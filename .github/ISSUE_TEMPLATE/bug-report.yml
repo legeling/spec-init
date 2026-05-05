@@ -1,0 +1,41 @@
+name: Bug Report
+description: Report a bug in the skill, script, templates, or examples
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is the bug?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Include commands, host environment, and related files when possible
+    validations:
+      required: true
+  - type: input
+    id: host
+    attributes:
+      label: Host
+      placeholder: Claude / Codex / OpenCode
+  - type: textarea
+    id: files
+    attributes:
+      label: Related files

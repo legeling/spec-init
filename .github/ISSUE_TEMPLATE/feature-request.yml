@@ -1,0 +1,31 @@
+name: Feature Request
+description: Suggest an improvement for the skill, templates, docs, or examples
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or gap
+      description: What is missing or insufficient today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Use case
+      description: In what workflow would this help?
+    validations:
+      required: true
+  - type: input
+    id: host
+    attributes:
+      label: Host
+      placeholder: Claude / Codex / OpenCode
