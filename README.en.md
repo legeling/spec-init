@@ -3,7 +3,7 @@
 # spec-init
 
 <p>
-  <strong>A project kickoff skill for spec engineering: define requirements, design, tests, and tasks before implementation.</strong>
+  <strong>An SDD-oriented project kickoff skill: create documentation structure, engineering rules, and testing constraints before implementation starts.</strong>
 </p>
 
 <p>
@@ -22,99 +22,152 @@
   <img alt="Docs" src="https://img.shields.io/badge/docs-ZH%20%7C%20EN-E11D48">
 </p>
 
+<table>
+  <tr>
+    <td><strong>Stage-based SDD</strong><br/>A directory-first flow from intake to executable tasks.</td>
+    <td><strong>Built-in Rules</strong><br/>Clarification, bug-fix, and TDD guardrails ship with the scaffold.</td>
+    <td><strong>Traceability</strong><br/>A project starts with an explicit `FR -> DES -> TEST -> T` chain.</td>
+  </tr>
+</table>
+
+<img src="./docs/assets/images/spec-init-flow.svg" alt="spec-init workflow" width="100%">
+
 <img src="./docs/assets/images/spec-init-poster.png" alt="spec-init poster" width="100%">
 
 </div>
 
 ## Overview
 
-`spec-init` is a project kickoff skill stored in `skills/`, but it is better understood as a lightweight spec engineering workflow entry point.
+`spec-init` is a project kickoff skill stored in `skills/`, but its real role is a lightweight SDD (Spec-Driven Development) bootstrap system.
 
-It does more than generate folders. It turns a vague idea into an executable spec-driven documentation system before implementation starts:
+It does more than generate folders. It turns a vague project idea into an executable, traceable, rule-aware engineering entry point:
 
-- `docs/00-project-intake.md`
-- `docs/01-requirements.md`
-- `docs/02-design.md`
-- `docs/03-implementation-plan.md`
-- `docs/04-tdd-plan.md`
-- `docs/05-task-breakdown.md`
+- `docs/00-intake/README.md`
+- `docs/01-requirements/README.md`
+- `docs/02-design/README.md`
+- `docs/03-implementation/README.md`
+- `docs/04-tdd/README.md`
+- `docs/05-tasks/README.md`
+- `docs/rules/README.md`
 - `README.md`
 - `AGENTS.md`
 
-The goal is simple:
+Core goals:
 
-- separate requirements from design
-- define boundaries before coding
-- move testing earlier instead of “later”
-- move the project into a spec engineering workflow from day one
-- keep a clear traceability chain: `FR -> DES -> TEST -> T`
+- separate requirements, design, implementation planning, TDD planning, and task breakdown
+- turn document-driven development into the default workflow
+- define boundaries, validation, and task relationships before coding
+- maintain a full traceability chain: `FR -> DES -> TEST -> T`
+- ship project-level engineering rules, not just empty document shells
+- require user clarification before making material decisions
+- require design docs to include stack, architecture, trade-offs, and quality goals
+- require root-cause analysis for bug fixes instead of guess-based changes
+- require strict TDD with relevant white-box, performance, and security coverage
 
 ## Why this exists
 
-Many projects do not fail because of technology. They fail because nobody made the following explicit early enough:
+Many projects do not fail because of technology. They fail because these questions were never made explicit early enough:
 
-- what are we building
-- why now
-- what is out of scope
+- what exactly are we building
+- why are we building it now
+- what is explicitly out of scope
 - how design maps to requirements
 - how tests prove the work is done
 - how tasks derive from requirements and design
+- what engineering rules the team is supposed to follow by default
 
-This skill exists to make those things explicit at project start.
+Common outcomes:
 
-## Visuals
+- requirements and design get mixed together
+- implementation planning and task lists get mixed together
+- testing is always “added later”
+- the README turns into empty marketing text
+- rules only live in chat or PR comments instead of the repo itself
 
-After initialization, the project should form an executable documentation flow: intake -> requirements -> design -> implementation plan -> tdd plan -> task breakdown, and only then move into implementation.
+This skill exists to solve those problems at project start.
 
 ## What it generates
 
-The skill creates or fills at least:
+At minimum, the skill creates or fills:
 
 ```text
 docs/
-docs/adr/
+docs/00-intake/README.md
+docs/01-requirements/README.md
+docs/02-design/README.md
+docs/03-implementation/README.md
+docs/04-tdd/README.md
+docs/05-tasks/README.md
+docs/rules/README.md
+docs/rules/clarification-rules.md
+docs/rules/coding-standards.md
+docs/rules/bug-fix-rules.md
+docs/rules/testing-standards.md
+docs/rules/doc-sync-rules.md
+docs/rules/definition-of-done.md
+docs/adr/0000-record-template.md
 src/
 tests/
 scripts/
 README.md
 AGENTS.md
-docs/00-project-intake.md
-docs/01-requirements.md
-docs/02-design.md
-docs/03-implementation-plan.md
-docs/04-tdd-plan.md
-docs/05-task-breakdown.md
-docs/adr/0000-record-template.md
 ```
 
-These are not empty placeholders anymore. The templates include:
+These are not empty placeholders. The templates already include:
 
-- writing boundaries
-- self-check prompts
-- version / priority hints
+- document boundary guidance
+- self-check lists
+- priority and version-boundary prompts
 - `FR-*` / `DES-*` / `TEST-*` / `T-*` traceability expectations
+- a project rules directory under `docs/rules/`
+- clarification rules for material ambiguities
+- root-cause bug-fix rules
+- white-box / performance / security testing expectations
 - a minimal complete example project
 
-## Best fit
+## Structure
 
-- starting a project from 0 to 1
-- wanting a spec-first / doc-first / tdd-first workflow
-- teaching new developers the difference between requirements and design
-- building a maintainable project entry point for future collaborators
+The generated SDD documents are now organized by stage directories instead of being flattened in the root `docs/` directory:
 
-## Not a fit
+```text
+docs/
+|-- 00-intake/
+|   `-- README.md
+|-- 01-requirements/
+|   `-- README.md
+|-- 02-design/
+|   `-- README.md
+|-- 03-implementation/
+|   `-- README.md
+|-- 04-tdd/
+|   `-- README.md
+|-- 05-tasks/
+|   `-- README.md
+|-- adr/
+|   `-- 0000-record-template.md
+`-- rules/
+    |-- README.md
+    |-- clarification-rules.md
+    |-- coding-standards.md
+    |-- bug-fix-rules.md
+    |-- testing-standards.md
+    |-- doc-sync-rules.md
+    `-- definition-of-done.md
+```
 
-- one-off throwaway scripts
-- quick demos with no documentation discipline
-- mature repos that only need a small doc update
-- bug fixing, reviewing, or adding tests to an existing project
+Why this structure:
+
+- it matches the stages of SDD more clearly
+- each stage can grow into a richer directory over time
+- `rules/` lets the project keep engineering rules inside the generated scaffold
+- newcomers can see what to read first and what to do next
 
 ## Supported hosts
 
 | Host | Recommended install path | Typical invocation | Notes |
 |---|---|---|---|
-| Claude Code | `~/.claude/skills/spec-init` | `/spec-init` | supports richer frontmatter and dynamic context features |
-| Codex | `.agents/skills/spec-init` | `$spec-init` or skill picker | includes `agents/openai.yaml` for better presentation and invocation defaults |
+| Claude Code | `~/.claude/skills/spec-init` | `/spec-init` | supports richer frontmatter and dynamic injection |
+| Codex | `.agents/skills/spec-init` | `$spec-init` or skill picker | compatible with the Agent Skills directory layout |
 | OpenCode | `~/.config/opencode/skills/spec-init` | `/spec-init` or auto-load | also compatible with `.claude/skills` and `.agents/skills` |
 
 ## Installation
@@ -131,17 +184,6 @@ cp -R skills/spec-init ~/.claude/skills/spec-init
 cp -R skills/spec-init /path/to/repo/.agents/skills/spec-init
 ```
 
-This repository already includes:
-
-- `skills/spec-init/agents/openai.yaml`
-
-It improves Codex presentation by defining:
-
-- display name
-- short description
-- default prompt
-- implicit invocation policy
-
 ### OpenCode
 
 ```bash
@@ -150,18 +192,22 @@ cp -R skills/spec-init ~/.config/opencode/skills/spec-init
 
 ## Usage examples
 
+Different hosts use different explicit invocation syntax, but the intent is the same.
+
+Examples:
+
 ```text
 /spec-init my-app
 /spec-init ./demo-service --type=api
-/spec-init --here --type=web
+/spec-init --here --type=web --lang=en
 $spec-init my-cli --type=cli
 ```
 
-Or trigger it with natural language:
+You can also trigger it with natural language:
 
 - “Initialize a new project skeleton for me”
-- “Set up requirements, design, and TDD docs before coding”
-- “I want an API project, but start with documentation, not implementation”
+- “Create SDD documents and engineering rules before implementation”
+- “I want an API project, but start with the documentation skeleton first”
 
 ## Project types
 
@@ -173,11 +219,53 @@ Currently supported:
 - `library`
 - `service`
 
-If the user does not specify one, the skill infers the most likely type and records the reasoning in `docs/00-project-intake.md`.
+If the user does not specify one, the skill makes a baseline inference from the project name and directory name, then records the reasoning in `docs/00-intake/README.md`.
 
-## The core value: traceability
+## Output language
 
-The real value is not the number of markdown files. The value is that the repo gets pushed toward a connected chain:
+The bootstrap script now supports:
+
+- `--lang zh`
+- `--lang en`
+
+Current behavior:
+
+- Chinese is the default output language
+- `--lang en` generates English templates
+- `web` / `api` / `cli` have differentiated templates in both languages
+
+## Type-specific templates
+
+`web`, `api`, and `cli` already have differentiated templates, mainly in:
+
+- `docs/01-requirements/README.md`
+- `docs/02-design/README.md`
+- `docs/04-tdd/README.md`
+- `docs/05-tasks/README.md`
+
+## Built-in rules
+
+This project no longer generates only documents. It also generates project-level engineering rules:
+
+- `docs/rules/clarification-rules.md`
+- `docs/rules/coding-standards.md`
+- `docs/rules/bug-fix-rules.md`
+- `docs/rules/testing-standards.md`
+- `docs/rules/doc-sync-rules.md`
+- `docs/rules/definition-of-done.md`
+
+`AGENTS.md` defines execution order for agents, while `docs/rules/` keeps those rules as in-repo engineering assets.
+
+The current rule set especially strengthens four areas:
+
+1. material ambiguities must be confirmed with the user, with options and trade-offs explained
+2. design docs must include stack, architecture, trade-offs, and quality goals
+3. bug fixes must identify root cause instead of guessing
+4. testing must follow strict TDD with relevant white-box, performance, and security coverage
+
+## The real value: traceability
+
+The real value is not the number of markdown files. The value is that the project gets pushed toward a connected chain:
 
 - `FR-*`: what must be delivered
 - `DES-*`: how the design satisfies it
@@ -190,7 +278,7 @@ At minimum, the project should form one complete chain:
 FR-001 -> DES-001 -> TEST-001 -> T-001
 ```
 
-Without that chain, documentation tends to decay back into disconnected notes.
+Without that chain, documentation easily decays back into disconnected notes.
 
 ## Example project
 
@@ -198,7 +286,14 @@ See the included minimal complete example:
 
 [`skills/spec-init/examples/demo-app/`](./skills/spec-init/examples/demo-app/)
 
-It shows how intake, requirements, design, TDD, and tasks should connect in practice.
+It shows:
+
+- how intake is written
+- how requirements are written
+- how design maps to requirements
+- how the TDD plan maps to requirements
+- how the task breakdown becomes executable work
+- how `rules/` becomes part of the generated project structure
 
 ## Repository layout
 
@@ -219,8 +314,6 @@ skills/
 ```text
 skills/spec-init/
 |-- SKILL.md
-|-- agents/
-|   `-- openai.yaml
 |-- scripts/
 |   `-- spec-init.sh
 |-- references/
@@ -236,18 +329,20 @@ skills/spec-init/
 ## Status
 
 - working bootstrap script
-- stronger templates for requirements / design / TDD / tasks
+- Bash smoke tests and GitHub Actions CI
+- directory-based SDD structure output
+- `--lang zh|en` support
+- differentiated templates for `web` / `api` / `cli`
+- built-in `docs/rules/` rule directory
 - minimal complete example project
 - bilingual README
 - generated cover image
-- multilingual docs structure
-- Codex `agents/openai.yaml` included
 
 ## Next steps
 
-- add more project-type-specific examples
-- improve template variation by `web` / `api` / `cli`
-- continue improving Codex metadata and host-specific polish
+- add differentiated templates for `service` / `library`
+- add more examples such as `cli-tool` and `api-service`
+- continue improving host integration and release ergonomics
 
 ## License
 
@@ -260,9 +355,3 @@ That means:
 - distribution must include the license text or URL
 
 See the root `LICENSE` file for the full terms.
-
-If you plan to publish this repo, the next natural additions are:
-
-- repository topics
-- release notes
-- screenshots or short demo recordings

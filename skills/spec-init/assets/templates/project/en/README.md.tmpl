@@ -1,0 +1,124 @@
+# __PROJECT_NAME__
+
+> Project type: __PROJECT_TYPE__
+>
+> Initialized on: __DATE__
+
+## Overview
+
+[One sentence describing who this project helps and what problem it solves.]
+
+## Goals
+
+- [Goal 1]
+- [Goal 2]
+- [Goal 3]
+
+## Workflow
+
+This project follows Spec-Driven Development (SDD) + Test-Driven Development (TDD).
+
+Recommended order:
+
+1. Fill in `docs/00-intake/README.md`
+2. Define `docs/01-requirements/README.md`
+3. Produce `docs/02-design/README.md`
+4. Break down `docs/03-implementation/README.md`
+5. Define `docs/04-tdd/README.md`
+6. Generate `docs/05-tasks/README.md`
+7. Review `docs/rules/README.md`
+8. Start implementation and keep tests and docs in sync
+
+## Document Guide
+
+- `docs/00-intake/README.md`: background, users, goals, non-goals
+- `docs/01-requirements/README.md`: requirements, what / why only
+- `docs/02-design/README.md`: technical design, how only
+- `docs/03-implementation/README.md`: milestones, order, dependencies
+- `docs/04-tdd/README.md`: test strategy and requirement-to-test mapping
+- `docs/05-tasks/README.md`: executable task list
+- `docs/rules/README.md`: coding, testing, doc-sync, and Definition of Done rules
+- `docs/rules/clarification-rules.md`: clarification and decision confirmation rules
+- `docs/rules/bug-fix-rules.md`: bug fixing, root-cause, and regression rules
+- `docs/adr/`: architecture decision records
+
+## Traceability
+
+The project should maintain at least this chain:
+
+- `FR-*` defines requirements
+- `DES-*` defines how the requirements are satisfied
+- `TEST-*` defines how the requirements are verified
+- `T-*` defines the execution tasks
+
+Before implementation starts, confirm at least one complete chain:
+
+`FR-001 -> DES-001 -> TEST-001 -> T-001`
+
+## Structure
+
+```text
+.
+|-- AGENTS.md
+|-- README.md
+|-- docs
+|   |-- 00-intake
+|   |   `-- README.md
+|   |-- 01-requirements
+|   |   `-- README.md
+|   |-- 02-design
+|   |   `-- README.md
+|   |-- 03-implementation
+|   |   `-- README.md
+|   |-- 04-tdd
+|   |   `-- README.md
+|   |-- 05-tasks
+|   |   `-- README.md
+|   |-- adr
+|   |   `-- 0000-record-template.md
+|   `-- rules
+|       |-- README.md
+|       |-- clarification-rules.md
+|       |-- coding-standards.md
+|       |-- bug-fix-rules.md
+|       |-- testing-standards.md
+|       |-- doc-sync-rules.md
+|       `-- definition-of-done.md
+|-- scripts
+|   `-- .gitkeep
+|-- src
+|   `-- .gitkeep
+`-- tests
+    `-- .gitkeep
+```
+
+## Quick Start
+
+Fill in the real project commands:
+
+```bash
+# Install dependencies
+[command]
+
+# Start development
+[command]
+
+# Run tests
+[command]
+
+# Build artifacts
+[command]
+```
+
+## Current Status
+
+- [Current progress]
+- [Completed work]
+- [Known risks]
+
+## Next Steps
+
+1. Complete the open questions in `docs/00-intake/README.md`
+2. Convert the main goals into `FR-*` / `NFR-*` / `AC-*`
+3. Define the first design in `docs/02-design/README.md`
+4. Define the first red tests in `docs/04-tdd/README.md`

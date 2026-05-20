@@ -1,0 +1,21 @@
+# Documentation Sync Rules
+
+## Core Principles
+
+- Code, tests, README, and SDD documents must evolve together.
+- Documentation is not a release-afterthought manual. It is part of the implementation constraints before and after coding.
+
+## Sync Requirements
+
+- Requirement changes: update `docs/01-requirements/README.md`
+- Design changes: update `docs/02-design/README.md`
+- Delivery-order changes: update `docs/03-implementation/README.md`
+- Testing-strategy changes: update `docs/04-tdd/README.md`
+- Task-breakdown changes: update `docs/05-tasks/README.md`
+- Project-structure changes: update `README.md` and any affected rule docs
+
+## Review Questions
+
+- Does this code change still trace back to the intended `FR -> DES -> TEST -> T` chain?
+- Did this work introduce new `[To confirm]` items that still need to be documented?
+- Are any new rules only living in chat or PR comments instead of `docs/rules/`?

@@ -1,0 +1,28 @@
+# Clarification Rules
+
+## Core Principles
+
+- If there is a material ambiguity about requirements, target users, success criteria, non-goals, stack choice, architecture direction, data model, permission model, or test coverage strategy, ask the user first.
+- Do not treat “this seems reasonable” as “the user already confirmed it.”
+- You may offer options, but you must explain the trade-offs, risks, and recommendation clearly instead of deciding on the user's behalf.
+
+## Cases That Require Confirmation
+
+- Different choices change product scope or behavior
+- Different technical options materially affect architecture, maintenance cost, or delivery speed
+- Different data or permission models affect compatibility or long-term evolution
+- Different testing scopes affect quality guarantees
+- Any irreversible action such as overwriting files, migrating data, or replacing an existing implementation
+
+## Recommended Prompt Structure
+
+1. Explain what the ambiguity is
+2. Provide 2 to 3 candidate options
+3. For each option, describe fit, advantages, cost, and risk
+4. If you have a recommendation, mark it as a recommendation rather than a confirmed decision
+
+## Disallowed Practices
+
+- Skipping key clarification because it feels faster
+- Defaulting to your preferred stack or architecture without confirmation
+- Using vague wording to hide that the decision was never confirmed

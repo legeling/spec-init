@@ -13,3 +13,4 @@ Before submitting:
 - keep `skills/spec-init/` as the single core skill
 - do not split hosts into multiple duplicated implementations
 - keep templates and examples in sync
+- run `bash tests/spec-init.sh` before submitting changes

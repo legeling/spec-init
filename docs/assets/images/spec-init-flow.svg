@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" fill="none">
+  <rect width="1200" height="300" rx="24" fill="#0B1220"/>
+  <rect x="24" y="24" width="1152" height="252" rx="18" fill="#111827" stroke="#1F2937"/>
+  <text x="60" y="72" fill="#F9FAFB" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">spec-init workflow</text>
+  <text x="60" y="102" fill="#9CA3AF" font-family="Arial, Helvetica, sans-serif" font-size="16">Stage-based SDD scaffold with rules, traceability, and TDD guardrails.</text>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="60" y="144" width="150" height="82" rx="16" fill="#0F766E"/>
+    <text x="90" y="176" fill="#ECFDF5" font-size="18" font-weight="700">00 Intake</text>
+    <text x="90" y="202" fill="#D1FAE5" font-size="14">Problem, users, goals</text>
+
+    <rect x="248" y="144" width="168" height="82" rx="16" fill="#2563EB"/>
+    <text x="278" y="176" fill="#EFF6FF" font-size="18" font-weight="700">01 Requirements</text>
+    <text x="278" y="202" fill="#DBEAFE" font-size="14">FR, NFR, AC</text>
+
+    <rect x="454" y="144" width="144" height="82" rx="16" fill="#7C3AED"/>
+    <text x="486" y="176" fill="#F5F3FF" font-size="18" font-weight="700">02 Design</text>
+    <text x="486" y="202" fill="#EDE9FE" font-size="14">Stack, architecture</text>
+
+    <rect x="636" y="144" width="178" height="82" rx="16" fill="#C2410C"/>
+    <text x="668" y="176" fill="#FFF7ED" font-size="18" font-weight="700">03 Implementation</text>
+    <text x="668" y="202" fill="#FFEDD5" font-size="14">Milestones, sequencing</text>
+
+    <rect x="852" y="144" width="128" height="82" rx="16" fill="#BE185D"/>
+    <text x="884" y="176" fill="#FDF2F8" font-size="18" font-weight="700">04 TDD</text>
+    <text x="884" y="202" fill="#FCE7F3" font-size="14">White-box, perf, sec</text>
+
+    <rect x="1018" y="144" width="122" height="82" rx="16" fill="#374151"/>
+    <text x="1048" y="176" fill="#F9FAFB" font-size="18" font-weight="700">05 Tasks</text>
+    <text x="1048" y="202" fill="#D1D5DB" font-size="14">Executable steps</text>
+  </g>
+
+  <g stroke="#94A3B8" stroke-width="4" stroke-linecap="round">
+    <path d="M210 185H238"/>
+    <path d="M416 185H444"/>
+    <path d="M598 185H626"/>
+    <path d="M814 185H842"/>
+    <path d="M980 185H1008"/>
+  </g>
+
+  <g fill="#94A3B8">
+    <path d="M236 177L248 185L236 193V177Z"/>
+    <path d="M442 177L454 185L442 193V177Z"/>
+    <path d="M624 177L636 185L624 193V177Z"/>
+    <path d="M840 177L852 185L840 193V177Z"/>
+    <path d="M1006 177L1018 185L1006 193V177Z"/>
+  </g>
+
+  <rect x="910" y="42" width="230" height="54" rx="14" fill="#111827" stroke="#334155"/>
+  <text x="934" y="66" fill="#F9FAFB" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Rules always active</text>
+  <text x="934" y="88" fill="#94A3B8" font-family="Arial, Helvetica, sans-serif" font-size="13">clarification, bug-fix, testing, DoD</text>
+</svg>

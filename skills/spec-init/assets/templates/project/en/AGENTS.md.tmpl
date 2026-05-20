@@ -1,0 +1,62 @@
+# __PROJECT_NAME__ Agent Rules
+
+## Goal
+
+Clarify requirements, design, implementation order, and tests before coding to reduce rework and misunderstanding.
+
+## Working Order
+
+1. `docs/00-intake/README.md`
+2. `docs/01-requirements/README.md`
+3. `docs/02-design/README.md`
+4. `docs/03-implementation/README.md`
+5. `docs/04-tdd/README.md`
+6. `docs/05-tasks/README.md`
+7. `docs/rules/README.md`
+8. Implement code
+9. Update docs, tests, and README together
+
+## Document Boundaries
+
+| File | Focus | Do not put here |
+|---|---|---|
+| `docs/00-intake/README.md` | background, users, goals, constraints | concrete technical design |
+| `docs/01-requirements/README.md` | what / why / success | framework choices, tables, endpoint implementation |
+| `docs/02-design/README.md` | how / architecture / data / interface | task execution order |
+| `docs/03-implementation/README.md` | milestones, dependencies, delivery order | low-level implementation detail |
+| `docs/04-tdd/README.md` | how requirements are verified | vague “write tests later” statements |
+| `docs/05-tasks/README.md` | executable actions | abstract goals |
+| `docs/rules/` | project-wide engineering rules | product requirement details |
+
+## Delivery Rules
+
+- Do not start large implementation while blocking `[To confirm]` items remain unresolved.
+- If there is a material ambiguity about requirements, architecture direction, stack choice, data model, or test coverage strategy, confirm it with the user before deciding.
+- New features must update requirements, design, TDD, and tasks together.
+- API, data shape, and config changes must update design docs and tests together.
+- Bug fixes must include regression tests.
+- Any structure change must update the project tree in `README.md`.
+- Record key technical trade-offs in `docs/adr/`.
+- Every task should reference `FR-*`, `DES-*`, and `TEST-*` IDs.
+- Mark uncertain information as `[To confirm]` instead of inventing it.
+- Before implementation starts, ensure at least one complete chain exists: `FR -> DES -> TEST -> T`.
+- When there is a more specific rule, follow the documents in `docs/rules/`.
+
+## Project Commands
+
+Fill in the actual stack-specific commands:
+
+- Install: `[command]`
+- Dev: `[command]`
+- Test: `[command]`
+- Build: `[command]`
+- Lint: `[command]`
+
+## Definition of Done
+
+- Requirements, design, tests, and tasks are traceable.
+- Code and docs stay in sync.
+- High-priority requirements have automated verification.
+- README helps new contributors understand the structure quickly.
+- Known trade-offs and risks are recorded in docs or ADRs.
+- The checklist in `docs/rules/definition-of-done.md` passes.

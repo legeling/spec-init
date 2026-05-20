@@ -6,11 +6,13 @@
 
 它的重点不是“帮你生成空目录”，而是让项目从第一天开始就具备：
 
+- intake 文档
 - 需求文档
 - 设计文档
 - 实现计划
 - TDD 计划
 - 任务拆解
+- 项目规则目录
 - 项目 README
 - 项目级 AGENTS 规则
 
@@ -33,6 +35,16 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 - `skills/spec-init/references/`
 - `skills/spec-init/assets/templates/project/`
 - `skills/spec-init/examples/demo-app/`
+
+## 生成结构重点
+
+- `docs/00-intake/README.md`
+- `docs/01-requirements/README.md`
+- `docs/02-design/README.md`
+- `docs/03-implementation/README.md`
+- `docs/04-tdd/README.md`
+- `docs/05-tasks/README.md`
+- `docs/rules/`
 
 ## 相关文档
 

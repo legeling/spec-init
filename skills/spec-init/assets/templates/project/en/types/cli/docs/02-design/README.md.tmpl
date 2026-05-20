@@ -1,0 +1,86 @@
+# Design: __PROJECT_NAME__
+
+> Updated on: __DATE__
+>
+> This document explains how, not why.
+
+## 1. Design Goals
+
+- Make command entry points, argument rules, and execution results unambiguous
+- Prioritize stable output, diagnosable failures, and exit codes that scripts can trust
+
+## 2. System Boundary
+
+- Inputs: command names, subcommands, flags, environment variables, config files
+- Outputs: terminal text, machine-readable results, exit codes, optional file output
+- External systems: local file systems, remote APIs, external commands, or credential systems
+- Outside the system: graphical interfaces and long-running background services
+
+## 3. Architecture Overview
+
+[Describe the CLI call chain as command parsing -> config resolution -> executor -> output formatting, and mark side-effect boundaries.]
+
+## 4. Module Design
+
+| ID | Module | Responsibility | Requirements |
+|---|---|---|---|
+| `DES-001` | Command Parser | Parses command trees, flags, help output, and config entry points | `FR-001`, `FR-002` |
+| `DES-002` | Executor and Output Formatter | Runs the core flow, formats output, and controls exit codes | `FR-001`, `FR-002` |
+
+## 5. Data and State
+
+- Core entities: parsed command context, resolved config, execution result, error objects
+- Key fields: command name, flag values, config source, exit code, stdout content
+- State transitions: parse input -> validate arguments -> execute command -> emit output -> return exit code
+
+## 6. Interfaces and Contracts
+
+| Interface | Input | Output | Failure modes | Requirements |
+|---|---|---|---|---|
+| `[CLI] tool <subcommand> --flag value` | flags, config, environment variables | stdout, stderr, exit code | invalid flags, missing config, dependency failure | `FR-001`, `FR-002` |
+
+## 7. Technical Decisions and Trade-Offs
+
+- Decision: separate command parsing, execution logic, and output formatting explicitly
+- Alternatives: mix all logic directly in the command entry functions
+- Why not chosen: argument validation, testing, and failure handling would become hard to control quickly
+
+Record important decisions in `docs/adr/` when appropriate.
+
+## 8. Requirement Mapping
+
+Explain how the design covers the key requirements:
+
+- `DES-001` covers `FR-001` and `FR-002` through command parsing and help output
+- `DES-002` covers `FR-001` and `FR-002` through execution and output formatting
+- Explicitly call out any requirement that does not yet have design coverage
+
+## 9. Risks and Mitigations
+
+- Risk: too many input sources make behavior inconsistent
+- Mitigation: define source precedence explicitly and validate the resolved command context in one place
+
+## 10. Traceability Matrix
+
+| Requirement | Design |
+|---|---|
+| `FR-001` | `DES-001`, `DES-002` |
+| `FR-002` | `DES-001`, `DES-002` |
+
+## 11. Design Checklist
+
+- Every high-priority requirement has a corresponding design item here
+- This document explains how, not why
+- It does not mix in task lists, schedules, or execution details
+- Key risks and trade-offs are explicit
+
+## 12. Open Questions
+
+- Are interactive confirmation, dry-run, or verbose modes required?
+- Do automation scenarios require JSON output or colorless output?
+
+## What does not belong here
+
+- Pure product-background restatement
+- Low-level execution task lists
+- Detailed scheduling steps

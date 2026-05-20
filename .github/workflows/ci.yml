@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify bash syntax
+        run: bash -n skills/spec-init/scripts/spec-init.sh tests/spec-init.sh
+
+      - name: Run smoke tests
+        run: bash tests/spec-init.sh

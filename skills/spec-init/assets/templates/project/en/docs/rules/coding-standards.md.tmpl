@@ -1,0 +1,22 @@
+# Coding Standards
+
+## Core Principles
+
+- Requirements first, design second, implementation third. Do not skip the documentation phase and jump straight into large implementation.
+- Prefer the smallest correct change and avoid unnecessary abstraction.
+- Write uncertain information into `[To confirm]` sections instead of guessing in code.
+- For stack choice, architecture, deployment model, or permission model, do not default to “whatever is simplest to get running”. Choose the option that best fits the requirements and can be defended clearly.
+
+## Change Requirements
+
+- New functionality must trace back to `FR-*`, `DES-*`, `TEST-*`, and `T-*`.
+- API, data-shape, or config changes must update `docs/02-design/README.md`.
+- Important technical trade-offs should be written to `docs/adr/`.
+- When multiple technical options are reasonable, document the trade-offs first and confirm whether the user needs to decide.
+
+## Disallowed Practices
+
+- Using hard-coded fake data to hide real issues
+- “Fixing” bugs by commenting out failing code
+- Replacing key logic with `TODO` placeholders
+- Swallowing missing fields or failures with defaults that hide the real problem

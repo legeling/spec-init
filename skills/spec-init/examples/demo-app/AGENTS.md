@@ -6,25 +6,27 @@
 
 ## Working Order
 
-1. `docs/00-project-intake.md`
-2. `docs/01-requirements.md`
-3. `docs/02-design.md`
-4. `docs/03-implementation-plan.md`
-5. `docs/04-tdd-plan.md`
-6. `docs/05-task-breakdown.md`
-7. 实现代码
-8. 回写文档、测试和 README
+1. `docs/00-intake/README.md`
+2. `docs/01-requirements/README.md`
+3. `docs/02-design/README.md`
+4. `docs/03-implementation/README.md`
+5. `docs/04-tdd/README.md`
+6. `docs/05-tasks/README.md`
+7. `docs/rules/README.md`
+8. 实现代码
+9. 回写文档、测试和 README
 
 ## Document Boundaries
 
 | File | Focus | Do not put here |
 |---|---|---|
-| `docs/00-project-intake.md` | 背景、用户、目标、非目标、约束 | 具体技术方案 |
-| `docs/01-requirements.md` | what / why / success | 框架、库、表名、接口实现 |
-| `docs/02-design.md` | how / architecture / data / interface | 任务执行顺序 |
-| `docs/03-implementation-plan.md` | 里程碑、依赖、交付顺序 | 细碎的底层实现细节 |
-| `docs/04-tdd-plan.md` | 如何验证需求落地 | 只有“后面补测试”这种空话 |
-| `docs/05-task-breakdown.md` | 可执行动作 | 抽象愿景和泛泛而谈 |
+| `docs/00-intake/README.md` | 背景、用户、目标、非目标、约束 | 具体技术方案 |
+| `docs/01-requirements/README.md` | what / why / success | 框架、库、表名、接口实现 |
+| `docs/02-design/README.md` | how / architecture / data / interface | 任务执行顺序 |
+| `docs/03-implementation/README.md` | 里程碑、依赖、交付顺序 | 细碎的底层实现细节 |
+| `docs/04-tdd/README.md` | 如何验证需求落地 | 只有“后面补测试”这种空话 |
+| `docs/05-tasks/README.md` | 可执行动作 | 抽象愿景和泛泛而谈 |
+| `docs/rules/` | 项目级规范与完成定义 | 具体业务需求细节 |
 
 ## Delivery Rules
 
@@ -37,6 +39,7 @@
 - 每个任务都应该关联 `FR-*`、`DES-*`、`TEST-*` ID。
 - 不确定的信息要显式标成 `[待确认]`，不要编造。
 - 开始编码前，至少保证一条完整追踪链已经存在：`FR -> DES -> TEST -> T`
+- 具体编码、测试和文档同步规范，优先遵循 `docs/rules/` 下的规则文件。
 
 ## Project Commands
 
@@ -55,3 +58,4 @@
 - 高优先级需求有自动化验证。
 - README 能帮助新成员快速理解项目结构。
 - 已知风险和取舍已记录到文档或 ADR。
+- `docs/rules/definition-of-done.md` 中的检查项通过。
