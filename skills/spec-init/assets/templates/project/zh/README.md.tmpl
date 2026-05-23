@@ -37,7 +37,13 @@
 - `docs/03-implementation/README.md`: 里程碑、顺序、依赖
 - `docs/04-tdd/README.md`: 测试策略与需求-测试映射
 - `docs/05-tasks/README.md`: 可执行任务清单
+- `docs/issues/README.md`: 未解决问题、阻塞项、风险和技术债
+- `docs/changes/README.md`: 新需求、bugfix、重构等变更记录
+- `docs/releases/README.md`: 版本发布记录
+- `docs/archive/README.md`: 归档和废弃文档索引
 - `docs/rules/README.md`: 编码、测试、文档同步和完成定义规则
+- `docs/rules/change-management-rules.md`: 变更记录与发布规则
+- `docs/rules/issue-management-rules.md`: issue 跟踪与文档归档规则
 - `docs/rules/clarification-rules.md`: 需求澄清与决策确认规则
 - `docs/rules/bug-fix-rules.md`: bug 定位、根因修复与回归规则
 - `docs/adr/`: 关键架构决策记录
@@ -74,6 +80,17 @@
 |   |   `-- README.md
 |   |-- 05-tasks
 |   |   `-- README.md
+|   |-- issues
+|   |   `-- README.md
+|   |-- changes
+|   |   |-- README.md
+|   |   |-- BUG-0001-template.md
+|   |   `-- CR-0001-template.md
+|   |-- releases
+|   |   |-- README.md
+|   |   `-- v0.1.0-template.md
+|   |-- archive
+|   |   `-- README.md
 |   |-- adr
 |   |   `-- 0000-record-template.md
 |   `-- rules
@@ -83,6 +100,8 @@
 |       |-- bug-fix-rules.md
 |       |-- testing-standards.md
 |       |-- doc-sync-rules.md
+|       |-- change-management-rules.md
+|       |-- issue-management-rules.md
 |       `-- definition-of-done.md
 |-- scripts
 |   `-- .gitkeep
@@ -120,5 +139,7 @@
 
 1. 完成 `docs/00-intake/README.md` 中的待确认项
 2. 把关键目标转换成 `FR-*` / `NFR-*` / `AC-*`
-3. 在 `docs/02-design/README.md` 中明确第一版技术方案
+3. 在 `docs/02-design/README.md` 中明确当前阶段设计与约定
 4. 在 `docs/04-tdd/README.md` 中定义首批红灯测试
+5. 当引入新需求或 bugfix 时，记到 `docs/changes/`
+6. 当出现未解决问题或废弃文档时，维护 `docs/issues/` 和 `docs/archive/`

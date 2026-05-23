@@ -52,6 +52,27 @@
 - Backend APIs or a BFF
 - Design system, component guidelines, or brand constraints
 
+## 8.1 Beginner Fill-In Prompts
+
+If you are not sure how to write this yet, answer these first:
+
+| Question | Why it matters |
+|---|---|
+| Which page is the most important V1 page? | Without a key page, the first complete flow cannot be focused |
+| Are users mainly on mobile or desktop? | This shapes experience goals and later design rules |
+| Are login, permissions, or multi-role flows required? | This changes scope and user flows |
+| Is there already a brand color, typography, or component system? | This shapes visual and component expectations in design |
+| Which browsers and minimum device capabilities must be supported? | This defines compatibility and performance boundaries |
+
+## 8.2 Copyable V1 Example
+
+For a common dashboard or tool-style web product, you can start with:
+
+- V1 key page: post-login home page or the main list page
+- V1 core flow: create one record, view its status, update one key field
+- V1 required feedback: loading, success, failure, and empty state
+- V2 candidates: multi-role permissions, complex reports, bulk actions, theme switching
+
 ## 9. Requirements Checklist
 
 - Every `FR-*` can be verified on its own
@@ -64,6 +85,17 @@
 - What exactly is the first core flow on the key page?
 - Are there authentication, authorization, or multi-role scenarios?
 - Which browsers and minimum device capabilities must be supported?
+- Is there an existing brand, font, component library, or design system constraint?
+
+## 10.1 Common Mistakes
+
+Wrong:
+
+- "Use React for the homepage, TanStack Table for lists, and a specific UI kit for forms."
+
+Better:
+
+- "Users can complete the primary create, view, and update flow on the key page."
 
 ## What does not belong here
 

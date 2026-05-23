@@ -38,9 +38,9 @@
 
 ## Overview
 
-`spec-init` is a project kickoff skill stored in `skills/`, but its real role is a lightweight SDD (Spec-Driven Development) bootstrap system.
+`spec-init` is an agent skill stored in `skills/`, but it is not just a directory bootstrap script.
 
-It does more than generate folders. It turns a vague project idea into an executable, traceable, rule-aware engineering entry point:
+Its real role is to help an agent turn either a vague idea or an existing project into an executable, traceable, rule-aware spec set:
 
 - `docs/00-intake/README.md`
 - `docs/01-requirements/README.md`
@@ -48,6 +48,8 @@ It does more than generate folders. It turns a vague project idea into an execut
 - `docs/03-implementation/README.md`
 - `docs/04-tdd/README.md`
 - `docs/05-tasks/README.md`
+- `docs/changes/README.md`
+- `docs/releases/README.md`
 - `docs/rules/README.md`
 - `README.md`
 - `AGENTS.md`
@@ -86,9 +88,9 @@ Common outcomes:
 
 This skill exists to solve those problems at project start.
 
-## What it generates
+## What it produces
 
-At minimum, the skill creates or fills:
+During execution, the agent creates or updates these spec artifacts based on the user's goal and the real project context:
 
 ```text
 docs/
@@ -98,22 +100,27 @@ docs/02-design/README.md
 docs/03-implementation/README.md
 docs/04-tdd/README.md
 docs/05-tasks/README.md
+docs/issues/README.md
 docs/rules/README.md
 docs/rules/clarification-rules.md
 docs/rules/coding-standards.md
 docs/rules/bug-fix-rules.md
 docs/rules/testing-standards.md
 docs/rules/doc-sync-rules.md
+docs/rules/change-management-rules.md
+docs/rules/issue-management-rules.md
 docs/rules/definition-of-done.md
+docs/changes/README.md
+docs/releases/README.md
+docs/archive/README.md
 docs/adr/0000-record-template.md
-src/
-tests/
-scripts/
 README.md
 AGENTS.md
 ```
 
-These are not empty placeholders. The templates already include:
+These files should not remain empty placeholders. The skill still includes template and script resources, but those are helpers, not the final result.
+
+The resulting content should include:
 
 - document boundary guidance
 - self-check lists
@@ -123,7 +130,15 @@ These are not empty placeholders. The templates already include:
 - clarification rules for material ambiguities
 - root-cause bug-fix rules
 - white-box / performance / security testing expectations
-- a minimal complete example project
+- frontend guidance for resolution targets, colors, typography, and component rules
+- backend guidance for API, database, migration, and naming conventions
+- beginner-friendly decision guides and must-ask checklists by project type
+- copyable example answers, scope trimming help, and common mistake examples
+- current-state synthesis for existing projects
+- explicit options, trade-offs, and recommendations for missing decisions
+- change-tracking entry points for new requirements, bug fixes, and releases
+- support for fuller requirements, fuller design, and ongoing spec refinement
+- issue tracking, document retirement, and archive support
 
 ## Structure
 
@@ -143,6 +158,14 @@ docs/
 |   `-- README.md
 |-- 05-tasks/
 |   `-- README.md
+|-- issues/
+|   `-- README.md
+|-- changes/
+|   `-- README.md
+|-- releases/
+|   `-- README.md
+|-- archive/
+|   `-- README.md
 |-- adr/
 |   `-- 0000-record-template.md
 `-- rules/
@@ -152,6 +175,8 @@ docs/
     |-- bug-fix-rules.md
     |-- testing-standards.md
     |-- doc-sync-rules.md
+    |-- change-management-rules.md
+    |-- issue-management-rules.md
     `-- definition-of-done.md
 ```
 
@@ -160,6 +185,8 @@ Why this structure:
 - it matches the stages of SDD more clearly
 - each stage can grow into a richer directory over time
 - `rules/` lets the project keep engineering rules inside the generated scaffold
+- `changes/` and `releases/` preserve historical context instead of losing it
+- `issues/` and `archive/` give unresolved problems and retired docs a clear home
 - newcomers can see what to read first and what to do next
 
 ## Supported hosts
@@ -205,9 +232,10 @@ $spec-init my-cli --type=cli
 
 You can also trigger it with natural language:
 
-- “Initialize a new project skeleton for me”
-- “Create SDD documents and engineering rules before implementation”
-- “I want an API project, but start with the documentation skeleton first”
+- “Turn this idea into requirements, design, and a TDD plan”
+- “This is an existing project, read the code first and then help me add specs”
+- “I want an API project, but start by clarifying the specs before coding”
+- “Analyze this repo and tell me which docs and rules are missing”
 
 ## Project types
 
@@ -223,7 +251,7 @@ If the user does not specify one, the skill makes a baseline inference from the 
 
 ## Output language
 
-The bootstrap script now supports:
+The helper template resources support:
 
 - `--lang zh`
 - `--lang en`
@@ -328,21 +356,19 @@ skills/spec-init/
 
 ## Status
 
-- working bootstrap script
-- Bash smoke tests and GitHub Actions CI
-- directory-based SDD structure output
-- `--lang zh|en` support
-- differentiated templates for `web` / `api` / `cli`
-- built-in `docs/rules/` rule directory
-- minimal complete example project
-- bilingual README
-- generated cover image
+- agent-driven spec workflow guidance is in place
+- bilingual templates, references, and example resources are in place
+- differentiated spec prompts exist for `web` / `api` / `cli`
+- built-in `docs/rules/` rule directory is in place
+- minimal complete example project is included
+- bilingual README is included
+- the Bash scaffold script remains as an optional helper, not the primary product capability
 
 ## Next steps
 
-- add differentiated templates for `service` / `library`
-- add more examples such as `cli-tool` and `api-service`
-- continue improving host integration and release ergonomics
+- add stronger spec flows and examples for `service` / `library`
+- strengthen existing-project spec completion scenarios
+- further reduce the “empty template” feeling and improve direct agent-authored content
 
 ## License
 

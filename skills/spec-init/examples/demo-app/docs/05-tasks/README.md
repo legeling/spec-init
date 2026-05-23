@@ -19,52 +19,52 @@
   - Requirement: FR-001
   - Design: DES-001
   - Test: TEST-001
-  - Output: [代码 / 文档 / 脚本]
+  - Output: [文档 / 规则 / 说明]
   - Depends on: [无或任务 ID]
 ```
 
 ## 初始任务建议
 
-- [ ] T-001 实现项目骨架生成并验证核心文件输出
+- [ ] T-001 补齐第一版 agent 驱动 spec 示例链路
   - Requirement: FR-001
   - Design: DES-001
   - Test: TEST-001
-  - Output: 初始化脚本与生成结果
+  - Output: 有内容的 intake / requirements / design / tdd / tasks 示例
   - Depends on: 无
 
-- [ ] T-002 补 requirements 模板中的边界说明与验收标准
+- [ ] T-002 补关键缺失信息时的方案对比与推荐示例
   - Requirement: FR-002
   - Design: DES-002
   - Test: TEST-002
-  - Output: 可直接编辑的 requirements 模板
+  - Output: requirements / design 中的方案对比说明
   - Depends on: T-001
 
-- [ ] T-003 补 design 模板中的需求映射和风险说明
-  - Requirement: FR-002
-  - Design: DES-002
-  - Test: TEST-002
-  - Output: 可回链到 requirements 的 design 模板
+- [ ] T-003 增加“现有项目补 spec”工作流的示例说明
+  - Requirement: FR-003
+  - Design: DES-001
+  - Test: TEST-003
+  - Output: 面向已有仓库的 spec 补齐说明
   - Depends on: T-002
 
 - [ ] T-004 建立最小完整示例追踪链
-  - Requirement: FR-003
+  - Requirement: FR-004
   - Design: DES-003
-  - Test: TEST-003
+  - Test: TEST-004
   - Output: 示例中的 `FR-001 -> DES-001 -> TEST-001 -> T-001`
   - Depends on: T-003
 
-- [ ] T-005 为初始化工作流补测试策略与回归检查
-  - Requirement: FR-001, FR-003
-  - Design: DES-001, DES-003
-  - Test: TEST-001, TEST-003
+- [ ] T-005 为 spec 工作流补测试策略与回归检查
+  - Requirement: FR-001, FR-003, FR-004
+  - Design: DES-001, DES-003, DES-004
+  - Test: TEST-001, TEST-003, TEST-004
   - Output: `docs/04-tdd/README.md`
   - Depends on: T-004
 
-- [ ] T-006 补 rules 目录并校对 README、AGENTS，确保结构和规则一致
+- [ ] T-006 校对 README、AGENTS、rules 和示例，确保定位一致
   - Requirement: FR-004
   - Design: DES-004
   - Test: TEST-004
-  - Output: `docs/rules/` 与入口文档
+  - Output: `docs/rules/`、README、AGENTS 与示例文档
   - Depends on: T-005
 
 ## 当前任务列表

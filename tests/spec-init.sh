@@ -48,27 +48,55 @@ assert_file_exists "$explicit_dir/README.md"
 assert_file_exists "$explicit_dir/AGENTS.md"
 assert_file_exists "$explicit_dir/docs/00-intake/README.md"
 assert_file_exists "$explicit_dir/docs/05-tasks/README.md"
+assert_file_exists "$explicit_dir/docs/issues/README.md"
+assert_file_exists "$explicit_dir/docs/changes/README.md"
+assert_file_exists "$explicit_dir/docs/changes/CR-0001-template.md"
+assert_file_exists "$explicit_dir/docs/changes/BUG-0001-template.md"
+assert_file_exists "$explicit_dir/docs/releases/README.md"
+assert_file_exists "$explicit_dir/docs/releases/v0.1.0-template.md"
+assert_file_exists "$explicit_dir/docs/archive/README.md"
 assert_file_exists "$explicit_dir/docs/rules/README.md"
 assert_file_exists "$explicit_dir/docs/rules/clarification-rules.md"
 assert_file_exists "$explicit_dir/docs/rules/coding-standards.md"
 assert_file_exists "$explicit_dir/docs/rules/bug-fix-rules.md"
+assert_file_exists "$explicit_dir/docs/rules/change-management-rules.md"
+assert_file_exists "$explicit_dir/docs/rules/issue-management-rules.md"
 assert_contains "$explicit_dir/README.md" "项目类型：cli"
 assert_contains "$explicit_dir/docs/00-intake/README.md" '当前推断的项目类型：`cli`'
+assert_contains "$explicit_dir/docs/00-intake/README.md" '新手决策向导'
 assert_contains "$explicit_dir/docs/00-intake/README.md" '推断依据：用户明确通过命令参数指定项目类型：cli。'
 assert_contains "$explicit_dir/docs/01-requirements/README.md" '工具输出稳定、退出码明确'
+assert_contains "$explicit_dir/docs/01-requirements/README.md" '主要是给人工使用，还是需要接入自动化流水线'
+assert_contains "$explicit_dir/docs/01-requirements/README.md" '可直接参考的 V1 示例'
+assert_contains "$explicit_dir/docs/01-requirements/README.md" '常见错误示例'
 assert_contains "$explicit_dir/docs/02-design/README.md" 'Command Parser'
 assert_contains "$explicit_dir/docs/04-tdd/README.md" '退出码不稳定'
 assert_contains "$explicit_dir/docs/05-tasks/README.md" 'T-CLI-001'
+assert_contains "$explicit_dir/docs/issues/README.md" '还没解决的问题'
+assert_contains "$explicit_dir/docs/changes/README.md" '为什么变'
+assert_contains "$explicit_dir/docs/releases/README.md" '最终对外交付了什么'
+assert_contains "$explicit_dir/docs/archive/README.md" '已废弃'
 assert_contains "$explicit_dir/docs/rules/README.md" '文档驱动开发'
+assert_contains "$explicit_dir/docs/rules/README.md" 'change-management-rules.md'
+assert_contains "$explicit_dir/docs/rules/README.md" 'issue-management-rules.md'
 assert_contains "$explicit_dir/docs/rules/clarification-rules.md" '必须先问用户'
+assert_contains "$explicit_dir/docs/rules/clarification-rules.md" '按项目类型补充必问问题'
 assert_contains "$explicit_dir/docs/rules/bug-fix-rules.md" '定位根因'
+assert_contains "$explicit_dir/docs/rules/change-management-rules.md" '当前状态文档和历史变更文档必须同时维护'
+assert_contains "$explicit_dir/docs/rules/issue-management-rules.md" '未解决问题要进入 `docs/issues/`'
 assert_contains "$explicit_dir/docs/04-tdd/README.md" 'White-box'
 
 web_dir="$TMP_ROOT/admin-web"
 bash "$SCRIPT_PATH" "$web_dir" --type web >"$TMP_ROOT/web.out"
 
 assert_contains "$web_dir/docs/01-requirements/README.md" '以浏览器页面为主要入口的产品'
+assert_contains "$web_dir/docs/01-requirements/README.md" '主要用户更常在手机还是桌面使用'
+assert_contains "$web_dir/docs/01-requirements/README.md" 'V2 候选内容'
 assert_contains "$web_dir/docs/02-design/README.md" '页面壳层与路由入口'
+assert_contains "$web_dir/docs/02-design/README.md" '前端体验与视觉规范'
+assert_contains "$web_dir/docs/02-design/README.md" '目标终端与分辨率'
+assert_contains "$web_dir/docs/02-design/README.md" '色彩体系'
+assert_contains "$web_dir/docs/02-design/README.md" '组件规范'
 assert_contains "$web_dir/docs/04-tdd/README.md" '关键页面'
 assert_contains "$web_dir/docs/05-tasks/README.md" 'T-WEB-001'
 assert_contains "$web_dir/docs/04-tdd/README.md" 'Performance'
@@ -78,7 +106,13 @@ api_dir="$TMP_ROOT/orders-api"
 bash "$SCRIPT_PATH" "$api_dir" --type api >"$TMP_ROOT/api.out"
 
 assert_contains "$api_dir/docs/01-requirements/README.md" '以 HTTP 接口为主要交付物的服务'
+assert_contains "$api_dir/docs/01-requirements/README.md" '首批资源、动作和调用方分别是什么'
+assert_contains "$api_dir/docs/01-requirements/README.md" 'V2 候选内容'
 assert_contains "$api_dir/docs/02-design/README.md" 'API Transport Layer'
+assert_contains "$api_dir/docs/02-design/README.md" '后端工程约定与数据规范'
+assert_contains "$api_dir/docs/02-design/README.md" '数据库约定'
+assert_contains "$api_dir/docs/02-design/README.md" 'migration 规范'
+assert_contains "$api_dir/docs/02-design/README.md" '事务边界'
 assert_contains "$api_dir/docs/04-tdd/README.md" '真实 HTTP 契约'
 assert_contains "$api_dir/docs/05-tasks/README.md" 'T-API-001'
 assert_contains "$api_dir/docs/02-design/README.md" '架构质量目标'
@@ -89,6 +123,9 @@ bash "$SCRIPT_PATH" "$inferred_dir" --name "Order Worker" >"$TMP_ROOT/inferred.o
 assert_contains "$inferred_dir/README.md" "项目类型：service"
 assert_contains "$inferred_dir/docs/00-intake/README.md" '当前推断的项目类型：`service`'
 assert_contains "$inferred_dir/docs/00-intake/README.md" 'worker/consumer/queue/job/scheduler/daemon/service'
+assert_contains "$inferred_dir/docs/01-requirements/README.md" '范围裁剪助手'
+assert_contains "$inferred_dir/docs/01-requirements/README.md" '常见错误示例'
+assert_contains "$inferred_dir/docs/03-implementation/README.md" '范围分阶段建议'
 
 existing_dir="$TMP_ROOT/existing-project"
 mkdir -p "$existing_dir"
@@ -113,10 +150,24 @@ bash "$SCRIPT_PATH" "$english_dir" --type cli --lang en >"$TMP_ROOT/english.out"
 assert_contains "$english_dir/README.md" 'Project type: cli'
 assert_contains "$english_dir/AGENTS.md" 'Clarify requirements, design, implementation order, and tests before coding'
 assert_contains "$english_dir/docs/00-intake/README.md" 'Current inferred project type: `cli`'
+assert_contains "$english_dir/docs/00-intake/README.md" 'Beginner Decision Guide'
 assert_contains "$english_dir/docs/05-tasks/README.md" 'T-CLI-001 Define the command tree'
+assert_contains "$english_dir/docs/issues/README.md" 'unresolved problems'
+assert_contains "$english_dir/docs/changes/README.md" 'why something changed'
+assert_contains "$english_dir/docs/releases/README.md" 'what was actually delivered'
+assert_contains "$english_dir/docs/archive/README.md" 'retired, replaced, or historical documents'
 assert_contains "$english_dir/docs/rules/definition-of-done.md" 'Before a task is marked done'
 assert_contains "$english_dir/docs/rules/clarification-rules.md" 'ask the user first'
+assert_contains "$english_dir/docs/rules/clarification-rules.md" 'Project-Type-Specific Must-Ask Questions'
 assert_contains "$english_dir/docs/rules/bug-fix-rules.md" 'root cause'
+assert_contains "$english_dir/docs/rules/change-management-rules.md" 'Current-state docs and historical change docs must both be maintained'
+assert_contains "$english_dir/docs/rules/issue-management-rules.md" 'Unresolved problems belong in `docs/issues/`'
+assert_contains "$english_dir/docs/01-requirements/README.md" 'Is the tool mainly for humans or for automation pipelines?'
+assert_contains "$english_dir/docs/01-requirements/README.md" 'Copyable V1 Example'
+assert_contains "$english_dir/docs/01-requirements/README.md" 'Common Mistakes'
+assert_contains "$english_dir/docs/03-implementation/README.md" 'Ongoing Refinement Plan'
+assert_contains "$english_dir/docs/02-design/README.md" 'CLI Experience and Conventions'
+assert_contains "$english_dir/docs/02-design/README.md" 'Exit-code rules'
 assert_contains "$english_dir/docs/04-tdd/README.md" 'White-box Unit'
 
 invalid_dir="$TMP_ROOT/invalid-project"

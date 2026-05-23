@@ -75,6 +75,27 @@ Notes:
 - Security targets: [auth, authorization, input validation, sensitive-data protection]
 - Testability: [how white-box, integration, regression, performance, and security testing will work]
 
+## 7.3 Domain-Specific Conventions and Engineering Rules
+
+- UI-heavy projects should add: [resolution targets, breakpoints, colors, typography, component reuse rules, interaction states, accessibility baseline]
+- Backend / API projects should add: [API naming, error model, database naming, table relations, indexes, migrations, transactions, logging]
+- CLI / tooling projects should add: [command naming, argument format, output style, exit codes, machine-readable output rules]
+- Every project should add: [naming style, directory boundaries, config conventions, third-party dependency admission rules]
+
+Notes:
+
+- These rules should be defined during design, not improvised during implementation.
+- If a rule is not settled yet, record it as `[To confirm]` and mirror it in the open-questions section.
+
+## 7.4 Full Design Checklist
+
+- Are the main modules and module boundaries covered?
+- Are the main call chains and key exception paths covered?
+- Are the core data / state / resource models covered?
+- Are API contracts, error models, and permission boundaries covered?
+- Are performance, security, and testability goals covered?
+- Are recommended options clearly separated from confirmed decisions?
+
 Record important decisions in `docs/adr/` when appropriate.
 
 ## 8. Requirement Mapping
@@ -105,6 +126,7 @@ Explain how the design covers the key requirements:
 - Key risks and trade-offs are explicit
 - The stack, architecture direction, and quality goals are explicit instead of “decide later”
 - Any disputed key option includes trade-offs and a clear user-confirmation status
+- Project-type-specific conventions are explicit instead of being deferred to implementation time
 
 ## 12. Open Questions
 

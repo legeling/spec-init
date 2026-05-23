@@ -12,9 +12,13 @@
 4. `docs/03-implementation/README.md`
 5. `docs/04-tdd/README.md`
 6. `docs/05-tasks/README.md`
-7. `docs/rules/README.md`
-8. 实现代码
-9. 回写文档、测试和 README
+7. `docs/issues/README.md`
+8. `docs/changes/README.md`
+9. `docs/releases/README.md`
+10. `docs/archive/README.md`
+11. `docs/rules/README.md`
+12. 实现代码
+13. 回写文档、测试、变更记录和 README
 
 ## Document Boundaries
 
@@ -35,6 +39,10 @@
 - 新功能必须同步更新 requirements、design、tdd、tasks 中受影响的部分。
 - 新接口、数据结构、配置项变化，必须同时更新设计文档和测试。
 - 修 bug 必须补回归测试。
+- 新需求、bugfix、重构或流程变化，应同步更新 `docs/changes/`。
+- 版本发布或对外交付变化，应同步更新 `docs/releases/`。
+- 未解决问题、风险和技术债，应同步更新 `docs/issues/`。
+- 被替代或废弃的文档，应同步归档到 `docs/archive/`。
 - 目录结构变化必须更新 `README.md` 中的项目树。
 - 关键技术权衡写入 `docs/adr/`。
 - 每个任务都应该关联 `FR-*`、`DES-*`、`TEST-*` ID。

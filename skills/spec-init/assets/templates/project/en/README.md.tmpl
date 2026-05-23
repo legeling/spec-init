@@ -37,7 +37,13 @@ Recommended order:
 - `docs/03-implementation/README.md`: milestones, order, dependencies
 - `docs/04-tdd/README.md`: test strategy and requirement-to-test mapping
 - `docs/05-tasks/README.md`: executable task list
+- `docs/issues/README.md`: unresolved issues, blockers, risks, and technical debt
+- `docs/changes/README.md`: change records for new requirements, bug fixes, and refactors
+- `docs/releases/README.md`: release history
+- `docs/archive/README.md`: archived and deprecated document index
 - `docs/rules/README.md`: coding, testing, doc-sync, and Definition of Done rules
+- `docs/rules/change-management-rules.md`: change-tracking and release rules
+- `docs/rules/issue-management-rules.md`: issue tracking and document retirement rules
 - `docs/rules/clarification-rules.md`: clarification and decision confirmation rules
 - `docs/rules/bug-fix-rules.md`: bug fixing, root-cause, and regression rules
 - `docs/adr/`: architecture decision records
@@ -74,6 +80,17 @@ Before implementation starts, confirm at least one complete chain:
 |   |   `-- README.md
 |   |-- 05-tasks
 |   |   `-- README.md
+|   |-- issues
+|   |   `-- README.md
+|   |-- changes
+|   |   |-- README.md
+|   |   |-- BUG-0001-template.md
+|   |   `-- CR-0001-template.md
+|   |-- releases
+|   |   |-- README.md
+|   |   `-- v0.1.0-template.md
+|   |-- archive
+|   |   `-- README.md
 |   |-- adr
 |   |   `-- 0000-record-template.md
 |   `-- rules
@@ -83,6 +100,8 @@ Before implementation starts, confirm at least one complete chain:
 |       |-- bug-fix-rules.md
 |       |-- testing-standards.md
 |       |-- doc-sync-rules.md
+|       |-- change-management-rules.md
+|       |-- issue-management-rules.md
 |       `-- definition-of-done.md
 |-- scripts
 |   `-- .gitkeep
@@ -120,5 +139,7 @@ Fill in the real project commands:
 
 1. Complete the open questions in `docs/00-intake/README.md`
 2. Convert the main goals into `FR-*` / `NFR-*` / `AC-*`
-3. Define the first design in `docs/02-design/README.md`
+3. Define the current-stage design and conventions in `docs/02-design/README.md`
 4. Define the first red tests in `docs/04-tdd/README.md`
+5. Record new requirements or bug fixes in `docs/changes/`
+6. Track unresolved issues and retired docs in `docs/issues/` and `docs/archive/`

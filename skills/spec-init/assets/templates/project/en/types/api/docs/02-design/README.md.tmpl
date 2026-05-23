@@ -75,6 +75,23 @@ Notes:
 - Security targets: [auth, authorization, input validation, sensitive-data protection]
 - Testability: [how white-box, integration, regression, performance, and security testing will work]
 
+## 7.3 Backend Conventions and Data Rules
+
+- API path rules: [version prefix, resource naming, verb usage, bulk-operation rules]
+- Request / response rules: [field naming style, pagination shape, time format, idempotency fields]
+- Error model: [error codes, messages, field-level validation errors, trace ID]
+- Database conventions: [database and table naming, primary-key strategy, foreign-key strategy, soft-delete rules]
+- Schema and indexing: [core tables, unique constraints, main query paths, index strategy]
+- Migration rules: [file naming, rollback expectations, forward-compatibility principles]
+- Transaction boundaries: [which operations must be transactional, which should be async-decoupled]
+- Logging and observability: [structured log fields, audit fields, metrics, alerts]
+- Security boundaries: [authentication mode, authorization model, redaction, write-operation protection]
+
+Notes:
+
+- These rules should be fixed before large API and schema implementation starts.
+- If the database or error model is not final, document candidate options and `[To confirm]` items instead of treating personal habits as team standards.
+
 ## 8. Requirement Mapping
 
 Explain how the design covers the key requirements:
@@ -103,11 +120,13 @@ Explain how the design covers the key requirements:
 - Key risks and trade-offs are explicit
 - The stack, architecture direction, and quality goals are explicit
 - Any disputed key option includes trade-offs and a clear user-confirmation status
+- API naming, error model, database conventions, migration rules, and transaction boundaries are explicit
 
 ## 12. Open Questions
 
 - Does the system also need webhook or async consumer capabilities in addition to synchronous APIs?
 - Must the error model be shared across multiple services?
+- Are there already team conventions for database naming, primary keys, and migrations?
 
 ## What does not belong here
 

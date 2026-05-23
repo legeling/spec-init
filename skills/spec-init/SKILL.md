@@ -1,184 +1,189 @@
 ---
 name: spec-init
-description: 启动 SDD 工作流 / kick off a new project with stage-based SDD docs, project rules, README, and AGENTS scaffolding before implementation starts.
-compatibility: Requires bash. Works best in Claude Code, Codex, OpenCode, and other Agent Skills compatible tools.
+description: 面向新项目或现有项目的文档驱动开发 skill。Use when the user wants to create,补齐,更新, or refine specs such as intake, requirements, design, TDD, tasks, README, or AGENTS for a real project.
+compatibility: Works best in Claude Code, Codex, OpenCode, and other Agent Skills compatible tools.
 metadata:
   stage: beta
   language: zh-CN
-  workflow: project-bootstrap
+  workflow: agent-driven-spec
 ---
 
-# /spec-init — SDD 项目启动器
+# /spec-init — Agent 驱动的文档开发 skill
 
-这个 skill 用于把“我想做个项目”变成一套可执行的 SDD 起步结构，而不是只生成空文件夹。
+这个 skill 不是“帮用户创建一堆空模板”的脚手架，也不是“固定 Bash 初始化器”。
 
-目标：
+它的真正职责是：
 
-- 初始化一个适合 Spec-Driven Development (SDD) + Test-Driven Development (TDD) 的项目骨架
-- 生成分阶段的 `docs/`、`docs/rules/`、`README.md`、`AGENTS.md`、`src/`、`tests/`、`scripts/`
-- 用模板帮助开发者区分“需求文档”和“设计文档”
-- 在开始编码前，把项目目标、边界、方案、测试策略、任务清单和默认工程规则写清楚
+- 先理解用户目标
+- 先理解现有项目或上下文
+- 通过 agent 的分析、追问、归纳和写作，产出真正可用的 spec
+- 用 spec 驱动后续设计、实现、测试和文档同步
+- 把 spec 当成持续演进的项目资产，而不是一次性启动产物
+
+## 目标
+
+- 帮用户把模糊想法整理成能执行的 spec
+- 帮已有项目补齐缺失的 intake / requirements / design / tdd / tasks / rules
+- 帮用户区分 what / why / how / verify / do-next
+- 形成至少一条完整追踪链：`FR -> DES -> TEST -> T`
+- 在信息不足时主动提供候选方案、对比、建议，而不是只留下空白
+- 帮用户逐步补全完整需求、完整设计、完整验证策略，而不是只停留在最小第一版
+
+## 核心定位
+
+默认把这个 skill 当成“agent 写 spec 的工作流”，不是“脚本生成目录”。
+
+优先级：
+
+1. 理解用户和项目现状
+2. 读代码 / 读文档 / 读目录结构
+3. 澄清关键问题
+4. 产出或更新有内容的 spec
+5. 必要时才借助模板或脚本补齐基础结构
 
 ## 何时使用
 
-- 用户说“初始化项目”“从 0 到 1 搭个项目骨架”
-- 用户想要 `README.md`、`AGENTS.md`、`docs/`、`rules/` 模板
-- 用户不知道需求、设计、实现计划、测试计划的区别
-- 用户想做 spec-first / doc-first / tdd-first 的起步流程
+- 用户说“帮我做 spec”“补需求文档”“整理设计文档”“先别写代码，先把文档理清”
+- 用户有现成项目，想补齐或更新 `docs/`、`README.md`、`AGENTS.md`
+- 用户想做文档驱动开发、spec-first、design-first、TDD-first
+- 用户想让 agent 帮他决定还缺哪些文档、哪些规范、哪些待确认问题
 
 ## 何时不要使用
 
-- 用户只是想临时创建一个单文件脚本或一次性实验目录
-- 用户已经有成熟项目结构，只是要补一两份文档
-- 当前任务是修 bug、补测试、review 或重构，而不是初始化项目工作流
+- 用户只想要一个临时脚本、一次性 demo 或纯代码实现
+- 当前任务只是修一个小 bug、补一条测试、做一次 review
+- 用户明确不想做 spec，只要直接写代码
 
-## 先理解文档边界
+## 两种主要场景
 
-在生成任何文档前，先阅读 `references/doc-boundaries.md`，严格区分：
+### 场景 A：新项目
 
-- `docs/00-intake/README.md`: 先澄清背景、用户、目标、非目标
-- `docs/01-requirements/README.md`: 写 what / why / success，不写技术实现
-- `docs/02-design/README.md`: 写 how / architecture / trade-offs，不重复产品目标
-- `docs/03-implementation/README.md`: 写里程碑、先后顺序、依赖关系
-- `docs/04-tdd/README.md`: 写如何用测试证明需求落地
-- `docs/05-tasks/README.md`: 写可执行任务，并回链到需求/设计/测试
-- `docs/rules/`: 写项目级编码、测试、文档同步和完成定义规则
+用户只有一个想法、方向或需求草稿。
 
-如果用户是新手，再额外阅读 `references/example-idea-to-docs.md`，用最小例子帮助对方理解这些文档如何衔接。
+你要做的是：
+
+- 先把想法拆成 intake / requirements / design / tdd / tasks
+- 如果用户不懂概念，主动给方案、对比和建议
+- 不要只生成空文件；至少把当前已知信息写进去
+
+### 场景 B：现有项目
+
+用户已经有代码或仓库，想完善、补齐或更新 spec。
+
+你要做的是：
+
+- 先读仓库结构、README、核心代码、现有 docs
+- 找出当前真实行为、模块边界、依赖关系、缺失文档
+- 基于现状写 spec，而不是凭模板猜一个“理想项目”
+- 对已有项目优先增量补文档，不要粗暴覆盖
 
 ## 核心原则
 
-- 不要一上来就写代码，先把文档骨架和规则骨架补齐
-- 不确定的内容写成 `[待确认]`，不要编造
-- 缺少信息但不阻塞时，先生成模板并留下问题清单
-- 对需求边界、技术栈、架构方向、数据模型、权限模型、测试覆盖策略存在关键疑点时，必须使用 `question` 工具向用户确认
-- 使用 `question` 时，要给用户方案选择，并说明优点、代价、风险和推荐理由，不能替用户拍板
-- 如果目标仓库已经有 `README.md` 或 `AGENTS.md`，优先增量更新，不要粗暴覆盖
+- 不要把模板当结果，模板只是辅助。
+- 文档必须反映当前项目真实情况或当前轮次的明确决策。
+- 用户没有提到但又必须明确的内容，要主动提出候选方案和对比。
+- 推荐可以给，但推荐不是确认；不要替用户拍板关键决策。
+- 如果项目已存在，先读代码再写文档，不要反过来。
+- 如果信息不全，写 `[待确认]`，但不要把整份文档都留空。
+- spec 不是一次性文档；每轮需求变化、设计变化、实现变化后都要继续完善。
 
-## 项目类型提示
+## 文档边界
 
-- `web`: 页面、后台界面、站点、控制台、前端产品
-- `api`: HTTP API、BFF、后端接口服务、系统集成层
-- `cli`: 命令行工具、开发辅助脚本、终端工作流
-- `library`: SDK、可复用包、组件库、工具函数集
-- `service`: worker、调度器、事件消费者、长期运行进程
+先阅读并遵循：
 
-如果用户没有明确说类型，就根据目标用户、交付物和使用方式推断，并把推断依据写进 `docs/00-intake/README.md`。
+- `references/doc-boundaries.md`
+- `references/example-idea-to-docs.md`
 
-## 语言支持
+边界如下：
 
-- 默认输出中文模板
-- 如果用户明确要求英文，或显式传入 `--lang en`，输出英文模板
-- 当前脚本支持：`--lang zh` / `--lang en`
+- `docs/00-intake/README.md`: 为什么做，谁来用，什么不做
+- `docs/01-requirements/README.md`: 做什么，为什么做，怎么验收
+- `docs/02-design/README.md`: 怎么实现，方案对比，规范约定
+- `docs/03-implementation/README.md`: 先做什么后做什么
+- `docs/04-tdd/README.md`: 怎么验证完成
+- `docs/05-tasks/README.md`: 现在具体做什么动作
+- `docs/issues/README.md`: 尚未解决的问题、阻塞项、风险和技术债
+- `docs/changes/`: 这次为什么变、影响什么、同步了哪些文档和测试
+- `docs/releases/`: 某个版本最终对外交付了什么
+- `docs/archive/README.md`: 已归档、已替代、已废弃但仍需保留历史的文档
+- `docs/adr/`: 关键架构或技术决策为什么改变
+- `docs/rules/`: 默认工程规则
 
-## 调用方式
+## 默认工作流
 
-不同宿主对 skill 的显式调用语法不同，例如可能是 `/spec-init`、`$spec-init` 或技能选择器。
+### Step 0: 判断是“新项目”还是“现有项目”
 
-核心输入意图是一致的：
+先判断：
 
-- 初始化一个新项目
-- 指定目标目录或项目名
-- 可选指定项目类型，如 `web`、`api`、`cli`、`library`、`service`
-- 可选指定输出语言，如 `zh`、`en`
-- 可选允许覆盖已有模板文件
+- 当前目录是否已有代码、配置、README、docs、测试
+- 用户是要从零梳理，还是基于现状补齐 spec
 
-## 初始化完成的最小交付
+如果是现有项目：
 
-在你认为初始化完成之前，至少确认以下结果已经出现：
+- 先读目录结构
+- 先读 README / docs / 关键入口代码
+- 先梳理真实调用链和模块边界
 
-- `docs/`、`docs/rules/`、`README.md`、`AGENTS.md`、`src/`、`tests/`、`scripts/` 已创建或补齐
-- `docs/00-intake/README.md` 至少写清项目目标、目标用户、非目标、待确认问题
-- `docs/01-requirements/README.md` 中至少有一组 `FR-*` 和 `AC-*`
-- `docs/02-design/README.md` 中至少有一组 `DES-*`，并映射到 `FR-*`
-- `docs/04-tdd/README.md` 中至少有一组 `TEST-*`，并映射到 `FR-*`
-- `docs/05-tasks/README.md` 中至少有一组 `T-*`，并映射到 `FR-*` / `DES-*` / `TEST-*`
-- `docs/rules/definition-of-done.md` 已存在
-- 至少形成一条完整追踪链：`FR-001 -> DES-001 -> TEST-001 -> T-001`
+如果是新项目：
 
-## 执行指令
+- 先整理用户目标和约束
+- 再建立最小 spec 结构
 
-需求来源：
+### Step 0.1: 识别本轮意图
 
-- 当前用户请求
-- 如果运行环境支持参数注入，可额外参考传入参数
+先判断这次请求更接近哪一类：
 
----
+- 继续实施：主要推进 `tasks / tdd / implementation`
+- 新需求引入：主要更新 `requirements / design / changes`
+- 小改动：如果影响面有限，也要判断是否需要最小 change 记录
+- bugfix：主要更新 `changes / tdd / design`，必要时回写 requirements
+- 发布整理：主要更新 `releases / changes / README`
+- 问题追踪：主要更新 `issues/`
+- 文档清理：主要更新 `archive/` 并说明替代关系
 
-### Step 0: 判断初始化场景
+不要把所有请求都当成“继续写任务”或“继续写代码”。
 
-1. 确定目标目录：
-   - 有 `--here` → 当前目录
-   - 有路径 → 使用该路径
-   - 否则默认当前目录
-2. 推断项目名：
-   - 优先使用显式传入名称
-   - 否则取目标目录名
-3. 推断项目类型：
-   - 优先使用用户明确给出的类型
-   - 否则根据交付物和使用方式推断
-   - 如果仍不确定，选择最接近的类型，并在 intake 文档里注明“当前推断”
-4. 推断输出语言：
-   - 优先使用用户明确要求的语言或显式参数
-   - 否则默认中文
-5. 检查仓库现状：
-   - 新目录 / 空目录 → 走完整初始化
-   - 已有项目 → 仅补齐缺失文档、规则目录与基础目录
-6. 如果存在同名文件且会覆盖，只有这时再询问用户是否覆盖；否则默认保留原文件
+### Step 1: 先理解问题，不先写模板
 
-### Step 1: 先做问题澄清，不先做方案
+至少收集或推断：
 
-先收集或推断以下信息。如果信息不完整，不要阻塞，写进 `docs/00-intake/README.md` 的 `[待确认]` 区域：
-
-- 这个项目解决什么问题
-- 谁会使用它
+- 项目解决什么问题
+- 目标用户是谁
 - 为什么现在要做
-- 成功标准是什么
+- 当前阶段最重要的价值是什么
 - 明确不做什么
-- 有哪些约束（时间、平台、合规、预算、性能）
-- 当前假设里最容易出错的点是什么
+- 约束是什么
+- 当前最容易出错的假设是什么
 
-如果用户信息很少，也不要停在“需要更多信息”。先把当前已知内容整理为 intake，并把缺失项写成 `[待确认]`。
+如果用户要求的是“完整设计”或“完整需求”，还必须继续补齐：
 
-### Step 2: 创建目录骨架
+- 主要用户角色与差异
+- 端到端核心流程与异常流程
+- 关键对象、状态、字段和关系
+- 外部依赖、第三方系统、部署与运行约束
+- 权限模型、审计要求、性能目标、安全边界
+- 后续阶段可能扩展的模块和边界
 
-优先使用本 skill 自带脚本：
+如果用户是新手，主动给最小问题清单，不要只说“请补充更多信息”。
 
-```bash
-bash "<skill-root>/scripts/spec-init.sh" [目标路径] --name "[项目名]" --type "[项目类型]" --lang "[输出语言]"
-```
+### Step 2: 信息不足时，主动给方案和选择
 
-说明：
+如果用户没有提到某个关键设计点，且这个点会影响 spec 质量：
 
-- `scripts/spec-init.sh`、`references/`、`assets/templates/project/` 都是当前 skill 自带资源
-- 某些宿主会给出 skill 根目录变量或自动路径注入，例如 Claude 风格的 `${CLAUDE_SKILL_DIR}`
-- 某些宿主不会，这时以当前 `SKILL.md` 所在目录作为 `<skill-root>`
-- 如果宿主不能直接执行 skill 内脚本，就手动按以下结构创建：
+- 给 2 到 3 个候选方案
+- 写清适用场景、优点、代价、风险
+- 给出推荐意见
+- 明确标注“推荐”而不是“已确认”
 
-```text
-docs/
-docs/00-intake/README.md
-docs/01-requirements/README.md
-docs/02-design/README.md
-docs/03-implementation/README.md
-docs/04-tdd/README.md
-docs/05-tasks/README.md
-docs/adr/0000-record-template.md
-docs/rules/README.md
-docs/rules/coding-standards.md
-docs/rules/testing-standards.md
-docs/rules/doc-sync-rules.md
-docs/rules/definition-of-done.md
-src/
-tests/
-scripts/
-README.md
-AGENTS.md
-```
+特别要覆盖：
 
-### Step 3: 按顺序填充文档
+- Web：SPA / SSR / Hybrid，设计系统是否已有，移动端还是桌面优先
+- API / Service：单体 / 模块化单体 / 多服务，认证方式，数据库与错误模型
+- CLI：仅文本输出还是文本 + JSON，人工优先还是自动化优先
 
-严格按下面顺序工作，不要跳步：
+### Step 3: 产出有内容的 spec
+
+按顺序产出或更新：
 
 1. `docs/00-intake/README.md`
 2. `docs/01-requirements/README.md`
@@ -186,184 +191,184 @@ AGENTS.md
 4. `docs/03-implementation/README.md`
 5. `docs/04-tdd/README.md`
 6. `docs/05-tasks/README.md`
-7. `docs/rules/`
+7. `docs/issues/`（当存在未决问题、阻塞、技术债、已知风险时）
+8. `docs/changes/`（当本轮是新需求、bugfix、重构、流程变更时）
+9. `docs/releases/`（当本轮涉及版本发布或对外变更总结时）
+10. `docs/archive/`（当旧文档需要废弃但仍需保留历史时）
+11. `docs/rules/`
+12. 必要时更新 `README.md` / `AGENTS.md`
 
-不要只留下空模板。至少把用户已经说清楚的信息写进去；只有真正缺失的地方才保留 `[待确认]`。
+要求：
 
-#### 3.1 Intake 文档
+- 不要只写标题
+- 至少填入当前轮次已知信息
+- 新手场景下要包含示例、对比、错误示例、范围裁剪建议
+- 如果用户希望做完整设计，就不要只停在“一条主流程”，要继续补角色、异常流、数据边界、规则和质量目标
 
-用于把“脑子里的想法”变成可讨论的问题陈述。重点写：
+### Step 3.1: 完整需求要求
 
-- 业务背景
-- 用户画像
-- 典型使用场景
-- 成功标准
-- 非目标
-- 待确认问题
+当用户要的不是“占位 spec”而是“完整需求”时，requirements 至少覆盖：
 
-#### 3.2 Requirements 文档
+- 主要用户角色和目标差异
+- 关键业务流程和异常流程
+- 功能需求、非功能需求、验收标准
+- 数据或资源边界
+- 权限、合规、审计、性能、安全要求
+- 明确范围外内容
+- 待确认问题和决策依赖
 
-要求只回答“做什么”和“为什么做”：
+不要只写一个首页或一个接口就停住，除非用户明确说只整理最小范围。
 
-- 用户故事
-- 功能需求 `FR-*`
-- 非功能需求 `NFR-*`
-- 验收标准 `AC-*`
-- 范围外内容
-- 风险假设
+### Step 3.2: 完整设计要求
 
-不要在这里写：
+当用户要“完整设计”时，design 至少覆盖：
 
-- 用什么框架
-- 用什么数据库
-- API 路径怎么命名
-- 表结构怎么设计
-- 组件怎么拆
+- 系统边界与模块边界
+- 核心调用链和异常链路
+- 数据模型 / 资源模型 / 状态流转
+- 接口契约与错误模型
+- 权限模型与安全边界
+- 性能、可维护性、可测试性目标
+- 技术栈候选方案、权衡和推荐
+- 已确认项与 `[待确认]` 分离记录
 
-#### 3.3 Design 文档
+不要把 design 简化成“推荐某个框架”或“先做哪几个页面”。
 
-要求只回答“怎么实现”：
+### Step 4: 如果是现有项目，spec 必须回写真实现状
 
-- 系统边界和架构图
-- 模块职责
-- 数据模型
-- 接口契约
-- 状态流 / 调用链
-- 技术选型与权衡
-- 对需求条目的映射
-- 架构质量目标（可维护性、性能、安全、可测试性）
+对现有项目：
 
-不要在这里重复写需求背景，也不要把任务拆解直接塞进设计文档。
+- requirements 要基于真实用户流程或真实模块能力
+- design 要基于真实调用链、目录结构、接口、数据边界
+- TDD 要基于真实风险路径和真实现有测试空缺
+- tasks 要基于当前最有价值的后续动作，不是模板动作
 
-补充要求：
+### Step 5: 建立追踪链
 
-- 设计不能只写“最简单可跑”的做法，而要写“为什么这个栈和架构适合当前需求”。
-- 对存在多个合理方案的关键设计，必须列出候选方案和利弊，并确认是否已获用户确认。
-
-#### 3.4 Implementation Plan 文档
-
-把设计变成交付顺序：
-
-- 里程碑
-- 依赖关系
-- 高风险优先项
-- 每个阶段的可验收产出
-- 回滚 / 降级策略
-
-#### 3.5 TDD Plan 文档
-
-把“完成定义”前置：
-
-- 哪些需求需要白盒单元测试
-- 哪些需求需要集成测试
-- 哪些用户流程需要端到端测试
-- 哪些需求需要性能测试或安全测试
-- 红 / 绿 / 重构的第一轮从哪里开始
-- 回归测试如何覆盖高风险路径
-
-要求至少建立一个“需求 ID → 测试方式”的映射表。
-
-补充要求：
-
-- 不要先写实现，再回头“补点测试”。
-- 白盒、性能、安全测试只要与当前版本相关，就应该进入计划，而不是默认跳过。
-
-#### 3.6 Task Breakdown 文档
-
-把计划变成能执行的任务：
-
-- 每个任务都要有 ID
-- 每个任务都要能在半天到一天内完成
-- 每个任务都要关联 requirement / design / test
-- 任务描述必须是动作，不是愿景
-
-#### 3.7 Rules 文档
-
-把默认工程规则沉淀进项目：
-
-- 需求澄清与用户确认规则
-- 编码规范
-- bug 修复规则
-- 测试规范
-- 文档同步规则
-- Definition of Done
-
-规则应该服务项目执行，而不是变成空泛口号。
-
-### Step 4: 建立追踪关系
-
-在初始化结束前，显式检查以下映射已经存在：
+在结束前显式检查：
 
 - `FR-* -> AC-*`
 - `FR-* -> DES-*`
 - `FR-* -> TEST-*`
 - `FR-* / DES-* / TEST-* -> T-*`
 
-如果任何链条断掉，就补到对应文档，而不是把缺口留给后续。
+至少形成一条完整链：
 
-### Step 5: 生成 README.md
+```text
+FR-001 -> DES-001 -> TEST-001 -> T-001
+```
 
-`README.md` 至少包含：
+如果项目已经比较完整，不要只满足“至少一条链”。要尽量把高优先级需求都接入追踪链，而不是停在最小演示状态。
 
-- 项目一句话说明
-- 项目目标
-- 文档导航
-- 规则导航
-- 目录结构
-- 推荐开发流程
-- 快速开始占位
-- 当前状态与下一步
+### Step 5.1: 持续完善循环
 
-### Step 6: 生成 AGENTS.md
+spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、实现变更、测试补强后，都要检查：
 
-`AGENTS.md` 用来固化这个项目的工作规则，至少包含：
+- `docs/01-requirements/README.md` 是否需要补新需求或修正边界
+- `docs/02-design/README.md` 是否需要补新模块、新约定或新的异常链路
+- `docs/04-tdd/README.md` 是否需要补新的测试映射和回归策略
+- `docs/05-tasks/README.md` 是否需要把新发现的工作拆成任务
+- `docs/issues/` 是否需要新增未解决问题、阻塞项、风险或技术债
+- `docs/changes/` 是否需要新增一条需求变更、bugfix 或重构记录
+- `docs/releases/` 是否需要补一条版本说明
+- `docs/archive/` 是否需要归档被替代、已作废或不再生效的文档
+- `README.md`、`AGENTS.md`、`docs/rules/` 是否需要同步
 
-- 先需求、再设计、再实现的顺序
-- 文档边界
-- rules 目录的优先级说明
-- TDD 要求
-- 关联变更同步要求（代码、测试、文档一起更新）
-- Definition of Done
-- 不确定信息写 `[待确认]`，禁止编造
+不要把 spec 当成“初始化时写一次，以后不更新”的静态文档。
 
-### Step 7: 输出初始化报告
+### Step 5.2: 变更记录规则
 
-最终汇报时说明：
+把文档分成两层：
 
-- 创建 / 更新了哪些目录和文件
-- 还有哪些 `[待确认]` 信息
-- 建议开发者先从哪一份文档开始补齐
-- 需求 / 设计 / 实现计划 / 测试计划 / rules 之间如何衔接
+- 当前状态文档：`requirements / design / implementation / tdd / tasks`
+- 历史变更文档：`changes / adr / releases`
+
+默认规则：
+
+- 新需求：更新当前状态文档，并新增 `docs/changes/CR-xxxx-*.md`
+- bugfix：更新受影响的当前状态文档，并新增 `docs/changes/BUG-xxxx-*.md`
+- 架构 / 技术决策变化：更新 design，并新增或补充 `docs/adr/`
+- 版本发布：新增或更新 `docs/releases/vx.y.z.md`
+- 长期未解决的问题、阻塞项或技术债：写入 `docs/issues/`
+- 被替代、废弃或仅保留历史价值的文档：放入 `docs/archive/` 并记录替代关系
+
+不要只改当前状态不留痕，也不要只写变更记录却不更新当前状态。
+
+### Step 6: 脚本和模板的正确位置
+
+`scripts/spec-init.sh` 和 `assets/templates/project/` 只是辅助资源，不是主工作流。
+
+仅在以下情况才优先使用它们：
+
+- 用户明确要一个基础文档目录结构
+- 当前目录几乎为空，先补一个最小文档骨架更高效
+- 宿主环境不方便由 agent 逐文件创建基础目录
+
+即使使用了脚本，也必须继续：
+
+- 读上下文
+- 补内容
+- 写方案对比
+- 更新真实 spec
+
+不能把“脚本跑完”当成任务完成。
+
+## 新手支持要求
+
+如果用户不懂概念或没有说全：
+
+- 不能只抛空模板
+- 必须主动给示例答案
+- 必须主动给范围裁剪建议，但不能只会做范围裁剪
+- 必须主动给常见错误示例
+- 必须主动给关键方案对比
+- 必须在用户继续追问时，能够把最小草稿继续完善成完整需求和完整设计
+
+## 现有项目支持要求
+
+如果用户说：
+
+- “我有一个项目，想补 spec”
+- “我想给现有项目完善 requirements / design”
+- “代码已经有了，但文档没跟上”
+
+你必须：
+
+- 先读项目
+- 先理解现状
+- 再写 spec
+
+不要假设这是“初始化项目”。
 
 ## 输出要求
 
-最终回复时，优先说明：
+最终回复优先说明：
 
-- 初始化到了哪个目录
-- 创建或更新了哪些关键文件
-- 当前推断的项目类型是什么，以及依据是什么
-- 输出语言是什么
-- 已经形成了哪几条 `FR -> DES -> TEST -> T` 追踪链
-- 还有哪些 `[待确认]` 需要用户补充
+- 这次是新项目梳理还是现有项目补文档
+- 读取了哪些现有上下文
+- 创建或更新了哪些 spec 文件
+- 哪些地方是根据现状整理出来的
+- 哪些地方仍然是 `[待确认]`
+- 已形成哪些 `FR -> DES -> TEST -> T` 追踪链
 
 ## 质量要求
 
-- 任何模板都要可直接编辑，而不是只有标题
-- 每份文档都要告诉用户“该写什么”和“不该写什么”
-- 不要生成过度企业化的空话
-- 默认中文；如果用户明确要求英文，再切换语言
-- 结构要轻量，但必须有 traceability：需求 → 设计 → 测试 → 任务
-- `docs/rules/` 必须能约束实现，而不是装饰目录
-- 对关键疑点的确认、根因修复和严格 TDD 要在模板里显式可见
+- 文档要能直接用于后续开发，而不是“占位 markdown”
+- 方案对比要真实可决策，而不是摆样子
+- 不能把实现细节提前写进 requirements
+- 不能把任务清单混进 design
+- 不能把“后面补测试”当 TDD 计划
+- 对已有项目，不能写出和代码现状冲突的 spec
+- 对用户要求“完整设计”的场景，不能只给最小骨架或最小示例后就停止
+- 对新需求、bugfix、发布等场景，必须明确当前状态文档和历史变更文档分别怎么更新
+- 对未解决问题和废弃文档，也必须明确应该进入 `issues/` 还是 `archive/`
 
 ## 参考资源
 
-本 skill 自带以下文件：
+- `references/doc-boundaries.md`: 文档边界
+- `references/example-idea-to-docs.md`: 从想法到 spec 的最小示例
+- `assets/templates/project/`: 可选模板资源
+- `scripts/spec-init.sh`: 可选目录骨架脚本
+- `examples/demo-app/`: 最小示例项目
 
-- `references/doc-boundaries.md`: 解释需求、设计、实现计划、测试计划、任务和规则的边界
-- `references/example-idea-to-docs.md`: 用一个最小例子演示想法如何落到文档
-- `assets/templates/project/`: 项目初始化模板
-- `scripts/spec-init.sh`: 一键生成目录与基础文件
-- `examples/demo-app/`: 生成后的示例项目骨架
-
-使用这个 skill 时，优先复用这些资源，不要从零发明另一套格式。
+优先把这些资源当参考和辅助，不要把它们当最终交付物。

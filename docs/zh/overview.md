@@ -12,6 +12,10 @@
 - 实现计划
 - TDD 计划
 - 任务拆解
+- issue 跟踪
+- 变更记录
+- 发布记录
+- 归档与废弃文档索引
 - 项目规则目录
 - 项目 README
 - 项目级 AGENTS 规则
@@ -44,6 +48,10 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 - `docs/03-implementation/README.md`
 - `docs/04-tdd/README.md`
 - `docs/05-tasks/README.md`
+- `docs/issues/README.md`
+- `docs/changes/README.md`
+- `docs/releases/README.md`
+- `docs/archive/README.md`
 - `docs/rules/`
 
 ## 相关文档

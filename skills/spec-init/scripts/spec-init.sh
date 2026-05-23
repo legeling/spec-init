@@ -259,6 +259,10 @@ mkdir -p \
   "$TARGET_DIR/docs/03-implementation" \
   "$TARGET_DIR/docs/04-tdd" \
   "$TARGET_DIR/docs/05-tasks" \
+  "$TARGET_DIR/docs/issues" \
+  "$TARGET_DIR/docs/changes" \
+  "$TARGET_DIR/docs/releases" \
+  "$TARGET_DIR/docs/archive" \
   "$TARGET_DIR/docs/adr" \
   "$TARGET_DIR/docs/rules" \
   "$TARGET_DIR/src" \
@@ -277,6 +281,13 @@ render_project_template "docs/02-design/README.md.tmpl" "$TARGET_DIR/$DESIGN_DOC
 render_project_template "docs/03-implementation/README.md.tmpl" "$TARGET_DIR/$IMPLEMENTATION_DOC"
 render_project_template "docs/04-tdd/README.md.tmpl" "$TARGET_DIR/$TDD_DOC"
 render_project_template "docs/05-tasks/README.md.tmpl" "$TARGET_DIR/$TASKS_DOC"
+render_project_template "docs/issues/README.md.tmpl" "$TARGET_DIR/docs/issues/README.md"
+render_project_template "docs/changes/README.md.tmpl" "$TARGET_DIR/docs/changes/README.md"
+render_project_template "docs/changes/CR-0001-template.md.tmpl" "$TARGET_DIR/docs/changes/CR-0001-template.md"
+render_project_template "docs/changes/BUG-0001-template.md.tmpl" "$TARGET_DIR/docs/changes/BUG-0001-template.md"
+render_project_template "docs/releases/README.md.tmpl" "$TARGET_DIR/docs/releases/README.md"
+render_project_template "docs/releases/v0.1.0-template.md.tmpl" "$TARGET_DIR/docs/releases/v0.1.0-template.md"
+render_project_template "docs/archive/README.md.tmpl" "$TARGET_DIR/docs/archive/README.md"
 render_project_template "docs/adr/0000-record-template.md.tmpl" "$TARGET_DIR/docs/adr/0000-record-template.md"
 render_project_template "docs/rules/README.md.tmpl" "$TARGET_DIR/$RULES_INDEX_DOC"
 render_project_template "docs/rules/clarification-rules.md.tmpl" "$TARGET_DIR/docs/rules/clarification-rules.md"
@@ -284,6 +295,8 @@ render_project_template "docs/rules/coding-standards.md.tmpl" "$TARGET_DIR/docs/
 render_project_template "docs/rules/testing-standards.md.tmpl" "$TARGET_DIR/docs/rules/testing-standards.md"
 render_project_template "docs/rules/bug-fix-rules.md.tmpl" "$TARGET_DIR/docs/rules/bug-fix-rules.md"
 render_project_template "docs/rules/doc-sync-rules.md.tmpl" "$TARGET_DIR/docs/rules/doc-sync-rules.md"
+render_project_template "docs/rules/change-management-rules.md.tmpl" "$TARGET_DIR/docs/rules/change-management-rules.md"
+render_project_template "docs/rules/issue-management-rules.md.tmpl" "$TARGET_DIR/docs/rules/issue-management-rules.md"
 render_project_template "docs/rules/definition-of-done.md.tmpl" "$TARGET_DIR/docs/rules/definition-of-done.md"
 
 printf '\n%s %s\n' "$(localized_text '已初始化目录：' 'Initialized project scaffold in:')" "$TARGET_DIR"

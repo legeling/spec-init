@@ -14,6 +14,12 @@
 - Important technical trade-offs should be written to `docs/adr/`.
 - When multiple technical options are reasonable, document the trade-offs first and confirm whether the user needs to decide.
 
+## Design-First Conventions
+
+- Before large-scale frontend work starts, `docs/02-design/README.md` must define the supported resolution range, responsive breakpoints, color system, typography scale, component reuse rules, and core interaction states.
+- Before API or database work starts, `docs/02-design/README.md` must define API naming rules, the error model, database naming rules, migration rules, and transaction boundaries.
+- If these conventions do not exist yet, developers must not silently choose based on personal preference. Record them as `[To confirm]` or add an explicit temporary convention.
+
 ## Disallowed Practices
 
 - Using hard-coded fake data to hide real issues

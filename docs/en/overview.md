@@ -10,6 +10,10 @@ It helps projects start with:
 - implementation plan
 - TDD plan
 - task breakdown
+- issues
+- changes
+- releases
+- archive
 - project rules
 - README
 - AGENTS rules
@@ -34,4 +38,8 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 - `docs/03-implementation/README.md`
 - `docs/04-tdd/README.md`
 - `docs/05-tasks/README.md`
+- `docs/issues/README.md`
+- `docs/changes/README.md`
+- `docs/releases/README.md`
+- `docs/archive/README.md`
 - `docs/rules/`

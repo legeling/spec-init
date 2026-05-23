@@ -20,6 +20,15 @@
 
 [Describe the CLI call chain as command parsing -> config resolution -> executor -> output formatting, and mark side-effect boundaries.]
 
+## 3.1 Candidate Options and User Confirmation
+
+| Topic | Option | Advantages | Costs / Risks | Recommendation | Confirmed by user |
+|---|---|---|---|---|---|
+| Output shape | Human-readable text only | Simple to start with | Weak automation integration | Only suitable for purely manual workflows | [yes / no] |
+| Output shape | Text + JSON | Better for both humans and automation | Higher spec-maintenance cost | Better for tools that need to evolve | [yes / no] |
+
+If this section is still unresolved, do not treat the output contract as final.
+
 ## 4. Module Design
 
 | ID | Module | Responsibility | Requirements |
@@ -47,6 +56,41 @@
 
 Record important decisions in `docs/adr/` when appropriate.
 
+## 7.1 CLI Experience and Conventions
+
+- Command naming rules: [command, subcommand, flag, and alias naming style]
+- Argument rules: [required args, defaults, short flags, long flags, mutually exclusive flags]
+- Output rules: [stdout / stderr boundaries, table / text / JSON formats]
+- Exit-code rules: [success, user-input error, dependency error, unknown error]
+- Config rules: [precedence of environment variables, config files, and command flags]
+- Interaction rules: [interactive confirmation, dry-run, verbose, colorless output]
+- Error-message rules: [how failures stay actionable and show the next step]
+
+Notes:
+
+- These conventions should be defined before command implementation starts.
+- If the output protocol or exit-code scheme is not fixed yet, mark it as `[To confirm]` instead of treating default behavior as a standard.
+
+## 7.2 Technology Stack and Delivery Foundation
+
+- Implementation language and framework: [for example Bash / Node CLI / Go CLI / Python CLI]
+- Argument parsing approach: [for example Cobra / Click / argparse / custom]
+- Config parsing approach: [config file format, environment loading strategy]
+- Testing stack: [unit / integration / command E2E]
+- Distribution model: [local script / binary / package manager / container]
+
+Notes:
+
+- This section must explain why these choices fit the tool workflow, not just list technology names.
+- If the output format, distribution model, or parsing approach is not final, document the options and confirmation status.
+
+## 7.3 Architecture Quality Goals
+
+- Maintainability: [how command tree, executors, and output layers stay separated]
+- Performance targets: [startup time, command latency, resource usage]
+- Security targets: [credential handling, command-injection defense, sensitive-output control]
+- Testability: [how white-box, integration, command E2E, and regression testing will work]
+
 ## 8. Requirement Mapping
 
 Explain how the design covers the key requirements:
@@ -73,11 +117,14 @@ Explain how the design covers the key requirements:
 - This document explains how, not why
 - It does not mix in task lists, schedules, or execution details
 - Key risks and trade-offs are explicit
+- Command naming, arguments, output, exit codes, and config-precedence rules are explicit
+- The CLI stack, distribution model, and output contract are explicit
 
 ## 12. Open Questions
 
 - Are interactive confirmation, dry-run, or verbose modes required?
 - Do automation scenarios require JSON output or colorless output?
+- Is there already a team-wide exit-code or log-output convention?
 
 ## What does not belong here
 

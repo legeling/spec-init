@@ -52,6 +52,27 @@
 - Authentication and authorization services
 - Storage, cache, or messaging dependencies
 
+## 8.1 Beginner Fill-In Prompts
+
+If you are not sure how to write this yet, answer these first:
+
+| Question | Why it matters |
+|---|---|
+| What are the first resources, actions, and caller types? | This defines the V1 scope |
+| Is the API mainly used by humans in debug tools or by integrating systems? | This shapes response, errors, and documentation expectations |
+| Are pagination, idempotency, bulk operations, or webhooks required? | This directly affects API scope and acceptance criteria |
+| What auth model and traffic limits apply? | This shapes security and non-functional requirements |
+| Are there audit, compliance, or retention requirements? | This affects write operations and logging boundaries |
+
+## 8.2 Copyable V1 Example
+
+For a common CRUD or platform API, you can start with:
+
+- V1 resources: only 1 to 2 core resources first
+- V1 actions: the most important 2 to 3 create / read / update actions
+- V1 contract: consistent auth, one shared error structure, and a basic pagination decision
+- V2 candidates: bulk endpoints, webhooks, advanced filters, open-platform features, SDKs
+
 ## 9. Requirements Checklist
 
 - Every `FR-*` can be verified on its own
@@ -64,6 +85,17 @@
 - What are the first resources and operations exposed in V1?
 - Are idempotency, pagination, bulk operations, or webhooks required?
 - What authentication model and traffic limits apply to callers?
+- Are there audit, compliance, retention, or sensitive-data handling requirements?
+
+## 10.1 Common Mistakes
+
+Wrong:
+
+- "Create the user table and order table first, then implement `/api/v1/orders/list`."
+
+Better:
+
+- "Callers can query order status and update order-processing results when they have permission."
 
 ## What does not belong here
 

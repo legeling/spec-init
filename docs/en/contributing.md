@@ -6,7 +6,7 @@ Good contributions include:
 - improving template boundaries and traceability
 - adding new project-type examples
 - improving docs and bilingual content
-- fixing bootstrap script issues
+- fixing helper-script, template, or example issues that drift from the skill workflow
 
 Before submitting:
 

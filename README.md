@@ -38,9 +38,9 @@
 
 ## 项目简介
 
-`spec-init` 是一个放在 `skills/` 目录里的项目启动 skill，但它更准确的定位是一套轻量的 SDD（Spec-Driven Development）启动系统。
+`spec-init` 是一个放在 `skills/` 目录里的 agent skill，但它不是“目录初始化脚本”。
 
-它不是“帮你多建几个目录”的脚手架，而是把一个模糊的项目想法先落成一套可执行、可追踪、带规则的工程入口：
+它的真正定位是：让 agent 帮用户做文档驱动开发，把一个模糊想法或一个已有项目，整理成一套可执行、可追踪、带规则的 spec：
 
 - `docs/00-intake/README.md`
 - `docs/01-requirements/README.md`
@@ -48,6 +48,8 @@
 - `docs/03-implementation/README.md`
 - `docs/04-tdd/README.md`
 - `docs/05-tasks/README.md`
+- `docs/changes/README.md`
+- `docs/releases/README.md`
 - `docs/rules/README.md`
 - `README.md`
 - `AGENTS.md`
@@ -88,7 +90,7 @@
 
 ## 这个 skill 会产出什么
 
-运行后，至少会生成或补齐：
+运行时，agent 会根据用户目标和项目现状，创建或更新这些 spec：
 
 ```text
 docs/
@@ -98,22 +100,27 @@ docs/02-design/README.md
 docs/03-implementation/README.md
 docs/04-tdd/README.md
 docs/05-tasks/README.md
+docs/issues/README.md
 docs/rules/README.md
 docs/rules/clarification-rules.md
 docs/rules/coding-standards.md
 docs/rules/bug-fix-rules.md
 docs/rules/testing-standards.md
 docs/rules/doc-sync-rules.md
+docs/rules/change-management-rules.md
+docs/rules/issue-management-rules.md
 docs/rules/definition-of-done.md
+docs/changes/README.md
+docs/releases/README.md
+docs/archive/README.md
 docs/adr/0000-record-template.md
-src/
-tests/
-scripts/
 README.md
 AGENTS.md
 ```
 
-这些不是纯空模板。现在模板里已经包含：
+这些文件不应该是空模板，而应该是 agent 基于当前上下文写出的真实内容。当前 skill 还带有模板和脚本资源，但它们只是辅助，不是结果本身。
+
+agent 产出的内容至少应包含：
 
 - 文档边界提示
 - 自检项
@@ -123,7 +130,15 @@ AGENTS.md
 - 关键疑点必须先问用户的澄清规则
 - 根因修复和回归测试规则
 - 白盒 / 性能 / 安全测试要求
-- 最小完整示例项目
+- 前端项目的分辨率 / 颜色 / 字号 / 组件规范引导
+- 后端项目的 API / 数据库 / migration / 命名约定引导
+- 面向新手的项目类型决策向导与必问问题清单
+- 可直接参考的示例答案、范围裁剪助手、常见错误示例
+- 现有项目补文档时的现状归纳
+- 对关键缺失信息的方案、选择、对比和建议
+- 新需求、bugfix、版本发布时的变更记录入口
+- 完整需求、完整设计、持续完善 spec 的工作闭环
+- issue 跟踪、文档归档、废弃文档管理
 
 ## 结构设计
 
@@ -143,6 +158,14 @@ docs/
 |   `-- README.md
 |-- 05-tasks/
 |   `-- README.md
+|-- issues/
+|   `-- README.md
+|-- changes/
+|   `-- README.md
+|-- releases/
+|   `-- README.md
+|-- archive/
+|   `-- README.md
 |-- adr/
 |   `-- 0000-record-template.md
 `-- rules/
@@ -152,6 +175,8 @@ docs/
     |-- bug-fix-rules.md
     |-- testing-standards.md
     |-- doc-sync-rules.md
+    |-- change-management-rules.md
+    |-- issue-management-rules.md
     `-- definition-of-done.md
 ```
 
@@ -160,6 +185,8 @@ docs/
 - 更符合 SDD 的阶段语义
 - 后续更容易在每个阶段扩展子文档
 - `rules/` 可以把项目级规范内置进初始化结果
+- `changes/` 和 `releases/` 可以把历史变化留痕下来
+- `issues/` 和 `archive/` 可以让未解决问题和废弃文档都有去处
 - 新成员更容易理解“先看哪一层，再做哪一层”
 
 ## 支持的宿主
@@ -205,9 +232,10 @@ $spec-init my-cli --type=cli
 
 也可以自然语言触发：
 
-- “帮我初始化一个新项目骨架”
-- “先帮我建 SDD 文档和开发规则”
-- “我想做一个 API 项目，先别写代码，先把文档骨架建好”
+- “帮我把这个想法整理成 requirements、design 和 TDD plan”
+- “这是一个现成项目，帮我补 spec，先读代码再写文档”
+- “我想做一个 API 项目，先别写代码，先把 spec 理清”
+- “给我分析一下现有仓库还缺哪些文档和规则”
 
 ## 项目类型
 
@@ -223,7 +251,7 @@ $spec-init my-cli --type=cli
 
 ## 输出语言
 
-初始化脚本现在支持：
+辅助模板资源支持：
 
 - `--lang zh`
 - `--lang en`
@@ -328,21 +356,19 @@ skills/spec-init/
 
 ## 当前状态
 
-- 已有可运行的初始化脚本
-- 已有 Bash smoke tests 和 GitHub Actions CI
-- 已支持目录化 SDD 结构输出
-- 已支持 `--lang zh|en`
-- 已有 `web` / `api` / `cli` 三类差异化模板
+- 已有 agent 驱动的 spec 工作流说明
+- 已有中英文模板、参考文档和示例资源
+- 已支持 `web` / `api` / `cli` 三类差异化 spec 提示
 - 已内置 `docs/rules/` 规则目录
 - 已有最小完整示例项目
 - 已有中英文 README
-- 已有真实封面图
+- 仍保留 Bash 脚本作为可选骨架辅助，不应被当成主能力
 
 ## 下一步计划
 
-- 为 `service` / `library` 增加差异化模板
-- 增加更多示例，例如 `cli-tool`、`api-service`
-- 继续增强宿主适配与发布体验
+- 为 `service` / `library` 增加差异化 spec 工作流与示例
+- 强化现有项目补 spec 的案例
+- 继续减少“空模板感”，增强 agent 直接写内容的质量
 
 ## 许可说明
 

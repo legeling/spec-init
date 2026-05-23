@@ -12,9 +12,13 @@ Clarify requirements, design, implementation order, and tests before coding to r
 4. `docs/03-implementation/README.md`
 5. `docs/04-tdd/README.md`
 6. `docs/05-tasks/README.md`
-7. `docs/rules/README.md`
-8. Implement code
-9. Update docs, tests, and README together
+7. `docs/issues/README.md`
+8. `docs/changes/README.md`
+9. `docs/releases/README.md`
+10. `docs/archive/README.md`
+11. `docs/rules/README.md`
+12. Implement code
+13. Update docs, tests, change records, and README together
 
 ## Document Boundaries
 
@@ -35,6 +39,10 @@ Clarify requirements, design, implementation order, and tests before coding to r
 - New features must update requirements, design, TDD, and tasks together.
 - API, data shape, and config changes must update design docs and tests together.
 - Bug fixes must include regression tests.
+- New requirements, bug fixes, refactors, or workflow changes should also update `docs/changes/`.
+- Releases or externally visible delivery changes should update `docs/releases/`.
+- Unresolved issues, risks, and technical debt should update `docs/issues/`.
+- Replaced or retired documents should be moved into `docs/archive/`.
 - Any structure change must update the project tree in `README.md`.
 - Record key technical trade-offs in `docs/adr/`.
 - Every task should reference `FR-*`, `DES-*`, and `TEST-*` IDs.
