@@ -3,6 +3,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPT_PATH="$ROOT_DIR/skills/spec-init/scripts/spec-init.sh"
+INSTALLER_PATH="$ROOT_DIR/install.sh"
+NODE_INSTALLER_PATH="$ROOT_DIR/bin/spec-init.js"
 TMP_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/spec-init-test.XXXXXX")"
 
 cleanup() {
@@ -40,6 +42,40 @@ assert_equals() {
 trap cleanup EXIT
 
 bash -n "$SCRIPT_PATH"
+bash -n "$INSTALLER_PATH"
+node --check "$NODE_INSTALLER_PATH"
+
+project_install_root="$TMP_ROOT/project-install"
+mkdir -p "$project_install_root"
+
+(
+  cd "$project_install_root"
+  node "$NODE_INSTALLER_PATH" >"$TMP_ROOT/node-install.out"
+)
+
+assert_file_exists "$project_install_root/.agents/skills/spec-init/SKILL.md"
+assert_file_exists "$project_install_root/.agents/skills/spec-init/scripts/spec-init.sh"
+assert_contains "$TMP_ROOT/node-install.out" 'Installed spec-init to:'
+assert_contains "$TMP_ROOT/node-install.out" '.agents/skills/spec-init'
+
+custom_install_dir="$TMP_ROOT/custom-install/spec-init"
+node "$NODE_INSTALLER_PATH" --dir "$custom_install_dir" >"$TMP_ROOT/node-custom.out"
+
+assert_file_exists "$custom_install_dir/SKILL.md"
+assert_file_exists "$custom_install_dir/scripts/spec-init.sh"
+
+if node "$NODE_INSTALLER_PATH" --host unknown >"$TMP_ROOT/node-invalid.out" 2>"$TMP_ROOT/node-invalid.err"; then
+  fail 'expected unsupported installer host to fail'
+fi
+
+assert_contains "$TMP_ROOT/node-invalid.err" 'unsupported host: unknown'
+
+bash_install_dir="$TMP_ROOT/bash-install/spec-init"
+SPEC_INIT_INSTALL_SOURCE="$ROOT_DIR" bash "$INSTALLER_PATH" --dir "$bash_install_dir" >"$TMP_ROOT/bash-install.out"
+
+assert_file_exists "$bash_install_dir/SKILL.md"
+assert_file_exists "$bash_install_dir/scripts/spec-init.sh"
+assert_contains "$TMP_ROOT/bash-install.out" 'Installed spec-init to:'
 
 explicit_dir="$TMP_ROOT/cli-tool"
 bash "$SCRIPT_PATH" "$explicit_dir" --name "Demo CLI" --type cli >"$TMP_ROOT/explicit.out"

@@ -1,0 +1,29 @@
+{
+  "name": "spec-init",
+  "version": "0.1.0",
+  "description": "Install the spec-init agent skill into a project or supported host directories.",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/legeling/spec-init.git"
+  },
+  "bin": {
+    "spec-init": "bin/spec-init.js"
+  },
+  "files": [
+    "bin/",
+    "install.sh",
+    "skills/spec-init/",
+    "LICENSE",
+    "README.md",
+    "README.en.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "lint": "node --check bin/spec-init.js && bash -n install.sh skills/spec-init/scripts/spec-init.sh tests/spec-init.sh",
+    "test": "bash tests/spec-init.sh"
+  }
+}

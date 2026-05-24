@@ -3,7 +3,7 @@
 # spec-init
 
 <p>
-  <strong>An SDD-oriented project kickoff skill: create documentation structure, engineering rules, and testing constraints before implementation starts.</strong>
+  <strong>An agent skill for project documentation and spec workflow: continuously organizing requirements, design, TDD, changes, issues, and archive docs.</strong>
 </p>
 
 <p>
@@ -24,8 +24,8 @@
 
 <table>
   <tr>
-    <td><strong>Stage-based SDD</strong><br/>A directory-first flow from intake to executable tasks.</td>
-    <td><strong>Built-in Rules</strong><br/>Clarification, bug-fix, and TDD guardrails ship with the scaffold.</td>
+    <td><strong>Project Docs</strong><br/>A full documentation flow from intake and requirements to TDD and executable tasks.</td>
+    <td><strong>Built-in Rules</strong><br/>Clarification, bug-fix, change-management, and issue-tracking rules ship with the skill.</td>
     <td><strong>Traceability</strong><br/>A project starts with an explicit `FR -> DES -> TEST -> T` chain.</td>
   </tr>
 </table>
@@ -48,8 +48,11 @@ Its real role is to help an agent turn either a vague idea or an existing projec
 - `docs/03-implementation/README.md`
 - `docs/04-tdd/README.md`
 - `docs/05-tasks/README.md`
+- `docs/issues/README.md`
 - `docs/changes/README.md`
 - `docs/releases/README.md`
+- `docs/archive/README.md`
+- `docs/adr/0000-record-template.md`
 - `docs/rules/README.md`
 - `README.md`
 - `AGENTS.md`
@@ -87,6 +90,17 @@ Common outcomes:
 - rules only live in chat or PR comments instead of the repo itself
 
 This skill exists to solve those problems at project start.
+
+## Best for
+
+- New projects: turn one fuzzy idea into intake, requirements, design, TDD, and tasks
+- Existing projects: read real code first, then fill missing specs
+- New requirements: update current-state docs and `docs/changes/`
+- Bug fixes: record symptoms, root cause, fix approach, regression tests, and impact scope
+- Releases: summarize additions, fixes, and breaking changes in `docs/releases/`
+- Long-term maintenance: keep blockers, debt, and known risks in `docs/issues/`, and retired docs in `docs/archive/`
+
+This repository is intended for Agent Skills workflows that need ongoing project documentation, requirements, design docs, TDD planning, change tracking, and issue management.
 
 ## What it produces
 
@@ -140,6 +154,12 @@ The resulting content should include:
 - support for fuller requirements, fuller design, and ongoing spec refinement
 - issue tracking, document retirement, and archive support
 
+More concretely, it manages three documentation layers:
+
+- current-state docs: `intake / requirements / design / implementation / tdd / tasks`
+- historical-change docs: `changes / releases / adr`
+- long-term maintenance docs: `issues / archive / rules`
+
 ## Structure
 
 The generated SDD documents are now organized by stage directories instead of being flattened in the root `docs/` directory:
@@ -189,32 +209,53 @@ Why this structure:
 - `issues/` and `archive/` give unresolved problems and retired docs a clear home
 - newcomers can see what to read first and what to do next
 
-## Supported hosts
+## Installation targets
 
-| Host | Recommended install path | Typical invocation | Notes |
+| Target | Default path | Typical invocation | Notes |
 |---|---|---|---|
-| Claude Code | `~/.claude/skills/spec-init` | `/spec-init` | supports richer frontmatter and dynamic injection |
-| Codex | `.agents/skills/spec-init` | `$spec-init` or skill picker | compatible with the Agent Skills directory layout |
-| OpenCode | `~/.config/opencode/skills/spec-init` | `/spec-init` or auto-load | also compatible with `.claude/skills` and `.agents/skills` |
+| Current project (default) | `.agents/skills/spec-init` | `$spec-init` or skill picker | best when the skill should live with the repository; also works for project-local OpenCode setups |
+| Claude Code | `~/.claude/skills/spec-init` | `/spec-init` | suitable for a global Claude Code install |
+| OpenCode | `~/.config/opencode/skills/spec-init` | `/spec-init` or auto-load | suitable for a global OpenCode install |
 
 ## Installation
 
-### Claude Code
+The default recommendation is to install directly into the current project.
+
+Run this from the project root:
 
 ```bash
-cp -R skills/spec-init ~/.claude/skills/spec-init
+npx --yes github:legeling/spec-init
 ```
 
-### Codex
+Or:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash
+```
+
+By default this installs to `.agents/skills/spec-init` in the current directory.
+
+If you want the global Claude Code or OpenCode location instead:
+
+```bash
+npx --yes github:legeling/spec-init --host claude
+npx --yes github:legeling/spec-init --host opencode
+
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host claude
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host opencode
+```
+
+If you want a custom location:
+
+```bash
+npx --yes github:legeling/spec-init --dir ./tools/skills/spec-init
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --dir ./tools/skills/spec-init
+```
+
+Manual copying still works, but it is now just a fallback:
 
 ```bash
 cp -R skills/spec-init /path/to/repo/.agents/skills/spec-init
-```
-
-### OpenCode
-
-```bash
-cp -R skills/spec-init ~/.config/opencode/skills/spec-init
 ```
 
 ## Usage examples
@@ -280,6 +321,8 @@ This project no longer generates only documents. It also generates project-level
 - `docs/rules/bug-fix-rules.md`
 - `docs/rules/testing-standards.md`
 - `docs/rules/doc-sync-rules.md`
+- `docs/rules/change-management-rules.md`
+- `docs/rules/issue-management-rules.md`
 - `docs/rules/definition-of-done.md`
 
 `AGENTS.md` defines execution order for agents, while `docs/rules/` keeps those rules as in-repo engineering assets.
@@ -321,6 +364,7 @@ It shows:
 - how design maps to requirements
 - how the TDD plan maps to requirements
 - how the task breakdown becomes executable work
+- how changes, releases, issues, and archive docs support long-term maintenance
 - how `rules/` becomes part of the generated project structure
 
 ## Repository layout
@@ -353,22 +397,6 @@ skills/spec-init/
 `-- examples/
     `-- demo-app/
 ```
-
-## Status
-
-- agent-driven spec workflow guidance is in place
-- bilingual templates, references, and example resources are in place
-- differentiated spec prompts exist for `web` / `api` / `cli`
-- built-in `docs/rules/` rule directory is in place
-- minimal complete example project is included
-- bilingual README is included
-- the Bash scaffold script remains as an optional helper, not the primary product capability
-
-## Next steps
-
-- add stronger spec flows and examples for `service` / `library`
-- strengthen existing-project spec completion scenarios
-- further reduce the “empty template” feeling and improve direct agent-authored content
 
 ## License
 

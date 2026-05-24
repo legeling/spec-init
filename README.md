@@ -3,7 +3,7 @@
 # spec-init
 
 <p>
-  <strong>一个偏向 SDD 的项目启动 skill：先落文档结构、开发规则和测试约束，再进入实现。</strong>
+  <strong>一个面向项目文档与 spec workflow 的 agent skill：用于持续整理 requirements、design、TDD、changes、issues 和 archive。</strong>
 </p>
 
 <p>
@@ -24,8 +24,8 @@
 
 <table>
   <tr>
-    <td><strong>Stage-based SDD</strong><br/>从 intake 到 tasks 的目录化文档流</td>
-    <td><strong>Built-in Rules</strong><br/>澄清、设计、修 bug、TDD 规则直接进项目</td>
+    <td><strong>Project Docs</strong><br/>从 intake、requirements、design 到 TDD、tasks 的完整项目文档流</td>
+    <td><strong>Built-in Rules</strong><br/>澄清、设计、修 bug、变更治理、问题跟踪规则直接进项目</td>
     <td><strong>Traceability</strong><br/>从 `FR` 到 `T` 的可回溯工作链</td>
   </tr>
 </table>
@@ -48,8 +48,11 @@
 - `docs/03-implementation/README.md`
 - `docs/04-tdd/README.md`
 - `docs/05-tasks/README.md`
+- `docs/issues/README.md`
 - `docs/changes/README.md`
 - `docs/releases/README.md`
+- `docs/archive/README.md`
+- `docs/adr/0000-record-template.md`
 - `docs/rules/README.md`
 - `README.md`
 - `AGENTS.md`
@@ -87,6 +90,17 @@
 - 规则只存在聊天记录里，没有沉淀到项目内
 
 这个 skill 的定位，就是把这些坑在项目启动阶段前置解决。
+
+## 适用场景
+
+- 新项目：把一句模糊想法整理成 intake、requirements、design、TDD、tasks
+- 现有项目：先读代码和现有文档，再补齐缺失的 spec
+- 新需求引入：同时更新当前状态文档和 `docs/changes/`
+- bugfix：记录症状、根因、修复方案、回归测试和影响范围
+- 版本发布：把本次新增、修复、破坏性变化写进 `docs/releases/`
+- 长期维护：把阻塞项、技术债、已知风险放进 `docs/issues/`，把废弃文档放进 `docs/archive/`
+
+这个仓库适合需要维护项目文档、需求文档、设计文档、TDD 计划、变更记录和问题跟踪的 Agent Skills 工作流。
 
 ## 这个 skill 会产出什么
 
@@ -140,6 +154,12 @@ agent 产出的内容至少应包含：
 - 完整需求、完整设计、持续完善 spec 的工作闭环
 - issue 跟踪、文档归档、废弃文档管理
 
+更具体地说，它覆盖三层文档：
+
+- 当前状态文档：`intake / requirements / design / implementation / tdd / tasks`
+- 历史变化文档：`changes / releases / adr`
+- 长期维护文档：`issues / archive / rules`
+
 ## 结构设计
 
 这个 skill 现在不再把 SDD 文档直接平铺在 `docs/` 根目录，而是按阶段目录组织：
@@ -189,32 +209,53 @@ docs/
 - `issues/` 和 `archive/` 可以让未解决问题和废弃文档都有去处
 - 新成员更容易理解“先看哪一层，再做哪一层”
 
-## 支持的宿主
+## 支持的安装目标
 
-| 宿主 | 推荐安装位置 | 显式调用方式 | 说明 |
+| 目标 | 默认路径 | 显式调用方式 | 说明 |
 |---|---|---|---|
-| Claude Code | `~/.claude/skills/spec-init` | `/spec-init` | 支持更丰富的 frontmatter 和动态注入 |
-| Codex | `.agents/skills/spec-init` | `$spec-init` 或技能选择器 | 兼容 Agent Skills 目录结构 |
-| OpenCode | `~/.config/opencode/skills/spec-init` | `/spec-init` 或自动加载 | 同时兼容 `.claude/skills` 和 `.agents/skills` |
+| 当前项目（默认） | `.agents/skills/spec-init` | `$spec-init` 或技能选择器 | 最适合直接随仓库一起管理，也兼容 OpenCode 的项目内技能目录 |
+| Claude Code | `~/.claude/skills/spec-init` | `/spec-init` | 适合全局安装到 Claude Code |
+| OpenCode | `~/.config/opencode/skills/spec-init` | `/spec-init` 或自动加载 | 适合全局安装到 OpenCode |
 
 ## 安装
 
-### Claude Code
+推荐默认直接装到当前项目根目录。
+
+在你的项目根目录执行：
 
 ```bash
-cp -R skills/spec-init ~/.claude/skills/spec-init
+npx --yes github:legeling/spec-init
 ```
 
-### Codex
+或者：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash
+```
+
+默认会安装到当前目录下的 `.agents/skills/spec-init`。
+
+如果你想直接安装到 Claude Code 或 OpenCode 的全局技能目录：
+
+```bash
+npx --yes github:legeling/spec-init --host claude
+npx --yes github:legeling/spec-init --host opencode
+
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host claude
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host opencode
+```
+
+如果你想安装到自定义目录：
+
+```bash
+npx --yes github:legeling/spec-init --dir ./tools/skills/spec-init
+curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --dir ./tools/skills/spec-init
+```
+
+仍然可以手动复制目录，但它现在只是备用方式：
 
 ```bash
 cp -R skills/spec-init /path/to/repo/.agents/skills/spec-init
-```
-
-### OpenCode
-
-```bash
-cp -R skills/spec-init ~/.config/opencode/skills/spec-init
 ```
 
 ## 使用示例
@@ -280,6 +321,8 @@ $spec-init my-cli --type=cli
 - `docs/rules/bug-fix-rules.md`
 - `docs/rules/testing-standards.md`
 - `docs/rules/doc-sync-rules.md`
+- `docs/rules/change-management-rules.md`
+- `docs/rules/issue-management-rules.md`
 - `docs/rules/definition-of-done.md`
 
 `AGENTS.md` 负责把规则固化为 agent 执行顺序，`docs/rules/` 负责把规则沉淀为项目内文档资产。
@@ -321,6 +364,7 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 - design 怎么承接 requirements
 - TDD plan 怎么映射需求
 - task breakdown 怎么落成任务
+- changes / releases / issues / archive 怎么分别承接历史变化和长期维护
 - rules 怎么作为项目内约束沉淀下来
 
 ## 仓库结构
@@ -353,31 +397,3 @@ skills/spec-init/
 `-- examples/
     `-- demo-app/
 ```
-
-## 当前状态
-
-- 已有 agent 驱动的 spec 工作流说明
-- 已有中英文模板、参考文档和示例资源
-- 已支持 `web` / `api` / `cli` 三类差异化 spec 提示
-- 已内置 `docs/rules/` 规则目录
-- 已有最小完整示例项目
-- 已有中英文 README
-- 仍保留 Bash 脚本作为可选骨架辅助，不应被当成主能力
-
-## 下一步计划
-
-- 为 `service` / `library` 增加差异化 spec 工作流与示例
-- 强化现有项目补 spec 的案例
-- 继续减少“空模板感”，增强 agent 直接写内容的质量
-
-## 许可说明
-
-当前仓库采用 `PolyForm Noncommercial 1.0.0`。
-
-这意味着：
-
-- 允许学习、研究、个人项目和非商用使用
-- 禁止商业用途
-- 分发时必须附带许可证文本或对应链接
-
-完整条款见仓库根目录 `LICENSE`。

@@ -14,8 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify bash syntax
-        run: bash -n skills/spec-init/scripts/spec-init.sh tests/spec-init.sh
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run lint checks
+        run: npm run lint
 
       - name: Run smoke tests
-        run: bash tests/spec-init.sh
+        run: npm test
