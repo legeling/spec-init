@@ -1,7 +1,7 @@
 # ADR-0000: [决策标题]
 
 - Status: Proposed
-- Date: 2026-04-29
+- Date: 2026-05-26
 
 ## Context
 

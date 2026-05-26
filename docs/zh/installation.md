@@ -54,5 +54,5 @@ cp -R skills/spec-init /path/to/repo/.agents/skills/spec-init
 
 或者直接询问：
 
-- “帮我把这个想法整理成 requirements、design 和 TDD plan”
+- “帮我把这个想法整理成 requirements、design 和 verification plan”
 - “这是一个现成项目，帮我补 spec，先读代码再写文档”

@@ -1,57 +1,74 @@
-# Demo App
+# demo-app
 
 > 项目类型：web
 >
-> 初始化日期：2026-05-20
+> 初始化日期：2026-05-26
 
 ## 项目简介
 
-Demo App 展示一个由 agent 驱动的文档开发流程：先理解项目目标或现有代码，再整理 intake、requirements、design、tdd、tasks 和工程规则，而不是只创建模板。
+[一句话说明这个项目帮助谁，用什么方式解决什么问题]
 
 ## 项目目标
 
-- 展示 spec-init skill 如何帮助用户把想法或现有项目整理成 spec
-- 演示需求、设计、测试、任务和项目规则之间的追踪关系
-- 展示 agent 如何在信息不足时给出方案、对比、建议和待确认项
+- [目标 1]
+- [目标 2]
+- [目标 3]
 
 ## 开发方式
 
-本项目采用 Spec-Driven Development (SDD) + Test-Driven Development (TDD)。
+本项目采用 Spec-Driven Development (SDD) + Verification-Driven Delivery。
 
 推荐顺序：
 
-1. 填写 `docs/00-intake/README.md`
-2. 明确 `docs/01-requirements/README.md`
-3. 输出 `docs/02-design/README.md`
-4. 拆分 `docs/03-implementation/README.md`
-5. 制定 `docs/04-tdd/README.md`
-6. 生成 `docs/05-tasks/README.md`
-7. 阅读 `docs/rules/README.md`
-8. 开始编码，并同步更新测试和文档
+1. 填写 `docs/workflow/00-intake/README.md`
+2. 明确 `docs/workflow/01-requirements/README.md`
+3. 输出 `docs/workflow/02-design/README.md`
+4. 沉淀 `docs/knowledge/` 中的长期真相
+5. 拆分 `docs/workflow/03-implementation/README.md`
+6. 制定 `docs/workflow/04-verification/README.md`
+7. 生成 `docs/workflow/05-tasks/README.md`
+8. 为本轮工作创建 `docs/changes/active/<change-key>/`
+9. 阅读 `docs/rules/README.md`
+10. 开始编码，并同步更新测试和文档
 
 ## 文档导航
 
-- `docs/00-intake/README.md`: 项目背景、用户、目标、非目标
-- `docs/01-requirements/README.md`: 需求定义，只写 what / why
-- `docs/02-design/README.md`: 技术设计，只写 how
-- `docs/03-implementation/README.md`: 里程碑、顺序、依赖
-- `docs/04-tdd/README.md`: 测试策略与需求-测试映射
-- `docs/05-tasks/README.md`: 可执行任务清单
-- `docs/issues/README.md`: 未解决问题、阻塞项、风险与技术债
-- `docs/changes/README.md`: 新需求、bugfix、重构记录
+- `docs/workflow/00-intake/README.md`: 项目背景、用户、目标、非目标
+- `docs/workflow/01-requirements/README.md`: 当前交付需求，只写 what / why
+- `docs/workflow/02-design/README.md`: 当前阶段设计，只写 how
+- `docs/workflow/03-implementation/README.md`: 里程碑、顺序、依赖
+- `docs/workflow/04-verification/README.md`: 验证策略与需求-测试映射
+- `docs/workflow/05-tasks/README.md`: 可执行任务清单
+- `docs/knowledge/context/README.md`: 术语、角色、实体和业务边界
+- `docs/knowledge/structure/README.md`: 模块边界、系统结构、集成关系
+- `docs/knowledge/behavior/README.md`: 核心流程、状态流转、规则
+- `docs/knowledge/reference/README.md`: 样例、协议、schema、素材与固定参考
+- `docs/issues/README.md`: 未解决问题、阻塞项、风险和技术债
+- `docs/changes/README.md`: 变更层总览与归档规则
+- `docs/changes/active/`: 当前进行中的 change 工作区
 - `docs/releases/README.md`: 版本发布记录
 - `docs/archive/README.md`: 归档和废弃文档索引
+- `docs/adr/README.md`: 决策记录索引
 - `docs/rules/README.md`: 编码、测试、文档同步和完成定义规则
-- `docs/adr/`: 关键架构决策记录
+- `docs/rules/document-routing-rules.md`: 文档语义到目录路径的映射规则
+- `docs/rules/change-management-rules.md`: 变更记录与发布规则
+- `docs/rules/issue-management-rules.md`: issue 跟踪与文档归档规则
+- `docs/rules/clarification-rules.md`: 需求澄清与决策确认规则
+- `docs/rules/bug-fix-rules.md`: bug 定位、根因修复与回归规则
+- `spec-init.topology.yml`: 项目当前采用的文档拓扑与默认路由
 
 ## 追踪关系
 
-本示例至少包含一条完整追踪链：
+本项目要求至少存在以下追踪链：
 
-- `FR-001`: agent 能把模糊需求整理成结构化 spec
-- `DES-001`: 文档工作流负责把 intake、requirements、design、tdd 和 tasks 串起来
-- `TEST-001`: 能验证 spec 是否形成完整追踪链与关键待确认项
-- `T-001`: 先补齐第一条 `FR -> DES -> TEST -> T` 链路
+- `FR-*` 定义需求
+- `DES-*` 定义如何满足需求
+- `TEST-*` 定义如何验证需求
+- `T-*` 定义实际执行任务
+
+推荐在开始实现前，先确认至少一条完整链路：
+
+`FR-001 -> DES-001 -> TEST-001 -> T-001`
 
 ## 目录结构
 
@@ -59,31 +76,52 @@ Demo App 展示一个由 agent 驱动的文档开发流程：先理解项目目�
 .
 |-- AGENTS.md
 |-- README.md
+|-- spec-init.topology.yml
 |-- docs
-|   |-- 00-intake
-|   |   `-- README.md
-|   |-- 01-requirements
-|   |   `-- README.md
-|   |-- 02-design
-|   |   `-- README.md
-|   |-- 03-implementation
-|   |   `-- README.md
-|   |-- 04-tdd
-|   |   `-- README.md
-|   |-- 05-tasks
-|   |   `-- README.md
+|   |-- workflow
+|   |   |-- 00-intake
+|   |   |   `-- README.md
+|   |   |-- 01-requirements
+|   |   |   `-- README.md
+|   |   |-- 02-design
+|   |   |   `-- README.md
+|   |   |-- 03-implementation
+|   |   |   `-- README.md
+|   |   |-- 04-verification
+|   |   |   `-- README.md
+|   |   `-- 05-tasks
+|   |       `-- README.md
+|   |-- knowledge
+|   |   |-- context
+|   |   |   `-- README.md
+|   |   |-- structure
+|   |   |   `-- README.md
+|   |   |-- behavior
+|   |   |   `-- README.md
+|   |   `-- reference
+|   |       `-- README.md
 |   |-- issues
 |   |   `-- README.md
 |   |-- changes
 |   |   |-- README.md
-|   |   |-- BUG-0001-template.md
-|   |   `-- CR-0001-template.md
+|   |   |-- active
+|   |   |   `-- CHG-0001-template
+|   |   |       |-- overview.md
+|   |   |       |-- design.md
+|   |   |       |-- verification.md
+|   |   |       |-- tasks.md
+|   |   |       `-- impact.md
+|   |   |-- completed
+|   |   |   `-- README.md
+|   |   `-- legacy
+|   |       `-- README.md
 |   |-- releases
 |   |   |-- README.md
 |   |   `-- v0.1.0-template.md
 |   |-- archive
 |   |   `-- README.md
 |   |-- adr
+|   |   |-- README.md
 |   |   `-- 0000-record-template.md
 |   `-- rules
 |       |-- README.md
@@ -94,6 +132,7 @@ Demo App 展示一个由 agent 驱动的文档开发流程：先理解项目目�
 |       |-- doc-sync-rules.md
 |       |-- change-management-rules.md
 |       |-- issue-management-rules.md
+|       |-- document-routing-rules.md
 |       `-- definition-of-done.md
 |-- scripts
 |   `-- .gitkeep
@@ -123,15 +162,16 @@ Demo App 展示一个由 agent 驱动的文档开发流程：先理解项目目�
 
 ## 当前状态
 
-- 已完成：目录化 SDD 文档结构、规则目录、示例文档
-- 已完成：最小追踪链示例
-- 已知风险：`service` / `library` 场景的 agent 指导仍不够细
+- [当前进度]
+- [已完成]
+- [已知风险]
 
 ## 下一步
 
-1. 完成 `docs/00-intake/README.md` 中的待确认项
+1. 完成 `docs/workflow/00-intake/README.md` 中的待确认项
 2. 把关键目标转换成 `FR-*` / `NFR-*` / `AC-*`
-3. 在 `docs/02-design/README.md` 中明确第一版技术方案
-4. 在 `docs/04-tdd/README.md` 中定义首批红灯测试
-5. 当引入新需求或 bugfix 时，同步记录到 `docs/changes/`
-6. 当有未解决问题或废弃文档时，同步更新 `docs/issues/` 和 `docs/archive/`
+3. 在 `docs/workflow/02-design/README.md` 中明确当前阶段设计与约定
+4. 在 `docs/knowledge/` 中补齐长期稳定真相
+5. 在 `docs/workflow/04-verification/README.md` 中定义首批红灯测试
+6. 当引入新需求或 bugfix 时，把本轮工作拆进 `docs/changes/active/<change-key>/`
+7. 当出现未解决问题或废弃文档时，维护 `docs/issues/` 和 `docs/archive/`

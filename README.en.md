@@ -3,7 +3,7 @@
 # spec-init
 
 <p>
-  <strong>An agent skill for project documentation and spec workflow: continuously organizing requirements, design, TDD, changes, issues, and archive docs.</strong>
+  <strong>An agent skill for project documentation and spec workflow: continuously organizing workflow, knowledge, changes, issues, and archive docs.</strong>
 </p>
 
 <p>
@@ -18,13 +18,13 @@
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-supported-7C3AED">
   <img alt="Codex" src="https://img.shields.io/badge/Codex-supported-059669">
   <img alt="OpenCode" src="https://img.shields.io/badge/OpenCode-supported-2563EB">
-  <img alt="Workflow" src="https://img.shields.io/badge/workflow-SDD%20%2B%20TDD-0F766E">
+  <img alt="Workflow" src="https://img.shields.io/badge/workflow-SDD%20%2B%20Topology-0F766E">
   <img alt="Docs" src="https://img.shields.io/badge/docs-ZH%20%7C%20EN-E11D48">
 </p>
 
 <table>
   <tr>
-    <td><strong>Project Docs</strong><br/>A full documentation flow from intake and requirements to TDD and executable tasks.</td>
+    <td><strong>Project Docs</strong><br/>A full documentation flow from intake and requirements to verification and executable tasks.</td>
     <td><strong>Built-in Rules</strong><br/>Clarification, bug-fix, change-management, and issue-tracking rules ship with the skill.</td>
     <td><strong>Traceability</strong><br/>A project starts with an explicit `FR -> DES -> TEST -> T` chain.</td>
   </tr>
@@ -40,18 +40,24 @@
 
 `spec-init` is an agent skill stored in `skills/`, but it is not just a directory bootstrap script.
 
-Its real role is to help an agent turn either a vague idea or an existing project into an executable, traceable, rule-aware spec set:
+Its real role is to help an agent turn either a vague idea or an existing project into an executable, traceable, rule-aware, topology-aware spec set:
 
-- `docs/00-intake/README.md`
-- `docs/01-requirements/README.md`
-- `docs/02-design/README.md`
-- `docs/03-implementation/README.md`
-- `docs/04-tdd/README.md`
-- `docs/05-tasks/README.md`
+- `docs/workflow/00-intake/README.md`
+- `docs/workflow/01-requirements/README.md`
+- `docs/workflow/02-design/README.md`
+- `docs/knowledge/context/README.md`
+- `docs/knowledge/structure/README.md`
+- `docs/knowledge/behavior/README.md`
+- `docs/knowledge/reference/README.md`
+- `docs/workflow/03-implementation/README.md`
+- `docs/workflow/04-verification/README.md`
+- `docs/workflow/05-tasks/README.md`
 - `docs/issues/README.md`
 - `docs/changes/README.md`
 - `docs/releases/README.md`
 - `docs/archive/README.md`
+- `spec-init.topology.yml`
+- `docs/adr/README.md`
 - `docs/adr/0000-record-template.md`
 - `docs/rules/README.md`
 - `README.md`
@@ -59,7 +65,7 @@ Its real role is to help an agent turn either a vague idea or an existing projec
 
 Core goals:
 
-- separate requirements, design, implementation planning, TDD planning, and task breakdown
+- separate workflow, long-lived knowledge, change workspaces, and project records
 - turn document-driven development into the default workflow
 - define boundaries, validation, and task relationships before coding
 - maintain a full traceability chain: `FR -> DES -> TEST -> T`
@@ -67,7 +73,7 @@ Core goals:
 - require user clarification before making material decisions
 - require design docs to include stack, architecture, trade-offs, and quality goals
 - require root-cause analysis for bug fixes instead of guess-based changes
-- require strict TDD with relevant white-box, performance, and security coverage
+- require explicit verification planning with relevant white-box, performance, and security coverage
 
 ## Why this exists
 
@@ -93,14 +99,14 @@ This skill exists to solve those problems at project start.
 
 ## Best for
 
-- New projects: turn one fuzzy idea into intake, requirements, design, TDD, and tasks
+- New projects: turn one fuzzy idea into intake, requirements, design, knowledge, verification, and tasks
 - Existing projects: read real code first, then fill missing specs
-- New requirements: update current-state docs and `docs/changes/`
+- New requirements: update workflow, knowledge, and `docs/changes/active/`
 - Bug fixes: record symptoms, root cause, fix approach, regression tests, and impact scope
 - Releases: summarize additions, fixes, and breaking changes in `docs/releases/`
 - Long-term maintenance: keep blockers, debt, and known risks in `docs/issues/`, and retired docs in `docs/archive/`
 
-This repository is intended for Agent Skills workflows that need ongoing project documentation, requirements, design docs, TDD planning, change tracking, and issue management.
+This repository is intended for Agent Skills workflows that need ongoing project documentation, long-lived knowledge, change workspaces, and issue management.
 
 ## What it produces
 
@@ -108,12 +114,16 @@ During execution, the agent creates or updates these spec artifacts based on the
 
 ```text
 docs/
-docs/00-intake/README.md
-docs/01-requirements/README.md
-docs/02-design/README.md
-docs/03-implementation/README.md
-docs/04-tdd/README.md
-docs/05-tasks/README.md
+docs/workflow/00-intake/README.md
+docs/workflow/01-requirements/README.md
+docs/workflow/02-design/README.md
+docs/workflow/03-implementation/README.md
+docs/workflow/04-verification/README.md
+docs/workflow/05-tasks/README.md
+docs/knowledge/context/README.md
+docs/knowledge/structure/README.md
+docs/knowledge/behavior/README.md
+docs/knowledge/reference/README.md
 docs/issues/README.md
 docs/rules/README.md
 docs/rules/clarification-rules.md
@@ -124,10 +134,16 @@ docs/rules/doc-sync-rules.md
 docs/rules/change-management-rules.md
 docs/rules/issue-management-rules.md
 docs/rules/definition-of-done.md
+docs/rules/document-routing-rules.md
 docs/changes/README.md
+docs/changes/active/<change-key>/
+docs/changes/completed/
+docs/changes/legacy/
 docs/releases/README.md
 docs/archive/README.md
+docs/adr/README.md
 docs/adr/0000-record-template.md
+spec-init.topology.yml
 README.md
 AGENTS.md
 ```
@@ -136,7 +152,7 @@ These files should not remain empty placeholders. The skill still includes templ
 
 The resulting content should include:
 
-- document boundary guidance
+- document boundary guidance and routing rules
 - self-check lists
 - priority and version-boundary prompts
 - `FR-*` / `DES-*` / `TEST-*` / `T-*` traceability expectations
@@ -150,43 +166,58 @@ The resulting content should include:
 - copyable example answers, scope trimming help, and common mistake examples
 - current-state synthesis for existing projects
 - explicit options, trade-offs, and recommendations for missing decisions
-- change-tracking entry points for new requirements, bug fixes, and releases
+- change-workspace entry points for new requirements, bug fixes, and releases
 - support for fuller requirements, fuller design, and ongoing spec refinement
 - issue tracking, document retirement, and archive support
 
-More concretely, it manages three documentation layers:
+More concretely, it manages four documentation layers:
 
-- current-state docs: `intake / requirements / design / implementation / tdd / tasks`
-- historical-change docs: `changes / releases / adr`
-- long-term maintenance docs: `issues / archive / rules`
+- workflow: `intake / requirements / design / implementation / verification / tasks`
+- knowledge: `context / structure / behavior / reference`
+- changes: `active / completed / legacy`
+- records: `issues / releases / adr / archive / rules`
 
 ## Structure
 
-The generated SDD documents are now organized by stage directories instead of being flattened in the root `docs/` directory:
+The generated SDD documents are now organized by semantic layers instead of being flattened in the root `docs/` directory:
 
 ```text
 docs/
-|-- 00-intake/
-|   `-- README.md
-|-- 01-requirements/
-|   `-- README.md
-|-- 02-design/
-|   `-- README.md
-|-- 03-implementation/
-|   `-- README.md
-|-- 04-tdd/
-|   `-- README.md
-|-- 05-tasks/
-|   `-- README.md
+|-- workflow/
+|   |-- 00-intake/
+|   |   `-- README.md
+|   |-- 01-requirements/
+|   |   `-- README.md
+|   |-- 02-design/
+|   |   `-- README.md
+|   |-- 03-implementation/
+|   |   `-- README.md
+|   |-- 04-verification/
+|   |   `-- README.md
+|   `-- 05-tasks/
+|       `-- README.md
+|-- knowledge/
+|   |-- context/
+|   |   `-- README.md
+|   |-- structure/
+|   |   `-- README.md
+|   |-- behavior/
+|   |   `-- README.md
+|   `-- reference/
+|       `-- README.md
 |-- issues/
 |   `-- README.md
 |-- changes/
-|   `-- README.md
+|   |-- README.md
+|   |-- active/
+|   |-- completed/
+|   `-- legacy/
 |-- releases/
 |   `-- README.md
 |-- archive/
 |   `-- README.md
 |-- adr/
+|   |-- README.md
 |   `-- 0000-record-template.md
 `-- rules/
     |-- README.md
@@ -197,13 +228,16 @@ docs/
     |-- doc-sync-rules.md
     |-- change-management-rules.md
     |-- issue-management-rules.md
+    |-- document-routing-rules.md
     `-- definition-of-done.md
 ```
 
 Why this structure:
 
-- it matches the stages of SDD more clearly
-- each stage can grow into a richer directory over time
+- `workflow/` stops numbered stage docs from being mixed with every other root-level doc
+- `knowledge/` holds long-lived truth instead of forcing everything into current-stage docs
+- `changes/` holds one-change workspaces and lifecycle states
+- `spec-init.topology.yml` and `document-routing-rules.md` decouple semantics from physical paths
 - `rules/` lets the project keep engineering rules inside the generated scaffold
 - `changes/` and `releases/` preserve historical context instead of losing it
 - `issues/` and `archive/` give unresolved problems and retired docs a clear home
@@ -273,7 +307,7 @@ $spec-init my-cli --type=cli
 
 You can also trigger it with natural language:
 
-- “Turn this idea into requirements, design, and a TDD plan”
+- “Turn this idea into requirements, design, and a verification plan”
 - “This is an existing project, read the code first and then help me add specs”
 - “I want an API project, but start by clarifying the specs before coding”
 - “Analyze this repo and tell me which docs and rules are missing”
@@ -288,7 +322,7 @@ Currently supported:
 - `library`
 - `service`
 
-If the user does not specify one, the skill makes a baseline inference from the project name and directory name, then records the reasoning in `docs/00-intake/README.md`.
+If the user does not specify one, the skill makes a baseline inference from the project name and directory name, then records the reasoning in `docs/workflow/00-intake/README.md`.
 
 ## Output language
 
@@ -307,10 +341,10 @@ Current behavior:
 
 `web`, `api`, and `cli` already have differentiated templates, mainly in:
 
-- `docs/01-requirements/README.md`
-- `docs/02-design/README.md`
-- `docs/04-tdd/README.md`
-- `docs/05-tasks/README.md`
+- `docs/workflow/01-requirements/README.md`
+- `docs/workflow/02-design/README.md`
+- `docs/workflow/04-verification/README.md`
+- `docs/workflow/05-tasks/README.md`
 
 ## Built-in rules
 
@@ -324,15 +358,16 @@ This project no longer generates only documents. It also generates project-level
 - `docs/rules/change-management-rules.md`
 - `docs/rules/issue-management-rules.md`
 - `docs/rules/definition-of-done.md`
+- `docs/rules/document-routing-rules.md`
 
-`AGENTS.md` defines execution order for agents, while `docs/rules/` keeps those rules as in-repo engineering assets.
+`AGENTS.md` defines execution order for agents, `docs/rules/` keeps those rules as in-repo engineering assets, and `spec-init.topology.yml` maps semantics to concrete paths.
 
 The current rule set especially strengthens four areas:
 
 1. material ambiguities must be confirmed with the user, with options and trade-offs explained
 2. design docs must include stack, architecture, trade-offs, and quality goals
 3. bug fixes must identify root cause instead of guessing
-4. testing must follow strict TDD with relevant white-box, performance, and security coverage
+4. verification must be explicit and include relevant white-box, performance, and security coverage
 
 ## The real value: traceability
 
@@ -362,9 +397,9 @@ It shows:
 - how intake is written
 - how requirements are written
 - how design maps to requirements
-- how the TDD plan maps to requirements
+- how the verification plan maps to requirements
 - how the task breakdown becomes executable work
-- how changes, releases, issues, and archive docs support long-term maintenance
+- how knowledge, changes, releases, issues, and archive docs support long-term maintenance
 - how `rules/` becomes part of the generated project structure
 
 ## Repository layout
@@ -397,6 +432,16 @@ skills/spec-init/
 `-- examples/
     `-- demo-app/
 ```
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=legeling/spec-init&type=Date)](https://www.star-history.com/#legeling/spec-init&Date)
+
+## Contributors
+
+Thanks to everyone who has contributed to this project.
+
+[![Contributors](https://contrib.rocks/image?repo=legeling/spec-init)](https://github.com/legeling/spec-init/graphs/contributors)
 
 ## License
 

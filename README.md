@@ -3,7 +3,7 @@
 # spec-init
 
 <p>
-  <strong>一个面向项目文档与 spec workflow 的 agent skill：用于持续整理 requirements、design、TDD、changes、issues 和 archive。</strong>
+  <strong>一个面向项目文档与 spec workflow 的 agent skill：用于持续整理 workflow、knowledge、changes、issues 和 archive。</strong>
 </p>
 
 <p>
@@ -18,13 +18,13 @@
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-supported-7C3AED">
   <img alt="Codex" src="https://img.shields.io/badge/Codex-supported-059669">
   <img alt="OpenCode" src="https://img.shields.io/badge/OpenCode-supported-2563EB">
-  <img alt="Workflow" src="https://img.shields.io/badge/workflow-SDD%20%2B%20TDD-0F766E">
+  <img alt="Workflow" src="https://img.shields.io/badge/workflow-SDD%20%2B%20Topology-0F766E">
   <img alt="Docs" src="https://img.shields.io/badge/docs-ZH%20%7C%20EN-E11D48">
 </p>
 
 <table>
   <tr>
-    <td><strong>Project Docs</strong><br/>从 intake、requirements、design 到 TDD、tasks 的完整项目文档流</td>
+    <td><strong>Project Docs</strong><br/>从 intake、requirements、design 到 verification、tasks 的完整项目文档流</td>
     <td><strong>Built-in Rules</strong><br/>澄清、设计、修 bug、变更治理、问题跟踪规则直接进项目</td>
     <td><strong>Traceability</strong><br/>从 `FR` 到 `T` 的可回溯工作链</td>
   </tr>
@@ -40,18 +40,24 @@
 
 `spec-init` 是一个放在 `skills/` 目录里的 agent skill，但它不是“目录初始化脚本”。
 
-它的真正定位是：让 agent 帮用户做文档驱动开发，把一个模糊想法或一个已有项目，整理成一套可执行、可追踪、带规则的 spec：
+它的真正定位是：让 agent 帮用户做文档驱动开发，把一个模糊想法或一个已有项目，整理成一套可执行、可追踪、带规则、带拓扑的 spec：
 
-- `docs/00-intake/README.md`
-- `docs/01-requirements/README.md`
-- `docs/02-design/README.md`
-- `docs/03-implementation/README.md`
-- `docs/04-tdd/README.md`
-- `docs/05-tasks/README.md`
+- `docs/workflow/00-intake/README.md`
+- `docs/workflow/01-requirements/README.md`
+- `docs/workflow/02-design/README.md`
+- `docs/knowledge/context/README.md`
+- `docs/knowledge/structure/README.md`
+- `docs/knowledge/behavior/README.md`
+- `docs/knowledge/reference/README.md`
+- `docs/workflow/03-implementation/README.md`
+- `docs/workflow/04-verification/README.md`
+- `docs/workflow/05-tasks/README.md`
 - `docs/issues/README.md`
 - `docs/changes/README.md`
 - `docs/releases/README.md`
 - `docs/archive/README.md`
+- `spec-init.topology.yml`
+- `docs/adr/README.md`
 - `docs/adr/0000-record-template.md`
 - `docs/rules/README.md`
 - `README.md`
@@ -59,7 +65,7 @@
 
 核心目标：
 
-- 帮开发者区分需求、设计、实施计划、测试计划和任务拆解
+- 帮开发者区分 workflow、knowledge、change workspace 和 records
 - 把“文档驱动开发”从建议变成默认工作方式
 - 在开始编码前把边界、方案、验证和任务关系写清楚
 - 建立完整追踪链：`FR -> DES -> TEST -> T`
@@ -67,7 +73,7 @@
 - 对关键疑点先向用户澄清，不允许开发者自行拍板
 - 设计必须写清技术栈、架构方案、权衡和质量目标
 - 修 bug 必须定位根因，不能靠猜测修复
-- 测试必须严格走 TDD，并覆盖白盒、性能、安全等相关质量要求
+- 测试必须显式进入 verification 计划，并覆盖白盒、性能、安全等相关质量要求
 
 ## 为什么做这个 skill
 
@@ -93,14 +99,14 @@
 
 ## 适用场景
 
-- 新项目：把一句模糊想法整理成 intake、requirements、design、TDD、tasks
+- 新项目：把一句模糊想法整理成 intake、requirements、design、knowledge、verification、tasks
 - 现有项目：先读代码和现有文档，再补齐缺失的 spec
-- 新需求引入：同时更新当前状态文档和 `docs/changes/`
+- 新需求引入：同时更新 workflow、knowledge 和 `docs/changes/active/`
 - bugfix：记录症状、根因、修复方案、回归测试和影响范围
 - 版本发布：把本次新增、修复、破坏性变化写进 `docs/releases/`
 - 长期维护：把阻塞项、技术债、已知风险放进 `docs/issues/`，把废弃文档放进 `docs/archive/`
 
-这个仓库适合需要维护项目文档、需求文档、设计文档、TDD 计划、变更记录和问题跟踪的 Agent Skills 工作流。
+这个仓库适合需要维护项目文档、长期真相、变更工作区和问题跟踪的 Agent Skills 工作流。
 
 ## 这个 skill 会产出什么
 
@@ -108,12 +114,16 @@
 
 ```text
 docs/
-docs/00-intake/README.md
-docs/01-requirements/README.md
-docs/02-design/README.md
-docs/03-implementation/README.md
-docs/04-tdd/README.md
-docs/05-tasks/README.md
+docs/workflow/00-intake/README.md
+docs/workflow/01-requirements/README.md
+docs/workflow/02-design/README.md
+docs/workflow/03-implementation/README.md
+docs/workflow/04-verification/README.md
+docs/workflow/05-tasks/README.md
+docs/knowledge/context/README.md
+docs/knowledge/structure/README.md
+docs/knowledge/behavior/README.md
+docs/knowledge/reference/README.md
 docs/issues/README.md
 docs/rules/README.md
 docs/rules/clarification-rules.md
@@ -124,10 +134,16 @@ docs/rules/doc-sync-rules.md
 docs/rules/change-management-rules.md
 docs/rules/issue-management-rules.md
 docs/rules/definition-of-done.md
+docs/rules/document-routing-rules.md
 docs/changes/README.md
+docs/changes/active/<change-key>/
+docs/changes/completed/
+docs/changes/legacy/
 docs/releases/README.md
 docs/archive/README.md
+docs/adr/README.md
 docs/adr/0000-record-template.md
+spec-init.topology.yml
 README.md
 AGENTS.md
 ```
@@ -136,7 +152,7 @@ AGENTS.md
 
 agent 产出的内容至少应包含：
 
-- 文档边界提示
+- 文档边界提示与路由规则
 - 自检项
 - 优先级和版本边界提示
 - `FR-*` / `DES-*` / `TEST-*` / `T-*` 的追踪要求
@@ -150,43 +166,58 @@ agent 产出的内容至少应包含：
 - 可直接参考的示例答案、范围裁剪助手、常见错误示例
 - 现有项目补文档时的现状归纳
 - 对关键缺失信息的方案、选择、对比和建议
-- 新需求、bugfix、版本发布时的变更记录入口
+- 新需求、bugfix、版本发布时的 change workspace 入口
 - 完整需求、完整设计、持续完善 spec 的工作闭环
 - issue 跟踪、文档归档、废弃文档管理
 
-更具体地说，它覆盖三层文档：
+更具体地说，它覆盖四层文档：
 
-- 当前状态文档：`intake / requirements / design / implementation / tdd / tasks`
-- 历史变化文档：`changes / releases / adr`
-- 长期维护文档：`issues / archive / rules`
+- workflow：`intake / requirements / design / implementation / verification / tasks`
+- knowledge：`context / structure / behavior / reference`
+- changes：`active / completed / legacy`
+- records：`issues / releases / adr / archive / rules`
 
 ## 结构设计
 
-这个 skill 现在不再把 SDD 文档直接平铺在 `docs/` 根目录，而是按阶段目录组织：
+这个 skill 现在不再把 SDD 文档直接平铺在 `docs/` 根目录，而是按语义层组织：
 
 ```text
 docs/
-|-- 00-intake/
-|   `-- README.md
-|-- 01-requirements/
-|   `-- README.md
-|-- 02-design/
-|   `-- README.md
-|-- 03-implementation/
-|   `-- README.md
-|-- 04-tdd/
-|   `-- README.md
-|-- 05-tasks/
-|   `-- README.md
+|-- workflow/
+|   |-- 00-intake/
+|   |   `-- README.md
+|   |-- 01-requirements/
+|   |   `-- README.md
+|   |-- 02-design/
+|   |   `-- README.md
+|   |-- 03-implementation/
+|   |   `-- README.md
+|   |-- 04-verification/
+|   |   `-- README.md
+|   `-- 05-tasks/
+|       `-- README.md
+|-- knowledge/
+|   |-- context/
+|   |   `-- README.md
+|   |-- structure/
+|   |   `-- README.md
+|   |-- behavior/
+|   |   `-- README.md
+|   `-- reference/
+|       `-- README.md
 |-- issues/
 |   `-- README.md
 |-- changes/
-|   `-- README.md
+|   |-- README.md
+|   |-- active/
+|   |-- completed/
+|   `-- legacy/
 |-- releases/
 |   `-- README.md
 |-- archive/
 |   `-- README.md
 |-- adr/
+|   |-- README.md
 |   `-- 0000-record-template.md
 `-- rules/
     |-- README.md
@@ -197,13 +228,16 @@ docs/
     |-- doc-sync-rules.md
     |-- change-management-rules.md
     |-- issue-management-rules.md
+    |-- document-routing-rules.md
     `-- definition-of-done.md
 ```
 
 这样做的原因是：
 
-- 更符合 SDD 的阶段语义
-- 后续更容易在每个阶段扩展子文档
+- `workflow/` 让编号阶段目录不再和其他目录混排
+- `knowledge/` 承载长期稳定真相，而不是把一切都塞进当前阶段文档
+- `changes/` 承载单次变更工作区和历史演进
+- `spec-init.topology.yml` 与 `document-routing-rules.md` 让语义和物理路径解耦
 - `rules/` 可以把项目级规范内置进初始化结果
 - `changes/` 和 `releases/` 可以把历史变化留痕下来
 - `issues/` 和 `archive/` 可以让未解决问题和废弃文档都有去处
@@ -273,7 +307,7 @@ $spec-init my-cli --type=cli
 
 也可以自然语言触发：
 
-- “帮我把这个想法整理成 requirements、design 和 TDD plan”
+- “帮我把这个想法整理成 requirements、design 和 verification plan”
 - “这是一个现成项目，帮我补 spec，先读代码再写文档”
 - “我想做一个 API 项目，先别写代码，先把 spec 理清”
 - “给我分析一下现有仓库还缺哪些文档和规则”
@@ -288,7 +322,7 @@ $spec-init my-cli --type=cli
 - `library`
 - `service`
 
-如果用户没明确说，skill 会根据项目名和目录名做基础推断，并把推断依据写进 `docs/00-intake/README.md`。
+如果用户没明确说，skill 会根据项目名和目录名做基础推断，并把推断依据写进 `docs/workflow/00-intake/README.md`。
 
 ## 输出语言
 
@@ -307,10 +341,10 @@ $spec-init my-cli --type=cli
 
 当前 `web` / `api` / `cli` 已提供差异化模板，重点体现在：
 
-- `docs/01-requirements/README.md` 的用户故事和需求语境不同
-- `docs/02-design/README.md` 的系统边界、模块职责和调用链不同
-- `docs/04-tdd/README.md` 的测试重点不同
-- `docs/05-tasks/README.md` 的初始执行任务不同
+- `docs/workflow/01-requirements/README.md` 的用户故事和需求语境不同
+- `docs/workflow/02-design/README.md` 的系统边界、模块职责和调用链不同
+- `docs/workflow/04-verification/README.md` 的测试重点不同
+- `docs/workflow/05-tasks/README.md` 的初始执行任务不同
 
 ## 内置规则
 
@@ -324,15 +358,16 @@ $spec-init my-cli --type=cli
 - `docs/rules/change-management-rules.md`
 - `docs/rules/issue-management-rules.md`
 - `docs/rules/definition-of-done.md`
+- `docs/rules/document-routing-rules.md`
 
-`AGENTS.md` 负责把规则固化为 agent 执行顺序，`docs/rules/` 负责把规则沉淀为项目内文档资产。
+`AGENTS.md` 负责把规则固化为 agent 执行顺序，`docs/rules/` 负责把规则沉淀为项目内文档资产，`spec-init.topology.yml` 负责把语义路由到具体路径。
 
 其中现在特别强化了 4 类规则：
 
 1. 关键疑点必须先向用户确认，可以给方案和利弊，但不能自己直接定
 2. 设计必须写技术栈、架构方案、权衡和质量目标，而不是只写最简单的做法
 3. 修 bug 必须先定位根因，禁止凭猜测修复
-4. 测试必须严格走 TDD，并覆盖白盒、性能、安全等与当前版本相关的要求
+4. 验证必须显式进入 verification 计划，并覆盖白盒、性能、安全等与当前版本相关的要求
 
 ## 这套方法的关键不是模板，而是追踪关系
 
@@ -362,9 +397,9 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 - intake 怎么写
 - requirements 怎么写
 - design 怎么承接 requirements
-- TDD plan 怎么映射需求
+- verification plan 怎么映射需求
 - task breakdown 怎么落成任务
-- changes / releases / issues / archive 怎么分别承接历史变化和长期维护
+- knowledge / changes / releases / issues / archive 怎么分别承接长期真相、历史变化和长期维护
 - rules 怎么作为项目内约束沉淀下来
 
 ## 仓库结构
@@ -397,3 +432,13 @@ skills/spec-init/
 `-- examples/
     `-- demo-app/
 ```
+
+## 星标历史
+
+[![Star History Chart](https://api.star-history.com/svg?repos=legeling/spec-init&type=Date)](https://www.star-history.com/#legeling/spec-init&Date)
+
+## 贡献者
+
+感谢所有参与这个项目的人。
+
+[![Contributors](https://contrib.rocks/image?repo=legeling/spec-init)](https://github.com/legeling/spec-init/graphs/contributors)

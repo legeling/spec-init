@@ -1,6 +1,6 @@
 ---
 name: spec-init
-description: 面向新项目或现有项目的文档驱动开发 skill。Use when the user wants to create,补齐,更新, or refine specs such as intake, requirements, design, TDD, tasks, README, or AGENTS for a real project.
+description: 面向新项目或现有项目的文档驱动开发 skill。Use when the user wants to create,补齐,更新, or refine specs such as workflow, knowledge, verification, changes, README, or AGENTS for a real project.
 compatibility: Works best in Claude Code, Codex, OpenCode, and other Agent Skills compatible tools.
 metadata:
   stage: beta
@@ -45,7 +45,7 @@ metadata:
 
 - 用户说“帮我做 spec”“补需求文档”“整理设计文档”“先别写代码，先把文档理清”
 - 用户有现成项目，想补齐或更新 `docs/`、`README.md`、`AGENTS.md`
-- 用户想做文档驱动开发、spec-first、design-first、TDD-first
+- 用户想做文档驱动开发、spec-first、design-first、verification-first
 - 用户想让 agent 帮他决定还缺哪些文档、哪些规范、哪些待确认问题
 
 ## 何时不要使用
@@ -96,12 +96,16 @@ metadata:
 
 边界如下：
 
-- `docs/00-intake/README.md`: 为什么做，谁来用，什么不做
-- `docs/01-requirements/README.md`: 做什么，为什么做，怎么验收
-- `docs/02-design/README.md`: 怎么实现，方案对比，规范约定
-- `docs/03-implementation/README.md`: 先做什么后做什么
-- `docs/04-tdd/README.md`: 怎么验证完成
-- `docs/05-tasks/README.md`: 现在具体做什么动作
+- `docs/workflow/00-intake/README.md`: 为什么做，谁来用，什么不做
+- `docs/workflow/01-requirements/README.md`: 做什么，为什么做，怎么验收
+- `docs/workflow/02-design/README.md`: 当前阶段怎么实现，方案对比，规范约定
+- `docs/knowledge/context/README.md`: 长期稳定的角色、术语、实体、业务边界
+- `docs/knowledge/structure/README.md`: 长期稳定的模块边界、系统结构、集成关系
+- `docs/knowledge/behavior/README.md`: 长期稳定的关键流程、状态流转、业务规则
+- `docs/knowledge/reference/README.md`: 样例、协议、schema、素材、fixtures 等固定参考资料
+- `docs/workflow/03-implementation/README.md`: 先做什么后做什么
+- `docs/workflow/04-verification/README.md`: 怎么验证完成
+- `docs/workflow/05-tasks/README.md`: 现在具体做什么动作
 - `docs/issues/README.md`: 尚未解决的问题、阻塞项、风险和技术债
 - `docs/changes/`: 这次为什么变、影响什么、同步了哪些文档和测试
 - `docs/releases/`: 某个版本最终对外交付了什么
@@ -133,10 +137,10 @@ metadata:
 
 先判断这次请求更接近哪一类：
 
-- 继续实施：主要推进 `tasks / tdd / implementation`
-- 新需求引入：主要更新 `requirements / design / changes`
+- 继续实施：主要推进 `tasks / verification / implementation`
+- 新需求引入：主要更新 `requirements / design / knowledge / changes`
 - 小改动：如果影响面有限，也要判断是否需要最小 change 记录
-- bugfix：主要更新 `changes / tdd / design`，必要时回写 requirements
+- bugfix：主要更新 `changes / verification / design`，必要时回写 requirements 和 knowledge
 - 发布整理：主要更新 `releases / changes / README`
 - 问题追踪：主要更新 `issues/`
 - 文档清理：主要更新 `archive/` 并说明替代关系
@@ -185,18 +189,22 @@ metadata:
 
 按顺序产出或更新：
 
-1. `docs/00-intake/README.md`
-2. `docs/01-requirements/README.md`
-3. `docs/02-design/README.md`
-4. `docs/03-implementation/README.md`
-5. `docs/04-tdd/README.md`
-6. `docs/05-tasks/README.md`
-7. `docs/issues/`（当存在未决问题、阻塞、技术债、已知风险时）
-8. `docs/changes/`（当本轮是新需求、bugfix、重构、流程变更时）
-9. `docs/releases/`（当本轮涉及版本发布或对外变更总结时）
-10. `docs/archive/`（当旧文档需要废弃但仍需保留历史时）
-11. `docs/rules/`
-12. 必要时更新 `README.md` / `AGENTS.md`
+1. `docs/workflow/00-intake/README.md`
+2. `docs/workflow/01-requirements/README.md`
+3. `docs/workflow/02-design/README.md`
+4. `docs/knowledge/context/README.md`
+5. `docs/knowledge/structure/README.md`
+6. `docs/knowledge/behavior/README.md`
+7. `docs/knowledge/reference/README.md`
+8. `docs/workflow/03-implementation/README.md`
+9. `docs/workflow/04-verification/README.md`
+10. `docs/workflow/05-tasks/README.md`
+11. `docs/issues/`（当存在未决问题、阻塞、技术债、已知风险时）
+12. `docs/changes/active/<change-key>/`（当本轮是新需求、bugfix、重构、流程变更时）
+13. `docs/releases/`（当本轮涉及版本发布或对外变更总结时）
+14. `docs/archive/`（当旧文档需要废弃但仍需保留历史时）
+15. `docs/rules/`
+16. 必要时更新 `README.md` / `AGENTS.md` / `spec-init.topology.yml`
 
 要求：
 
@@ -240,7 +248,7 @@ metadata:
 
 - requirements 要基于真实用户流程或真实模块能力
 - design 要基于真实调用链、目录结构、接口、数据边界
-- TDD 要基于真实风险路径和真实现有测试空缺
+- verification 要基于真实风险路径和真实现有测试空缺
 - tasks 要基于当前最有价值的后续动作，不是模板动作
 
 ### Step 5: 建立追踪链
@@ -264,30 +272,33 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 
 spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、实现变更、测试补强后，都要检查：
 
-- `docs/01-requirements/README.md` 是否需要补新需求或修正边界
-- `docs/02-design/README.md` 是否需要补新模块、新约定或新的异常链路
-- `docs/04-tdd/README.md` 是否需要补新的测试映射和回归策略
-- `docs/05-tasks/README.md` 是否需要把新发现的工作拆成任务
+- `docs/workflow/01-requirements/README.md` 是否需要补新需求或修正边界
+- `docs/workflow/02-design/README.md` 是否需要补新模块、新约定或新的异常链路
+- `docs/knowledge/` 是否需要补新的长期稳定真相
+- `docs/workflow/04-verification/README.md` 是否需要补新的测试映射和回归策略
+- `docs/workflow/05-tasks/README.md` 是否需要把新发现的工作拆成任务
 - `docs/issues/` 是否需要新增未解决问题、阻塞项、风险或技术债
-- `docs/changes/` 是否需要新增一条需求变更、bugfix 或重构记录
+- `docs/changes/` 是否需要新增或移动一个 change workspace
 - `docs/releases/` 是否需要补一条版本说明
 - `docs/archive/` 是否需要归档被替代、已作废或不再生效的文档
-- `README.md`、`AGENTS.md`、`docs/rules/` 是否需要同步
+- `README.md`、`AGENTS.md`、`docs/rules/`、`spec-init.topology.yml` 是否需要同步
 
 不要把 spec 当成“初始化时写一次，以后不更新”的静态文档。
 
 ### Step 5.2: 变更记录规则
 
-把文档分成两层：
+把文档分成四层：
 
-- 当前状态文档：`requirements / design / implementation / tdd / tasks`
-- 历史变更文档：`changes / adr / releases`
+- workflow：`intake / requirements / design / implementation / verification / tasks`
+- knowledge：`context / structure / behavior / reference`
+- changes：`active / completed / legacy`
+- records：`issues / adr / releases / archive / rules`
 
 默认规则：
 
-- 新需求：更新当前状态文档，并新增 `docs/changes/CR-xxxx-*.md`
-- bugfix：更新受影响的当前状态文档，并新增 `docs/changes/BUG-xxxx-*.md`
-- 架构 / 技术决策变化：更新 design，并新增或补充 `docs/adr/`
+- 新需求：更新 workflow 与 knowledge 中受影响的文档，并新增 `docs/changes/active/<change-key>/`
+- bugfix：更新受影响的 workflow / knowledge 文档，并新增 `docs/changes/active/<change-key>/`
+- 架构 / 技术决策变化：更新 design 和 knowledge/structure，并新增或补充 `docs/adr/`
 - 版本发布：新增或更新 `docs/releases/vx.y.z.md`
 - 长期未解决的问题、阻塞项或技术债：写入 `docs/issues/`
 - 被替代、废弃或仅保留历史价值的文档：放入 `docs/archive/` 并记录替代关系
@@ -357,7 +368,7 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 - 方案对比要真实可决策，而不是摆样子
 - 不能把实现细节提前写进 requirements
 - 不能把任务清单混进 design
-- 不能把“后面补测试”当 TDD 计划
+- 不能把“后面补测试”当 verification 计划
 - 对已有项目，不能写出和代码现状冲突的 spec
 - 对用户要求“完整设计”的场景，不能只给最小骨架或最小示例后就停止
 - 对新需求、bugfix、发布等场景，必须明确当前状态文档和历史变更文档分别怎么更新

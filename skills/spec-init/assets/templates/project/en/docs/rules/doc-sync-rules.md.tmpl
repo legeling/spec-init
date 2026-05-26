@@ -7,12 +7,13 @@
 
 ## Sync Requirements
 
-- Requirement changes: update `docs/01-requirements/README.md`
-- Design changes: update `docs/02-design/README.md`
-- Delivery-order changes: update `docs/03-implementation/README.md`
-- Testing-strategy changes: update `docs/04-tdd/README.md`
-- Task-breakdown changes: update `docs/05-tasks/README.md`
-- Requirement, bug-fix, or refactor changes: update `docs/changes/`
+- Requirement changes: update `docs/workflow/01-requirements/README.md`
+- Design changes: update `docs/workflow/02-design/README.md`
+- Long-lived business or structural changes: update `docs/knowledge/`
+- Delivery-order changes: update `docs/workflow/03-implementation/README.md`
+- Testing-strategy changes: update `docs/workflow/04-verification/README.md`
+- Task-breakdown changes: update `docs/workflow/05-tasks/README.md`
+- Requirement, bug-fix, or refactor changes: update `docs/changes/active/` or the correct archive location
 - Release changes: update `docs/releases/`
 - Project-structure changes: update `README.md` and any affected rule docs
 
@@ -21,4 +22,4 @@
 - Does this code change still trace back to the intended `FR -> DES -> TEST -> T` chain?
 - Did this work introduce new `[To confirm]` items that still need to be documented?
 - Are any new rules only living in chat or PR comments instead of `docs/rules/`?
-- Did this work change the current state without leaving a historical change record?
+- Did this work update workflow but forget the corresponding knowledge or change workspace?

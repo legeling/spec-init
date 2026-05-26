@@ -1,6 +1,6 @@
-# Project Rules: Demo App
+# Project Rules: demo-app
 
-> 更新时间：2026-05-20
+> 更新时间：2026-05-26
 
 这些规则用于把文档驱动开发从“建议”变成“默认工作方式”。
 
@@ -11,9 +11,10 @@
 - `docs/rules/bug-fix-rules.md`: bug 定位、根因修复与回归要求
 - `docs/rules/testing-standards.md`: 测试策略与回归要求
 - `docs/rules/doc-sync-rules.md`: 文档与代码同步规则
-- `docs/rules/change-management-rules.md`: 新需求、bugfix、发布记录规则
+- `docs/rules/change-management-rules.md`: 新需求、bugfix、发布的记录规则
 - `docs/rules/issue-management-rules.md`: issue 跟踪与废弃文档归档规则
 - `docs/rules/definition-of-done.md`: 完成定义检查清单
+- `docs/rules/document-routing-rules.md`: 文档语义到目录路径的路由规则
 
 ## 使用建议
 

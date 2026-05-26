@@ -8,7 +8,7 @@ It helps projects start with:
 - requirements
 - design
 - implementation plan
-- TDD plan
+- verification plan
 - task breakdown
 - issues
 - changes
@@ -32,12 +32,13 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 
 ## Generated structure highlights
 
-- `docs/00-intake/README.md`
-- `docs/01-requirements/README.md`
-- `docs/02-design/README.md`
-- `docs/03-implementation/README.md`
-- `docs/04-tdd/README.md`
-- `docs/05-tasks/README.md`
+- `docs/workflow/00-intake/README.md`
+- `docs/workflow/01-requirements/README.md`
+- `docs/workflow/02-design/README.md`
+- `docs/workflow/03-implementation/README.md`
+- `docs/workflow/04-verification/README.md`
+- `docs/workflow/05-tasks/README.md`
+- `docs/knowledge/`
 - `docs/issues/README.md`
 - `docs/changes/README.md`
 - `docs/releases/README.md`
