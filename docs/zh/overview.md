@@ -25,6 +25,16 @@
 - 先澄清问题，再开始设计
 - 先明确验证方式，再开始大规模实现
 - 文档之间必须可追踪，而不是孤立存在
+- 任务生成后先做 analyze，一致后再实现
+- 实现完成后做 converge，把代码现状、当前文档和变更历史重新对齐
+
+## 阶段循环
+
+```text
+specify -> clarify -> plan -> tasks -> analyze -> implement -> converge
+```
+
+`spec-init` 借鉴这个节奏，但长期文档源仍然是 `docs/` 分层拓扑，不默认切换到 `specs/`。
 
 ## 最小追踪链
 

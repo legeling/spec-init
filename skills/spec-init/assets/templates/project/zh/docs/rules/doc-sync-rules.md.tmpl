@@ -16,6 +16,8 @@
 - 新需求、bugfix、重构变化：更新 `docs/changes/active/` 或对应归档位置
 - 版本发布变化：更新 `docs/releases/`
 - 项目结构变化：更新 `README.md` 和必要的规则文档
+- 实现前 analyze 发现缺口：先补 requirements / design / verification / tasks / changes，再进入实现
+- 实现后 converge 发现偏差：回写真实行为、验证结果、知识层、变更状态和 records
 
 ## 审查问题
 
@@ -23,3 +25,4 @@
 - 是否产生了新的 `[待确认]` 但还没写入文档
 - 是否有新规则只停留在口头说明，尚未沉淀到 `docs/rules/`
 - 是否只更新了 workflow，却忘记同步 knowledge 或 change workspace
+- 是否完成实现前 analyze 和实现后 converge

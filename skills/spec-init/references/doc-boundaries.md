@@ -10,6 +10,8 @@
 - implementation plan: 先做什么后做什么
 - verification plan: 如何证明做对了
 - tasks: 现在具体做哪一步
+- analysis gate: 开工前检查 spec、design、verification、tasks 是否一致
+- convergence: 完成后把代码现状、当前文档和变更历史重新对齐
 - rules: 项目默认遵循什么工程规范
 
 ## 速查表
@@ -27,6 +29,8 @@
 | `docs/workflow/04-verification/README.md` | 怎么证明完成 | 测试层次、需求到测试映射、首批失败测试、回归策略 | 技术选型争论、产品背景 | 团队知道如何验证 |
 | `docs/workflow/05-tasks/README.md` | 现在做什么 | 可执行任务、依赖、关联文档 ID | 抽象口号、无法验收的描述 | 任务可以被直接执行 |
 | `docs/changes/active/<change-key>/` | 这次为什么变、影响什么 | 变更背景、设计调整、验证、任务、影响范围 | 项目长期真相 | 单次 change 可被完整追踪 |
+| 分析门禁 | 当前 spec 是否能安全进入实现 | 孤立 ID、缺失映射、冲突、阻塞性待确认、文档边界错误 | 新需求或新设计 | 没有阻塞实现的一致性缺口 |
+| 收敛检查 | 实现后哪些文档和记录必须回写 | 代码真实行为、验证结果、change 生命周期、README/AGENTS/ADR/release 同步 | 新功能愿景 | 当前真相、历史记录和代码一致 |
 | `docs/rules/` | 默认如何工作 | 编码、测试、文档同步、完成定义规则 | 具体业务需求细节 | 团队默认规则已沉淀到项目内 |
 
 ## 常见混淆
@@ -100,7 +104,9 @@
 6. 开工前写 `docs/workflow/04-verification/README.md`
 7. 最后拆 `docs/workflow/05-tasks/README.md`
 8. 为当前工作建立 `docs/changes/active/<change-key>/`
-9. 再把长期有效的工程规则沉淀进 `docs/rules/`
+9. 做一次分析门禁，确认 `FR / DES / TEST / T / change` 没有冲突或缺口
+10. 实现后做收敛检查，回写 workflow、knowledge、changes、issues、releases、archive、README、AGENTS
+11. 再把长期有效的工程规则沉淀进 `docs/rules/`
 
 ## 一个简单判断法
 
@@ -112,6 +118,8 @@
 - 这是在安排节奏吗？放 implementation plan。
 - 这是在定义验证方式吗？放 verification plan。
 - 这是在描述具体动作吗？放 tasks。
+- 这是在检查文档之间是否一致吗？放到 tasks 自检、change impact 或最终交付说明里。
+- 这是实现完成后的回写和归档吗？同步 workflow / knowledge / changes / records。
 - 这是某一次具体变更吗？放 changes。
 - 这是在定义项目默认做法吗？放 rules。
 
@@ -123,5 +131,21 @@
 - `T-001` 在 `docs/workflow/05-tasks/README.md` 关联 `FR-001`、`DES-001`、`TEST-001`
 - 长期稳定的角色、结构或规则继续沉淀到 `docs/knowledge/`
 - 项目默认约束写进 `docs/rules/`
+- 实现前执行分析门禁，找出孤立需求、未承接设计、未验证需求、游离任务和阻塞性 `[待确认]`
+- 实现后执行收敛检查，把代码真实行为、测试结果和 change 生命周期同步回文档
 
 这样文档不是一堆孤立文件，而是一条可追踪的链路和一套可执行的工作规则。
+
+## Spec Kit 阶段映射
+
+`spec-init` 不要求生成 `specs/` 目录，但可以借鉴 Spec Kit 的阶段节奏：
+
+| 阶段 | spec-init 写入位置 |
+|---|---|
+| specify | `00-intake` + `01-requirements` |
+| clarify | intake / requirements 的待确认区，必要时进入 `docs/issues/` |
+| plan | `02-design` + `03-implementation` + `04-verification` + `docs/knowledge/` |
+| tasks | `05-tasks` + `docs/changes/active/<change-key>/tasks.md` |
+| analyze | 任务生成后、实现前的一致性分析 |
+| implement | 代码、测试、迁移、脚本等真实改动 |
+| converge | 实现后回写当前文档、变更生命周期和 records |

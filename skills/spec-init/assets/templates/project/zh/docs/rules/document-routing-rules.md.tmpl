@@ -31,6 +31,20 @@
 - 某一次具体需求或 bugfix 的工作区：放 `changes`
 - 问题、发布、决策、归档：放 `records`
 
+## 阶段映射
+
+| Phase | 路由 |
+|---|---|
+| specify | `workflow.intake`, `workflow.requirements` |
+| clarify | intake / requirements 的待确认区，必要时 `records.issues` |
+| plan | `workflow.design`, `workflow.implementation`, `workflow.verification`, `knowledge.*` |
+| tasks | `workflow.tasks`, `changes.active` |
+| analyze | `workflow.requirements`, `workflow.design`, `workflow.verification`, `workflow.tasks`, `changes.active` |
+| implement | 代码、测试、脚本、迁移；任务来源仍回链到 `workflow.tasks` |
+| converge | `workflow.*`, `knowledge.*`, `changes.completed`, `records.*` |
+
+说明：这里借鉴 Spec Kit 的阶段节奏，但不把 `specs/` 作为默认长期文档目录。
+
 ## 同步要求
 
 - 调整目录结构时，同步更新 `spec-init.topology.yml`

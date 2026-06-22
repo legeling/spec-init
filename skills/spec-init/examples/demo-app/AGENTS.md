@@ -25,6 +25,20 @@
 17. 实现代码
 18. 回写文档、测试、变更记录和 README
 
+## Workflow Phases
+
+本项目的文档流程借鉴 Spec Kit 的阶段化节奏，但长期文档源仍是 `docs/`：
+
+| Phase | 本项目落点 | 完成标准 |
+|---|---|---|
+| specify | `00-intake`, `01-requirements` | 目标、边界、FR/NFR/AC 清楚 |
+| clarify | 待确认区、必要时 `docs/issues/` | 关键分歧已问用户或明确阻塞 |
+| plan | `02-design`, `03-implementation`, `04-verification`, `docs/knowledge/` | 方案、顺序、验证、长期真相一致 |
+| tasks | `05-tasks`, `docs/changes/active/<change-key>/tasks.md` | 任务可执行、可验证、可追踪 |
+| analyze | tasks 之后、实现之前 | 没有孤立 ID、冲突文档或阻塞性 `[待确认]` |
+| implement | 代码、测试、脚本、迁移 | 只执行能回链到 `FR -> DES -> TEST -> T` 的工作 |
+| converge | 实现之后 | workflow、knowledge、changes、records、README、AGENTS 已回写 |
+
 ## Document Boundaries
 
 | File | Focus | Do not put here |
@@ -58,6 +72,8 @@
 - 每个任务都应该关联 `FR-*`、`DES-*`、`TEST-*` ID。
 - 不确定的信息要显式标成 `[待确认]`，不要编造。
 - 开始编码前，至少保证一条完整追踪链已经存在：`FR -> DES -> TEST -> T`
+- 开始实现前必须完成 analyze 检查：需求、设计、验证、任务、change workspace 不得互相冲突。
+- 完成实现后必须完成 converge 检查：代码真实行为、测试结果、当前文档和历史记录重新一致。
 - 具体编码、测试和文档同步规范，优先遵循 `docs/rules/` 下的规则文件。
 
 ## Project Commands
@@ -77,6 +93,8 @@
 - 当前 change 已记录在 `docs/changes/active/`、`completed/` 或 `legacy/` 中的正确位置。
 - 代码与文档保持一致。
 - 高优先级需求有自动化验证。
+- 实现前的一致性分析没有阻塞项。
+- 实现后的收敛回写已完成。
 - README 能帮助新成员快速理解项目结构。
 - 已知风险和取舍已记录到文档或 ADR。
 - `docs/rules/definition-of-done.md` 中的检查项通过。

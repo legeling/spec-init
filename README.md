@@ -74,6 +74,7 @@
 - 设计必须写清技术栈、架构方案、权衡和质量目标
 - 修 bug 必须定位根因，不能靠猜测修复
 - 测试必须显式进入 verification 计划，并覆盖白盒、性能、安全等相关质量要求
+- 任务生成后必须做一致性分析，实现完成后必须做文档收敛
 
 ## 为什么做这个 skill
 
@@ -176,6 +177,22 @@ agent 产出的内容至少应包含：
 - knowledge：`context / structure / behavior / reference`
 - changes：`active / completed / legacy`
 - records：`issues / releases / adr / archive / rules`
+
+## 工作流阶段
+
+`spec-init` 保留自己的 `docs/` 分层拓扑，同时借鉴 Spec Kit 的阶段化推进方式：
+
+| Phase | spec-init 落点 | 目标 |
+|---|---|---|
+| specify | `docs/workflow/00-intake/`, `docs/workflow/01-requirements/` | 把想法变成目标、边界、FR/NFR/AC |
+| clarify | 待确认区，必要时进入 `docs/issues/` | 澄清会影响范围、方案、数据、权限、测试的关键问题 |
+| plan | `docs/workflow/02-design/`, `03-implementation/`, `04-verification/`, `docs/knowledge/` | 形成方案、实施顺序、验证策略和长期真相 |
+| tasks | `docs/workflow/05-tasks/`, `docs/changes/active/<change-key>/tasks.md` | 拆成可执行、可验证、可追踪任务 |
+| analyze | 实现前的一致性分析 | 查出孤立 ID、缺失映射、冲突文档和阻塞性 `[待确认]` |
+| implement | 代码、测试、脚本、迁移 | 执行能回链到 `FR -> DES -> TEST -> T` 的工作 |
+| converge | 实现后的文档收敛 | 让代码真实行为、当前文档和历史记录重新一致 |
+
+这不是把项目改成默认使用 `specs/` 目录；`docs/` 仍然是长期文档源。
 
 ## 结构设计
 
@@ -368,6 +385,7 @@ $spec-init my-cli --type=cli
 2. 设计必须写技术栈、架构方案、权衡和质量目标，而不是只写最简单的做法
 3. 修 bug 必须先定位根因，禁止凭猜测修复
 4. 验证必须显式进入 verification 计划，并覆盖白盒、性能、安全等与当前版本相关的要求
+5. 实现前必须 analyze，交付前必须 converge，避免文档停在计划状态
 
 ## 这套方法的关键不是模板，而是追踪关系
 

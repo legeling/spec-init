@@ -13,6 +13,8 @@
 - 接口、数据结构或配置项变化时，必须同步更新 `docs/workflow/02-design/README.md`，并在需要时回写 `docs/knowledge/structure/README.md`。
 - 关键技术权衡应记录到 `docs/adr/`。
 - 当存在多种合理技术方案时，必须先在设计文档中列出利弊，并确认是否需要用户拍板。
+- 大规模实现前必须先做 analyze 检查，确认没有孤立 ID、冲突文档或阻塞性 `[待确认]`。
+- 实现完成后必须做 converge 回写，不能只改代码不更新 workflow / knowledge / changes。
 
 ## 设计先行约定
 

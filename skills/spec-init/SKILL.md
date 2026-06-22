@@ -1,11 +1,6 @@
 ---
 name: spec-init
-description: 面向新项目或现有项目的文档驱动开发 skill。Use when the user wants to create,补齐,更新, or refine specs such as workflow, knowledge, verification, changes, README, or AGENTS for a real project.
-compatibility: Works best in Claude Code, Codex, OpenCode, and other Agent Skills compatible tools.
-metadata:
-  stage: beta
-  language: zh-CN
-  workflow: agent-driven-spec
+description: 面向新项目或现有项目的文档驱动开发 skill。Use when the user wants to create, 补齐, 更新, or refine project specs, run a Spec Kit-inspired workflow loop, maintain workflow/knowledge/change docs, analyze consistency, converge implementation back into docs, or update README/AGENTS for a real project.
 ---
 
 # /spec-init — Agent 驱动的文档开发 skill
@@ -23,7 +18,7 @@ metadata:
 ## 目标
 
 - 帮用户把模糊想法整理成能执行的 spec
-- 帮已有项目补齐缺失的 intake / requirements / design / tdd / tasks / rules
+- 帮已有项目补齐缺失的 intake / requirements / design / verification / tasks / rules
 - 帮用户区分 what / why / how / verify / do-next
 - 形成至少一条完整追踪链：`FR -> DES -> TEST -> T`
 - 在信息不足时主动提供候选方案、对比、建议，而不是只留下空白
@@ -62,7 +57,7 @@ metadata:
 
 你要做的是：
 
-- 先把想法拆成 intake / requirements / design / tdd / tasks
+- 先把想法拆成 intake / requirements / design / verification / tasks
 - 如果用户不懂概念，主动给方案、对比和建议
 - 不要只生成空文件；至少把当前已知信息写进去
 
@@ -112,6 +107,22 @@ metadata:
 - `docs/archive/README.md`: 已归档、已替代、已废弃但仍需保留历史的文档
 - `docs/adr/`: 关键架构或技术决策为什么改变
 - `docs/rules/`: 默认工程规则
+
+## Spec Kit 借鉴的阶段循环
+
+这个 skill 保留自己的 layered docs 拓扑，但执行节奏借鉴 Spec Kit 的阶段化工作流：
+
+| 阶段 | spec-init 落点 | 目标 |
+|---|---|---|
+| specify | `docs/workflow/00-intake/README.md`, `docs/workflow/01-requirements/README.md` | 把想法变成用户、边界、FR/NFR/AC |
+| clarify | intake / requirements 的待确认区，必要时更新 `docs/issues/` | 只澄清会影响范围、架构、数据、权限、测试的关键问题 |
+| plan | `docs/workflow/02-design/README.md`, `docs/workflow/03-implementation/README.md`, `docs/workflow/04-verification/README.md`, `docs/knowledge/` | 形成设计、实施顺序、验证策略和长期真相 |
+| tasks | `docs/workflow/05-tasks/README.md`, `docs/changes/active/<change-key>/tasks.md` | 拆成可执行、可验证、可追踪的任务 |
+| analyze | tasks 完成后、实现前，检查 requirements / design / verification / tasks / changes 是否冲突 | 找孤立 ID、缺失映射、未确认阻塞项和文档边界错误 |
+| implement | 代码、测试、脚本、迁移等真实改动 | 只执行已能回链到 `FR -> DES -> TEST -> T` 的工作 |
+| converge | 完成后回写 workflow、knowledge、changes、issues、releases、archive、README、AGENTS | 让代码现状、当前真相和历史变更记录重新一致 |
+
+不要把这些阶段理解成必须生成 `specs/` 目录。`spec-init` 的长期文档源仍是当前项目的 `docs/` 拓扑。
 
 ## 默认工作流
 
@@ -305,6 +316,28 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 
 不要只改当前状态不留痕，也不要只写变更记录却不更新当前状态。
 
+### Step 5.3: 分析与收敛门禁
+
+在任务拆完、准备实现前，必须做一次一致性分析：
+
+- requirements 里每条高优 `FR-*` 是否有 `AC-*`
+- design 里是否有对应 `DES-*` 承接高优 `FR-*`
+- verification 里是否有对应 `TEST-*` 验证高优 `FR-*`
+- tasks 里是否有可执行 `T-*` 串起 `FR / DES / TEST`
+- `docs/changes/active/<change-key>/` 是否记录了本轮背景、影响、验证和同步清单
+- 是否仍存在阻塞性 `[待确认]`
+- 是否把需求、设计、任务、长期知识或变更历史写错了位置
+
+实现完成后，必须做一次收敛检查：
+
+- 代码真实行为是否和 requirements / design / verification 一致
+- 新增测试和回归验证是否已经写回 verification
+- 新发现的长期真相是否进入 `docs/knowledge/`
+- 本轮 change 是否应该继续 active、移动到 completed，或转成 legacy
+- 发布、问题、ADR、归档、README、AGENTS 是否需要同步
+
+如果分析或收敛发现缺口，先补文档和任务，再继续实现或交付。
+
 ### Step 6: 脚本和模板的正确位置
 
 `scripts/spec-init.sh` 和 `assets/templates/project/` 只是辅助资源，不是主工作流。
@@ -361,6 +394,7 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 - 哪些地方是根据现状整理出来的
 - 哪些地方仍然是 `[待确认]`
 - 已形成哪些 `FR -> DES -> TEST -> T` 追踪链
+- 分析门禁发现了哪些缺口，以及实现后如何收敛文档
 
 ## 质量要求
 

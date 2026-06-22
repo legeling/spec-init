@@ -25,6 +25,20 @@ Clarify the current delivery scope, long-lived project truth, verification strat
 17. Implement code
 18. Update docs, tests, change records, and README together
 
+## Workflow Phases
+
+This project borrows the staged rhythm from Spec Kit while keeping `docs/` as the long-term source of truth:
+
+| Phase | Project location | Completion bar |
+|---|---|---|
+| specify | `00-intake`, `01-requirements` | goals, boundaries, FR/NFR/AC are clear |
+| clarify | open-question sections, and `docs/issues/` when needed | material ambiguity is confirmed or marked blocking |
+| plan | `02-design`, `03-implementation`, `04-verification`, `docs/knowledge/` | design, sequence, verification, and long-lived truth align |
+| tasks | `05-tasks`, `docs/changes/active/<change-key>/tasks.md` | tasks are executable, verifiable, and traceable |
+| analyze | after tasks and before implementation | no orphan IDs, conflicting docs, or blocking `[To confirm]` items |
+| implement | code, tests, scripts, migrations | only work traceable to `FR -> DES -> TEST -> T` is executed |
+| converge | after implementation | workflow, knowledge, changes, records, README, and AGENTS are updated |
+
 ## Document Boundaries
 
 | File | Focus | Do not put here |
@@ -58,6 +72,8 @@ Clarify the current delivery scope, long-lived project truth, verification strat
 - Every task should reference `FR-*`, `DES-*`, and `TEST-*` IDs.
 - Mark uncertain information as `[To confirm]` instead of inventing it.
 - Before implementation starts, ensure at least one complete chain exists: `FR -> DES -> TEST -> T`.
+- Before implementation starts, run analyze: requirements, design, verification, tasks, and change workspace must not conflict.
+- After implementation finishes, run converge: real behavior, test results, current docs, and history must align again.
 - When there is a more specific rule, follow the documents in `docs/rules/`.
 
 ## Project Commands
@@ -77,6 +93,8 @@ Fill in the actual stack-specific commands:
 - The current change is recorded in the correct location under `docs/changes/active/`, `completed/`, or `legacy/`.
 - Code and docs stay in sync.
 - High-priority requirements have automated verification.
+- The pre-implementation consistency analysis has no blocking findings.
+- Post-implementation convergence updates are complete.
 - README helps new contributors understand the structure quickly.
 - Known trade-offs and risks are recorded in docs or ADRs.
 - The checklist in `docs/rules/definition-of-done.md` passes.

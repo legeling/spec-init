@@ -74,6 +74,7 @@ Core goals:
 - require design docs to include stack, architecture, trade-offs, and quality goals
 - require root-cause analysis for bug fixes instead of guess-based changes
 - require explicit verification planning with relevant white-box, performance, and security coverage
+- require consistency analysis after task generation and documentation convergence after implementation
 
 ## Why this exists
 
@@ -176,6 +177,22 @@ More concretely, it manages four documentation layers:
 - knowledge: `context / structure / behavior / reference`
 - changes: `active / completed / legacy`
 - records: `issues / releases / adr / archive / rules`
+
+## Workflow phases
+
+`spec-init` keeps its layered `docs/` topology while borrowing Spec Kit's staged rhythm:
+
+| Phase | spec-init location | Goal |
+|---|---|---|
+| specify | `docs/workflow/00-intake/`, `docs/workflow/01-requirements/` | turn the idea into goals, boundaries, FR/NFR/AC |
+| clarify | open-question sections, and `docs/issues/` when needed | clarify decisions that affect scope, design, data, permissions, or tests |
+| plan | `docs/workflow/02-design/`, `03-implementation/`, `04-verification/`, `docs/knowledge/` | define design, delivery sequence, verification strategy, and long-lived truth |
+| tasks | `docs/workflow/05-tasks/`, `docs/changes/active/<change-key>/tasks.md` | create executable, verifiable, traceable tasks |
+| analyze | pre-implementation consistency analysis | find orphan IDs, missing mappings, conflicting docs, and blocking `[To confirm]` items |
+| implement | code, tests, scripts, migrations | execute work that traces back to `FR -> DES -> TEST -> T` |
+| converge | post-implementation documentation convergence | align real code behavior, current docs, and historical records again |
+
+This does not make `specs/` the default project document directory. `docs/` remains the long-term source of truth.
 
 ## Structure
 
@@ -368,6 +385,7 @@ The current rule set especially strengthens four areas:
 2. design docs must include stack, architecture, trade-offs, and quality goals
 3. bug fixes must identify root cause instead of guessing
 4. verification must be explicit and include relevant white-box, performance, and security coverage
+5. analyze before implementation and converge before delivery so docs do not remain only a plan
 
 ## The real value: traceability
 

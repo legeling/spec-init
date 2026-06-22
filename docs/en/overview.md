@@ -23,6 +23,16 @@ It helps projects start with:
 - clarify the problem before design
 - define validation before large implementation
 - keep documents connected through traceability
+- run analyze after tasks and before implementation
+- run converge after implementation so code, current docs, and change history align again
+
+## Phase loop
+
+```text
+specify -> clarify -> plan -> tasks -> analyze -> implement -> converge
+```
+
+`spec-init` borrows this rhythm while keeping the layered `docs/` topology as the long-term source of truth instead of defaulting to `specs/`.
 
 ## Minimal traceability chain
 

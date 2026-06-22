@@ -11,6 +11,8 @@
 - Bug fixes: update affected docs and record symptom, root cause, verification, and impact inside `docs/changes/active/<change-key>/`
 - Architecture or major technical changes: update `docs/workflow/02-design/README.md`, `docs/knowledge/structure/README.md`, and record an ADR
 - Releases: add or update `docs/releases/vx.y.z.md`
+- Before implementation: run analyze and confirm `FR / DES / TEST / T` plus the change workspace do not conflict
+- After implementation: run converge and confirm real behavior, verification results, and docs align
 - Once a change is done: move the workspace into `docs/changes/completed/`
 
 ## Minimum Requirements
@@ -18,3 +20,4 @@
 - Every change workspace must include background, impact scope, synced docs, and open questions
 - Every bug record must include symptom, root cause, fix approach, and regression requirements
 - Every release record must include added items, fixed items, breaking changes, and known issues
+- Every implementation round must have an analyze conclusion before coding and a convergence result before delivery

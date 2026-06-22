@@ -15,4 +15,11 @@
 - [ ] 已同步 workflow
 - [ ] 已同步 knowledge
 - [ ] 已同步 verification
+- [ ] 已同步 tasks
 - [ ] 已同步 issues / releases / adr（如适用）
+
+## 4. 分析与收敛清单
+
+- [ ] Analyze: 没有缺失映射、文档冲突、阻塞性 `[待确认]`
+- [ ] Implement: 代码、测试、脚本或迁移已按任务落地
+- [ ] Converge: 真实行为、验证结果和变更状态已回写
