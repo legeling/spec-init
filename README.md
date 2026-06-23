@@ -74,6 +74,7 @@
 - 设计必须写清技术栈、架构方案、权衡和质量目标
 - 修 bug 必须定位根因，不能靠猜测修复
 - 测试必须显式进入 verification 计划，并覆盖白盒、性能、安全等相关质量要求
+- 测试文档必须拆成策略、标准、设计方法、用例矩阵、回归套件、测试数据和覆盖映射，而不是混成一份进展报告
 - 任务生成后必须做一致性分析，实现完成后必须做文档收敛
 
 ## 为什么做这个 skill
@@ -120,6 +121,13 @@ docs/workflow/01-requirements/README.md
 docs/workflow/02-design/README.md
 docs/workflow/03-implementation/README.md
 docs/workflow/04-verification/README.md
+docs/workflow/04-verification/01-test-strategy-and-quality-gates.md
+docs/workflow/04-verification/02-test-standards.md
+docs/workflow/04-verification/03-test-design-methodology.md
+docs/workflow/04-verification/04-test-case-matrix.md
+docs/workflow/04-verification/05-regression-suite.md
+docs/workflow/04-verification/06-test-data-and-fixtures.md
+docs/workflow/04-verification/07-coverage-map.md
 docs/workflow/05-tasks/README.md
 docs/knowledge/context/README.md
 docs/knowledge/structure/README.md
@@ -161,6 +169,7 @@ agent 产出的内容至少应包含：
 - 关键疑点必须先问用户的澄清规则
 - 根因修复和回归测试规则
 - 白盒 / 性能 / 安全测试要求
+- 测试策略、质量门禁、测试标准、测试设计方法、用例矩阵、回归套件、测试数据和覆盖映射的分层要求
 - 前端项目的分辨率 / 颜色 / 字号 / 组件规范引导
 - 后端项目的 API / 数据库 / migration / 命名约定引导
 - 面向新手的项目类型决策向导与必问问题清单
@@ -210,7 +219,14 @@ docs/
 |   |-- 03-implementation/
 |   |   `-- README.md
 |   |-- 04-verification/
-|   |   `-- README.md
+|   |   |-- README.md
+|   |   |-- 01-test-strategy-and-quality-gates.md
+|   |   |-- 02-test-standards.md
+|   |   |-- 03-test-design-methodology.md
+|   |   |-- 04-test-case-matrix.md
+|   |   |-- 05-regression-suite.md
+|   |   |-- 06-test-data-and-fixtures.md
+|   |   `-- 07-coverage-map.md
 |   `-- 05-tasks/
 |       `-- README.md
 |-- knowledge/

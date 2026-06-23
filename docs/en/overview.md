@@ -9,6 +9,7 @@ It helps projects start with:
 - design
 - implementation plan
 - verification plan
+- test strategy, standards, design methodology, case matrix, regression suite, test data, and coverage map
 - task breakdown
 - issues
 - changes
@@ -22,6 +23,7 @@ It helps projects start with:
 
 - clarify the problem before design
 - define validation before large implementation
+- separate test strategy, standards, design methodology, case matrix, and regression suite before turning testing into executable tasks
 - keep documents connected through traceability
 - run analyze after tasks and before implementation
 - run converge after implementation so code, current docs, and change history align again
@@ -47,6 +49,13 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 - `docs/workflow/02-design/README.md`
 - `docs/workflow/03-implementation/README.md`
 - `docs/workflow/04-verification/README.md`
+- `docs/workflow/04-verification/01-test-strategy-and-quality-gates.md`
+- `docs/workflow/04-verification/02-test-standards.md`
+- `docs/workflow/04-verification/03-test-design-methodology.md`
+- `docs/workflow/04-verification/04-test-case-matrix.md`
+- `docs/workflow/04-verification/05-regression-suite.md`
+- `docs/workflow/04-verification/06-test-data-and-fixtures.md`
+- `docs/workflow/04-verification/07-coverage-map.md`
 - `docs/workflow/05-tasks/README.md`
 - `docs/knowledge/`
 - `docs/issues/README.md`

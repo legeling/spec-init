@@ -11,6 +11,7 @@
 - 设计文档
 - 实现计划
 - verification 计划
+- 测试策略、测试规范、测试设计、测试用例矩阵、回归套件、测试数据和覆盖映射
 - 任务拆解
 - issue 跟踪
 - 变更记录
@@ -24,6 +25,7 @@
 
 - 先澄清问题，再开始设计
 - 先明确验证方式，再开始大规模实现
+- 先拆清测试策略、测试标准、测试设计、用例矩阵和回归套件，再把测试当成可执行任务
 - 文档之间必须可追踪，而不是孤立存在
 - 任务生成后先做 analyze，一致后再实现
 - 实现完成后做 converge，把代码现状、当前文档和变更历史重新对齐
@@ -57,6 +59,13 @@ FR-001 -> DES-001 -> TEST-001 -> T-001
 - `docs/workflow/02-design/README.md`
 - `docs/workflow/03-implementation/README.md`
 - `docs/workflow/04-verification/README.md`
+- `docs/workflow/04-verification/01-test-strategy-and-quality-gates.md`
+- `docs/workflow/04-verification/02-test-standards.md`
+- `docs/workflow/04-verification/03-test-design-methodology.md`
+- `docs/workflow/04-verification/04-test-case-matrix.md`
+- `docs/workflow/04-verification/05-regression-suite.md`
+- `docs/workflow/04-verification/06-test-data-and-fixtures.md`
+- `docs/workflow/04-verification/07-coverage-map.md`
 - `docs/workflow/05-tasks/README.md`
 - `docs/knowledge/`
 - `docs/issues/README.md`

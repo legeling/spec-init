@@ -74,6 +74,7 @@ Core goals:
 - require design docs to include stack, architecture, trade-offs, and quality goals
 - require root-cause analysis for bug fixes instead of guess-based changes
 - require explicit verification planning with relevant white-box, performance, and security coverage
+- require verification docs to separate strategy, standards, test design, case matrix, regression suite, test data, and coverage mapping instead of mixing them into one progress report
 - require consistency analysis after task generation and documentation convergence after implementation
 
 ## Why this exists
@@ -120,6 +121,13 @@ docs/workflow/01-requirements/README.md
 docs/workflow/02-design/README.md
 docs/workflow/03-implementation/README.md
 docs/workflow/04-verification/README.md
+docs/workflow/04-verification/01-test-strategy-and-quality-gates.md
+docs/workflow/04-verification/02-test-standards.md
+docs/workflow/04-verification/03-test-design-methodology.md
+docs/workflow/04-verification/04-test-case-matrix.md
+docs/workflow/04-verification/05-regression-suite.md
+docs/workflow/04-verification/06-test-data-and-fixtures.md
+docs/workflow/04-verification/07-coverage-map.md
 docs/workflow/05-tasks/README.md
 docs/knowledge/context/README.md
 docs/knowledge/structure/README.md
@@ -161,6 +169,7 @@ The resulting content should include:
 - clarification rules for material ambiguities
 - root-cause bug-fix rules
 - white-box / performance / security testing expectations
+- layered verification expectations for strategy, quality gates, standards, test design, case matrix, regression suite, test data, and coverage mapping
 - frontend guidance for resolution targets, colors, typography, and component rules
 - backend guidance for API, database, migration, and naming conventions
 - beginner-friendly decision guides and must-ask checklists by project type
@@ -210,7 +219,14 @@ docs/
 |   |-- 03-implementation/
 |   |   `-- README.md
 |   |-- 04-verification/
-|   |   `-- README.md
+|   |   |-- README.md
+|   |   |-- 01-test-strategy-and-quality-gates.md
+|   |   |-- 02-test-standards.md
+|   |   |-- 03-test-design-methodology.md
+|   |   |-- 04-test-case-matrix.md
+|   |   |-- 05-regression-suite.md
+|   |   |-- 06-test-data-and-fixtures.md
+|   |   `-- 07-coverage-map.md
 |   `-- 05-tasks/
 |       `-- README.md
 |-- knowledge/

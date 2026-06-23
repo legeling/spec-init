@@ -23,6 +23,7 @@ description: 面向新项目或现有项目的文档驱动开发 skill。Use whe
 - 形成至少一条完整追踪链：`FR -> DES -> TEST -> T`
 - 在信息不足时主动提供候选方案、对比、建议，而不是只留下空白
 - 帮用户逐步补全完整需求、完整设计、完整验证策略，而不是只停留在最小第一版
+- 帮项目把测试策略、测试标准、测试设计、用例矩阵、回归套件、测试数据和覆盖映射拆成可维护文档，而不是把测试计划平铺成一份进展报告
 
 ## 核心定位
 
@@ -100,6 +101,13 @@ description: 面向新项目或现有项目的文档驱动开发 skill。Use whe
 - `docs/knowledge/reference/README.md`: 样例、协议、schema、素材、fixtures 等固定参考资料
 - `docs/workflow/03-implementation/README.md`: 先做什么后做什么
 - `docs/workflow/04-verification/README.md`: 怎么验证完成
+- `docs/workflow/04-verification/01-test-strategy-and-quality-gates.md`: 长期测试策略、测试层级、质量门禁和准出标准
+- `docs/workflow/04-verification/02-test-standards.md`: 测试代码命名、断言、隔离、Mock、失败路径和报告规则
+- `docs/workflow/04-verification/03-test-design-methodology.md`: 等价类、边界值、状态机、决策表、安全、并发、契约和回归设计方法
+- `docs/workflow/04-verification/04-test-case-matrix.md`: 模块级测试用例矩阵、优先级、层级、自动化状态和覆盖对象
+- `docs/workflow/04-verification/05-regression-suite.md`: 长期回归套件、触发条件、命令登记规范和残余风险记录
+- `docs/workflow/04-verification/06-test-data-and-fixtures.md`: 测试数据、fixtures、H2/Redis/外部依赖替身和脱敏规范
+- `docs/workflow/04-verification/07-coverage-map.md`: 模块、需求、设计、测试资产和已知缺口之间的覆盖映射
 - `docs/workflow/05-tasks/README.md`: 现在具体做什么动作
 - `docs/issues/README.md`: 尚未解决的问题、阻塞项、风险和技术债
 - `docs/changes/`: 这次为什么变、影响什么、同步了哪些文档和测试
@@ -287,6 +295,13 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 - `docs/workflow/02-design/README.md` 是否需要补新模块、新约定或新的异常链路
 - `docs/knowledge/` 是否需要补新的长期稳定真相
 - `docs/workflow/04-verification/README.md` 是否需要补新的测试映射和回归策略
+- `docs/workflow/04-verification/01-test-strategy-and-quality-gates.md` 是否需要更新测试层级、质量门禁或准出标准
+- `docs/workflow/04-verification/02-test-standards.md` 是否需要更新测试代码、断言、隔离或 Mock 规则
+- `docs/workflow/04-verification/03-test-design-methodology.md` 是否需要新增测试设计方法或模块风险模板
+- `docs/workflow/04-verification/04-test-case-matrix.md` 是否需要登记新的长期测试用例
+- `docs/workflow/04-verification/05-regression-suite.md` 是否需要更新回归套件和触发条件
+- `docs/workflow/04-verification/06-test-data-and-fixtures.md` 是否需要沉淀新的 fixtures 或测试数据规则
+- `docs/workflow/04-verification/07-coverage-map.md` 是否需要更新模块覆盖状态和测试缺口
 - `docs/workflow/05-tasks/README.md` 是否需要把新发现的工作拆成任务
 - `docs/issues/` 是否需要新增未解决问题、阻塞项、风险或技术债
 - `docs/changes/` 是否需要新增或移动一个 change workspace
@@ -325,6 +340,8 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 - verification 里是否有对应 `TEST-*` 验证高优 `FR-*`
 - tasks 里是否有可执行 `T-*` 串起 `FR / DES / TEST`
 - `docs/changes/active/<change-key>/` 是否记录了本轮背景、影响、验证和同步清单
+- 高风险变更是否已经补测试设计、失败路径、回归触发条件和残余风险记录
+- 新增长期测试资产是否已经进入测试用例矩阵、回归套件、测试数据规范或覆盖映射
 - 是否仍存在阻塞性 `[待确认]`
 - 是否把需求、设计、任务、长期知识或变更历史写错了位置
 
@@ -332,6 +349,7 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 
 - 代码真实行为是否和 requirements / design / verification 一致
 - 新增测试和回归验证是否已经写回 verification
+- 新增或变化的测试规范、测试设计、用例矩阵、回归套件、测试数据和覆盖缺口是否写回 verification 的对应细分文档
 - 新发现的长期真相是否进入 `docs/knowledge/`
 - 本轮 change 是否应该继续 active、移动到 completed，或转成 legacy
 - 发布、问题、ADR、归档、README、AGENTS 是否需要同步
@@ -403,6 +421,8 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 - 不能把实现细节提前写进 requirements
 - 不能把任务清单混进 design
 - 不能把“后面补测试”当 verification 计划
+- 不能把测试计划、测试标准、测试用例、历史进展、调试步骤和覆盖映射混写在一份平铺文档里
+- 对高风险变更，verification 必须写清测试层级、测试设计方法、失败路径、回归触发条件、实际命令和残余风险
 - 对已有项目，不能写出和代码现状冲突的 spec
 - 对用户要求“完整设计”的场景，不能只给最小骨架或最小示例后就停止
 - 对新需求、bugfix、发布等场景，必须明确当前状态文档和历史变更文档分别怎么更新
