@@ -12,6 +12,8 @@ These rules turn document-driven development from a suggestion into the default 
 - `docs/rules/testing-standards.md`: testing and regression expectations
 - `docs/rules/doc-sync-rules.md`: documentation and code sync rules
 - `docs/rules/change-management-rules.md`: change-tracking rules for requirements, bug fixes, and releases
+- `docs/rules/commit-rules.md`: commit format, document links, scope, and test status rules
+- `docs/rules/document-archive-rules.md`: record document IDs, indexes, and year/month archive rules
 - `docs/rules/issue-management-rules.md`: issue tracking and archive rules
 - `docs/rules/definition-of-done.md`: completion checklist
 - `docs/rules/document-routing-rules.md`: semantic-to-path routing rules
@@ -22,4 +24,5 @@ These rules turn document-driven development from a suggestion into the default 
 2. When a trade-off appears, check whether a default rule already exists here
 3. Run analyze before implementation to confirm requirements, design, verification, tasks, and the change workspace do not conflict
 4. Run converge after implementation to update current docs, long-lived truth, and change history
-5. As the project evolves, add new rules here instead of leaving them in chat or PR comments only
+5. Before committing, read `docs/rules/commit-rules.md` and ensure the commit body includes links, scope, impact, and test status
+6. As the project evolves, add new rules here instead of leaving them in chat or PR comments only

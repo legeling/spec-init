@@ -346,6 +346,8 @@ render_project_template "docs/rules/testing-standards.md.tmpl" "$TARGET_DIR/docs
 render_project_template "docs/rules/bug-fix-rules.md.tmpl" "$TARGET_DIR/docs/rules/bug-fix-rules.md"
 render_project_template "docs/rules/doc-sync-rules.md.tmpl" "$TARGET_DIR/docs/rules/doc-sync-rules.md"
 render_project_template "docs/rules/change-management-rules.md.tmpl" "$TARGET_DIR/docs/rules/change-management-rules.md"
+render_project_template "docs/rules/commit-rules.md.tmpl" "$TARGET_DIR/docs/rules/commit-rules.md"
+render_project_template "docs/rules/document-archive-rules.md.tmpl" "$TARGET_DIR/docs/rules/document-archive-rules.md"
 render_project_template "docs/rules/issue-management-rules.md.tmpl" "$TARGET_DIR/docs/rules/issue-management-rules.md"
 render_project_template "docs/rules/definition-of-done.md.tmpl" "$TARGET_DIR/docs/rules/definition-of-done.md"
 render_project_template "docs/rules/document-routing-rules.md.tmpl" "$TARGET_DIR/$ROUTING_RULES_DOC"

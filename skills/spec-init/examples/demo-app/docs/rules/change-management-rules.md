@@ -14,6 +14,7 @@
 - 实现前：完成 analyze 检查，确认 `FR / DES / TEST / T` 和 change workspace 没有冲突
 - 实现后：完成 converge 回写，确认代码真实行为、验证结果和文档一致
 - 变更完成后：把工作区移动到 `docs/changes/completed/`
+- 提交变更时：遵循 `docs/rules/commit-rules.md`，在提交正文中关联 Issue、change workspace、需求 / 设计 / 验证文档，并记录修改范围、影响范围和测试状态
 
 ## 最低要求
 
@@ -21,3 +22,4 @@
 - 每条 bug 记录必须写清症状、根因、修复方案和回归要求
 - 每个 release 记录必须写清新增、修复、破坏性变化和已知问题
 - 每轮实现前必须能说明 analyze 结论；每轮交付前必须能说明 converge 结果
+- 每次提交必须只绑定一个主要改动点，并能回链到对应文档记录

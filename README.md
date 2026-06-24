@@ -141,6 +141,8 @@ docs/rules/bug-fix-rules.md
 docs/rules/testing-standards.md
 docs/rules/doc-sync-rules.md
 docs/rules/change-management-rules.md
+docs/rules/commit-rules.md
+docs/rules/document-archive-rules.md
 docs/rules/issue-management-rules.md
 docs/rules/definition-of-done.md
 docs/rules/document-routing-rules.md
@@ -260,6 +262,8 @@ docs/
     |-- testing-standards.md
     |-- doc-sync-rules.md
     |-- change-management-rules.md
+    |-- commit-rules.md
+    |-- document-archive-rules.md
     |-- issue-management-rules.md
     |-- document-routing-rules.md
     `-- definition-of-done.md
@@ -389,6 +393,8 @@ $spec-init my-cli --type=cli
 - `docs/rules/testing-standards.md`
 - `docs/rules/doc-sync-rules.md`
 - `docs/rules/change-management-rules.md`
+- `docs/rules/commit-rules.md`
+- `docs/rules/document-archive-rules.md`
 - `docs/rules/issue-management-rules.md`
 - `docs/rules/definition-of-done.md`
 - `docs/rules/document-routing-rules.md`

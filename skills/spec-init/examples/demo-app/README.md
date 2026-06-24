@@ -66,6 +66,8 @@
 - `docs/rules/README.md`: 编码、测试、文档同步和完成定义规则
 - `docs/rules/document-routing-rules.md`: 文档语义到目录路径的映射规则
 - `docs/rules/change-management-rules.md`: 变更记录与发布规则
+- `docs/rules/commit-rules.md`: 提交格式、文档关联、范围和测试状态规则
+- `docs/rules/document-archive-rules.md`: 记录型文档编号、索引和按年月归档规则
 - `docs/rules/issue-management-rules.md`: issue 跟踪与文档归档规则
 - `docs/rules/clarification-rules.md`: 需求澄清与决策确认规则
 - `docs/rules/bug-fix-rules.md`: bug 定位、根因修复与回归规则

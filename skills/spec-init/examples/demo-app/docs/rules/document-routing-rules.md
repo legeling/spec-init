@@ -30,6 +30,8 @@
 - 长期稳定事实、术语、结构、规则、样例：放 `knowledge`
 - 某一次具体需求或 bugfix 的工作区：放 `changes`
 - 问题、发布、决策、归档：放 `records`
+- 记录型文档必须遵循 `docs/rules/document-archive-rules.md`，使用 `TYPE-YYYYMMDD-NNN` 并按年份和月份归档
+- 长期状态文档保持固定路径；内容变多时按功能模块拆分，并保留目录级 `README.md` 索引
 
 ## 阶段映射
 

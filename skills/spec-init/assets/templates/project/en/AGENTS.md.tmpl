@@ -64,6 +64,10 @@ This project borrows the staged rhythm from Spec Kit while keeping `docs/` as th
 - API, data shape, and config changes must update design docs, knowledge docs, and tests together.
 - Bug fixes must include regression tests and a corresponding change workspace update.
 - New requirements, bug fixes, refactors, or workflow changes should update `docs/changes/active/` or its archive destinations.
+- Every commit must follow `docs/rules/commit-rules.md`, use the `<type>: <short title>` title format, and include Summary, Links, Modified scope, Impact scope, Test status, and Detailed changes in the body.
+- Every commit can link to only one primary change point; before committing, confirm the corresponding Issue, change workspace, requirement / design / verification docs exist or have been synced.
+- Record documents must follow `docs/rules/document-archive-rules.md`, use `TYPE-YYYYMMDD-NNN`, and archive by year and month.
+- Code comments must explain what the key logic is, why it exists, and how it connects the business flow. Do not write empty comments that only repeat syntax.
 - Releases or externally visible delivery changes should update `docs/releases/`.
 - Unresolved issues, risks, and technical debt should update `docs/issues/`.
 - Replaced or retired documents should be moved into `docs/archive/`.

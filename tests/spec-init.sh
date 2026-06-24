@@ -107,6 +107,8 @@ assert_file_exists "$explicit_dir/docs/rules/clarification-rules.md"
 assert_file_exists "$explicit_dir/docs/rules/coding-standards.md"
 assert_file_exists "$explicit_dir/docs/rules/bug-fix-rules.md"
 assert_file_exists "$explicit_dir/docs/rules/change-management-rules.md"
+assert_file_exists "$explicit_dir/docs/rules/commit-rules.md"
+assert_file_exists "$explicit_dir/docs/rules/document-archive-rules.md"
 assert_file_exists "$explicit_dir/docs/rules/issue-management-rules.md"
 assert_file_exists "$explicit_dir/docs/rules/document-routing-rules.md"
 assert_contains "$explicit_dir/README.md" "项目类型：cli"
@@ -142,12 +144,20 @@ assert_contains "$explicit_dir/docs/releases/README.md" '最终对外交付了�
 assert_contains "$explicit_dir/docs/archive/README.md" '已废弃'
 assert_contains "$explicit_dir/docs/rules/README.md" '文档驱动开发'
 assert_contains "$explicit_dir/docs/rules/README.md" 'change-management-rules.md'
+assert_contains "$explicit_dir/docs/rules/README.md" 'commit-rules.md'
+assert_contains "$explicit_dir/docs/rules/README.md" 'document-archive-rules.md'
 assert_contains "$explicit_dir/docs/rules/README.md" 'issue-management-rules.md'
 assert_contains "$explicit_dir/docs/rules/README.md" 'document-routing-rules.md'
 assert_contains "$explicit_dir/docs/rules/clarification-rules.md" '必须先问用户'
 assert_contains "$explicit_dir/docs/rules/clarification-rules.md" '按项目类型补充必问问题'
 assert_contains "$explicit_dir/docs/rules/bug-fix-rules.md" '定位根因'
 assert_contains "$explicit_dir/docs/rules/change-management-rules.md" 'workflow 与 knowledge'
+assert_contains "$explicit_dir/docs/rules/commit-rules.md" '测试状态'
+assert_contains "$explicit_dir/docs/rules/commit-rules.md" '关联 Issue'
+assert_contains "$explicit_dir/docs/rules/document-archive-rules.md" 'TYPE-YYYYMMDD-NNN'
+assert_contains "$explicit_dir/docs/rules/document-archive-rules.md" '按年份和月份归档'
+assert_contains "$explicit_dir/docs/rules/coding-standards.md" '是什么'
+assert_contains "$explicit_dir/docs/rules/coding-standards.md" '为什么'
 assert_contains "$explicit_dir/docs/rules/issue-management-rules.md" '未解决问题要进入 `docs/issues/`'
 assert_contains "$explicit_dir/docs/rules/document-routing-rules.md" 'workflow.intake'
 assert_contains "$explicit_dir/docs/rules/document-routing-rules.md" '阶段映射'
@@ -232,6 +242,12 @@ assert_contains "$english_dir/docs/rules/clarification-rules.md" 'ask the user f
 assert_contains "$english_dir/docs/rules/clarification-rules.md" 'Project-Type-Specific Must-Ask Questions'
 assert_contains "$english_dir/docs/rules/bug-fix-rules.md" 'root cause'
 assert_contains "$english_dir/docs/rules/change-management-rules.md" 'workflow and knowledge docs'
+assert_contains "$english_dir/docs/rules/commit-rules.md" 'Test status'
+assert_contains "$english_dir/docs/rules/commit-rules.md" 'Linked Issue'
+assert_contains "$english_dir/docs/rules/document-archive-rules.md" 'TYPE-YYYYMMDD-NNN'
+assert_contains "$english_dir/docs/rules/document-archive-rules.md" 'archive by year and month'
+assert_contains "$english_dir/docs/rules/coding-standards.md" 'what it is'
+assert_contains "$english_dir/docs/rules/coding-standards.md" 'why it exists'
 assert_contains "$english_dir/docs/rules/issue-management-rules.md" 'Unresolved problems belong in `docs/issues/`'
 assert_contains "$english_dir/docs/rules/document-routing-rules.md" 'where each document semantic type should live'
 assert_contains "$english_dir/docs/rules/document-routing-rules.md" 'Phase Mapping'
