@@ -6,6 +6,7 @@
 - 每次提交必须能关联到一个主要文档入口：`docs/changes/active/<change-key>/`、`docs/issues/`、`docs/workflow/01-requirements/README.md` 或其他明确的需求 / 设计 / 验证文档。
 - 提交语言应跟随当前项目主要文档语言。中文项目用中文标题和正文；英文项目用英文标题和正文。
 - 提交正文必须记录修改目的、修改范围、影响范围和测试状态，不能只写一个短标题。
+- 提交正文中没有内容的关联项或状态项必须整行省略，不要写 `无`、`不适用` 或空占位。
 - 提交前必须完成必要的 analyze / converge 检查，并确认文档、测试和变更记录已经同步。
 
 ## 标题格式
@@ -60,7 +61,25 @@
 - [具体变更 2]
 ```
 
-如果某一项确实不适用，写 `不适用：<原因>`，不要删除分块。
+如果某一条目没有内容，整行省略；不要写 `无`、`不适用`、`N/A` 或类似空值。
+
+示例：
+
+```text
+关联：
+- Change: docs/changes/completed/CHG-20260624-001-homepage-hero/
+- Frontend: frontend/web@bd4be12
+```
+
+不要写：
+
+```text
+关联：
+- Change: docs/changes/completed/CHG-20260624-001-homepage-hero/
+- Requirement: 无
+- Design: 无
+- Test: 无
+```
 
 ## 关联规则
 
@@ -94,7 +113,6 @@ docs: 补充提交规范和文档关联规则
 为项目脚手架新增结构化提交规范，要求每次提交记录关联文档、修改范围、影响范围和测试状态。
 
 关联：
-- Issue: 不适用：本次是规则补强
 - Change: docs/changes/active/CHG-0001-template/
 - Requirement: FR-001 / docs/workflow/01-requirements/README.md
 - Design: DES-001 / docs/workflow/02-design/README.md
@@ -112,7 +130,6 @@ docs: 补充提交规范和文档关联规则
 
 测试状态：
 - 已运行：bash tests/spec-init.sh，结果通过
-- 未运行：不适用
 - 残余风险：旧项目需要手动复制该规则文件
 
 详细变更：

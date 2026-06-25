@@ -6,6 +6,7 @@
 - Every commit must link to one primary document entry: `docs/changes/active/<change-key>/`, `docs/issues/`, `docs/workflow/01-requirements/README.md`, or another explicit requirement / design / verification document.
 - Commit language should follow the project documentation language. Chinese projects use Chinese titles and bodies; English projects use English titles and bodies.
 - The commit body must record purpose, modified scope, impact scope, and test status. A short title alone is not enough.
+- Linked items or status items with no content must omit the whole line. Do not write `None`, `Not applicable`, `N/A`, or empty placeholders.
 - Before committing, finish the required analyze / converge checks and confirm docs, tests, and change records are synced.
 
 ## Title Format
@@ -60,7 +61,25 @@ Detailed changes:
 - [specific change 2]
 ```
 
-If a block truly does not apply, write `Not applicable: <reason>` instead of deleting the block.
+If an item has no content, omit the whole line. Do not write `None`, `Not applicable`, `N/A`, or similar empty values.
+
+Example:
+
+```text
+Links:
+- Change: docs/changes/completed/CHG-20260624-001-homepage-hero/
+- Frontend: frontend/web@bd4be12
+```
+
+Do not write:
+
+```text
+Links:
+- Change: docs/changes/completed/CHG-20260624-001-homepage-hero/
+- Requirement: None
+- Design: None
+- Test: None
+```
 
 ## Linking Rules
 
@@ -94,7 +113,6 @@ Summary:
 Add structured commit rules to the project scaffold so each commit records linked docs, modified scope, impact scope, and test status.
 
 Links:
-- Linked Issue: Not applicable: this is a rule hardening change
 - Change: docs/changes/active/CHG-0001-template/
 - Requirement: FR-001 / docs/workflow/01-requirements/README.md
 - Design: DES-001 / docs/workflow/02-design/README.md
@@ -112,7 +130,6 @@ Impact scope:
 
 Test status:
 - Run: bash tests/spec-init.sh, passed
-- Not run: Not applicable
 - Residual risk: existing projects need to copy this rule manually
 
 Detailed changes:
