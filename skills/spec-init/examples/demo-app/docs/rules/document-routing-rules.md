@@ -1,4 +1,9 @@
-# Document Routing Rules
+# 文档路由规则
+
+## 职责边界
+
+- 本文件负责：把文档语义映射到目录路径，并说明长期状态文档、长期知识、变更记录和记录型文档的边界。
+- 本文件不负责：记录型文档编号、索引字段或按年月归档细节；那部分见 `document-archive-rules.md`。
 
 ## 目的
 
@@ -35,15 +40,15 @@
 
 ## 阶段映射
 
-| Phase | 路由 |
+| 阶段 | 路由 |
 |---|---|
 | specify | `workflow.intake`, `workflow.requirements` |
 | clarify | intake / requirements 的待确认区，必要时 `records.issues` |
 | plan | `workflow.design`, `workflow.implementation`, `workflow.verification`, `knowledge.*` |
 | tasks | `workflow.tasks`, `changes.active` |
-| analyze | `workflow.requirements`, `workflow.design`, `workflow.verification`, `workflow.tasks`, `changes.active` |
+| analyze（一致性分析） | `workflow.requirements`, `workflow.design`, `workflow.verification`, `workflow.tasks`, `changes.active` |
 | implement | 代码、测试、脚本、迁移；任务来源仍回链到 `workflow.tasks` |
-| converge | `workflow.*`, `knowledge.*`, `changes.completed`, `records.*` |
+| converge（文档收敛） | `workflow.*`, `knowledge.*`, `changes.completed`, `records.*` |
 
 说明：这里借鉴 Spec Kit 的阶段节奏，但不把 `specs/` 作为默认长期文档目录。
 

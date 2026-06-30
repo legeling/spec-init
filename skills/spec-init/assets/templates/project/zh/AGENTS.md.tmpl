@@ -78,6 +78,8 @@
 - 开始编码前，至少保证一条完整追踪链已经存在：`FR -> DES -> TEST -> T`
 - 开始实现前必须完成 analyze 检查：需求、设计、验证、任务、change workspace 不得互相冲突。
 - 完成实现后必须完成 converge 检查：代码真实行为、测试结果、当前文档和历史记录重新一致。
+- `docs/changes/active/<change-key>/` 不能存放已完成变更；完成后必须移动到 `docs/changes/completed/`（如启用年月归档，则为 `docs/changes/completed/YYYY/MM/<change-key>/`）。
+- 如果暂时不能移动到 `completed/`，不得把状态写成“已完成”，必须保持“待收敛”或“阻塞”并写清剩余条件。
 - 具体编码、测试和文档同步规范，优先遵循 `docs/rules/` 下的规则文件。
 
 ## Project Commands
@@ -95,6 +97,7 @@
 - 需求、设计、验证、任务之间存在可追踪关系。
 - 长期稳定事实已沉淀到 `docs/knowledge/`。
 - 当前 change 已记录在 `docs/changes/active/`、`completed/` 或 `legacy/` 中的正确位置。
+- 已完成 change 不再停留在 `docs/changes/active/`。
 - 代码与文档保持一致。
 - 高优先级需求有自动化验证。
 - 实现前的一致性分析没有阻塞项。

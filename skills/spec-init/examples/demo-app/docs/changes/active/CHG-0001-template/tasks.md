@@ -20,5 +20,5 @@
   - Requirement: FR-ALL
   - Design: DES-ALL
   - Test: TEST-ALL
-  - Output: workflow / knowledge / changes / records 已同步
+  - Output: workflow / knowledge / changes / records 已同步；完成时工作区已从 `active/` 移到 `completed/`
   - Depends on: [相关实现任务完成]

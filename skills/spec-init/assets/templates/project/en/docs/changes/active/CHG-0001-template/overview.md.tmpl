@@ -18,6 +18,11 @@
 - Status: [active / blocked / needs convergence / completed]
 - Next phase entry: [document or task to update next]
 
+Status rule:
+
+- If the status is `completed`, this directory must not remain under `active/`; move it to `docs/changes/completed/` or `docs/changes/completed/YYYY/MM/<change-key>/`
+- If it cannot move yet, keep `needs convergence` or `blocked` and record the remaining conditions here: [remaining conditions]
+
 ## 4. Success Criteria
 
 - [observable result after this change is complete]

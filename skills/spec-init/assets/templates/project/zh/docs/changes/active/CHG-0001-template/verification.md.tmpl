@@ -25,4 +25,5 @@
 - [ ] 实现结果已回写 workflow
 - [ ] 长期真相已回写 knowledge
 - [ ] change 生命周期状态已更新
+- [ ] 如果 change 已完成，工作区已从 `active/` 移动到 `completed/`
 - [ ] 受影响的 issues / releases / adr / archive 已同步

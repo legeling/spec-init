@@ -354,6 +354,12 @@ spec 应该随着项目推进不断完善。每轮需求澄清、设计决策、
 - 本轮 change 是否应该继续 active、移动到 completed，或转成 legacy
 - 发布、问题、ADR、归档、README、AGENTS 是否需要同步
 
+完成状态的 change 不允许继续留在 `docs/changes/active/`：
+
+- 如果任务、验证、同步清单和收敛回写都完成，必须把整个 `docs/changes/active/<change-key>/` 移到 `docs/changes/completed/`（项目启用年月归档时使用 `docs/changes/completed/YYYY/MM/<change-key>/`）
+- 如果暂时不能移动，不能把状态写成“已完成 / completed”；必须保持“待收敛 / needs convergence”或“阻塞 / blocked”，并在 `overview.md` 或 `impact.md` 写清剩余条件
+- 移动后必须同步 `docs/changes/README.md` 索引、提交引用路径，以及必要的 releases / issues / ADR / archive 记录
+
 如果分析或收敛发现缺口，先补文档和任务，再继续实现或交付。
 
 ### Step 6: 脚本和模板的正确位置
