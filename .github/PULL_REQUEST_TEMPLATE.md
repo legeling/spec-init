@@ -1,30 +1,7 @@
-## Summary
+## Change
 
-- 
-
-## Why
-
-- 
-
-## Scope
-
-- [ ] `SKILL.md`
-- [ ] templates
-- [ ] examples
-- [ ] docs
-- [ ] README
-
-## Traceability Impact
-
-- [ ] Existing `FR -> DES -> TEST -> T` relationships still make sense
-- [ ] Example project was updated if needed
+Describe the problem and resulting behavior.
 
 ## Verification
 
-- [ ] Read the affected files end-to-end
-- [ ] Re-ran the init script if templates or script changed
-- [ ] Checked README / docs links if documentation changed
-
-## Notes
-
-- 
+Record actual checks and remaining limits. For scaffold changes, include compatibility impact; for workflow changes, include relevant scenario outcomes.

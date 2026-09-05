@@ -4,125 +4,92 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-function printUsage() {
-  console.log(`Usage:
-  spec-init [install] [--host HOST] [--dir PATH] [--force]
-
-Installs the spec-init skill.
-
-Options:
-  --host HOST   project | codex | claude | opencode (default: project)
-  --dir PATH    install to an explicit directory
-  --force       replace an existing installation
-  -h, --help    show this help message
-
-Examples:
-  npx --yes github:legeling/spec-init
-  npx --yes github:legeling/spec-init --host claude
-  npx --yes github:legeling/spec-init --dir ./.agents/skills/spec-init --force`);
-}
-
-function fail(message) {
-  console.error(`Error: ${message}`);
-  process.exit(1);
-}
-
-function resolveHostTarget(host) {
+function fail(message) { throw new Error(message); }
+function hostTarget(host) {
   switch (host) {
     case "project":
-    case "codex":
-      return path.resolve(process.cwd(), ".agents", "skills", "spec-init");
-    case "claude":
-      return path.join(os.homedir(), ".claude", "skills", "spec-init");
-    case "opencode":
-      return path.join(os.homedir(), ".config", "opencode", "skills", "spec-init");
-    default:
-      fail(`unsupported host: ${host}. Supported hosts: project, codex, claude, opencode`);
+    case "codex": return path.resolve(".agents", "skills", "spec-init");
+    case "claude": return path.join(os.homedir(), ".claude", "skills", "spec-init");
+    case "opencode": return path.join(os.homedir(), ".config", "opencode", "skills", "spec-init");
+    default: fail(`unsupported host: ${host}`);
   }
 }
-
-const args = process.argv.slice(2);
-
-if (args.includes("-h") || args.includes("--help")) {
-  printUsage();
-  process.exit(0);
-}
-
-if (args[0] === "install") {
-  args.shift();
-}
-
-let host = "project";
-let targetDir = "";
-let force = false;
-
-for (let index = 0; index < args.length; index += 1) {
-  const current = args[index];
-
-  if (current === "--host") {
-    host = args[index + 1] || "";
-    index += 1;
-    continue;
+function inspectTarget(target) {
+  let current = path.parse(target).root;
+  for (const part of target.slice(current.length).split(path.sep).filter(Boolean)) {
+    current = path.join(current, part);
+    let stat;
+    try { stat = fs.lstatSync(current); }
+    catch (error) { if (error.code === "ENOENT") continue; throw error; }
+    if (stat.isSymbolicLink() || !stat.isDirectory()) fail(`unsafe directory: ${current}`);
   }
-
-  if (current.startsWith("--host=")) {
-    host = current.slice("--host=".length);
-    continue;
+}
+function validatePackage(source) {
+  for (const file of ["SKILL.md", "scripts/spec-init.sh"]) {
+    const target = path.join(source, file);
+    if (!fs.existsSync(target) || !fs.lstatSync(target).isFile()) fail(`incomplete skill package: ${file}`);
   }
-
-  if (current === "--dir") {
-    targetDir = args[index + 1] || "";
-    index += 1;
-    continue;
+}
+function install() {
+  const args = process.argv.slice(2);
+  if (args[0] === "install") args.shift();
+  let host = "project", target, force = false;
+  for (let index = 0; index < args.length; index += 1) {
+    const argument = args[index];
+    if (argument === "--help" || argument === "-h") {
+      console.log("Usage: spec-init [install] [--host project|codex|claude|opencode] [--dir PATH] [--force]\n--force safely replaces an existing skill installation; back up customizations first.");
+      return;
+    }
+    if (argument === "--force") { force = true; continue; }
+    const option = argument.split("=", 1)[0];
+    if (option !== "--host" && option !== "--dir") fail(`unexpected argument: ${argument}`);
+    const value = argument.includes("=") ? argument.slice(option.length + 1) : args[++index];
+    if (!value || value.startsWith("--")) fail(`${option} requires a value`);
+    if (option === "--host") host = value; else target = value;
   }
-
-  if (current.startsWith("--dir=")) {
-    targetDir = current.slice("--dir=".length);
-    continue;
+  const defaultTarget = hostTarget(host); // Validate host even when --dir is supplied.
+  const source = fs.realpathSync(path.resolve(__dirname, "../skills/spec-init"));
+  const destination = target === undefined ? defaultTarget : path.resolve(target);
+  inspectTarget(destination);
+  if (destination === source || destination.startsWith(source + path.sep) || source.startsWith(destination.endsWith(path.sep) ? destination : destination + path.sep)) {
+    fail("installation source and destination must not overlap");
   }
-
-  if (current === "--force") {
-    force = true;
-    continue;
+  validatePackage(source);
+  if (fs.existsSync(destination)) {
+    if (!force) fail(`target already exists: ${destination} (use --force to replace it)`);
+    validatePackage(destination); // Never remove an unrelated directory with --force.
   }
-
-  fail(`unexpected argument: ${current}`);
-}
-
-if (!host) {
-  fail("--host requires a value");
-}
-
-if (args.includes("--dir") && !targetDir) {
-  fail("--dir requires a value");
-}
-
-const packageRoot = path.resolve(__dirname, "..");
-const sourceDir = path.join(packageRoot, "skills", "spec-init");
-
-if (!fs.existsSync(sourceDir)) {
-  fail(`skill source not found: ${sourceDir}`);
-}
-
-const destinationDir = targetDir ? path.resolve(targetDir) : resolveHostTarget(host);
-
-if (fs.existsSync(destinationDir)) {
-  if (!force) {
-    fail(`target already exists: ${destinationDir} (use --force to replace it)`);
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  const stage = fs.mkdtempSync(path.join(path.dirname(destination), ".spec-init-install-"));
+  const previous = path.join(stage, "previous");
+  let retainRecovery = false;
+  try {
+    const prepared = path.join(stage, "package");
+    fs.cpSync(source, prepared, { recursive: true, errorOnExist: true, force: false });
+    validatePackage(prepared);
+    fs.chmodSync(path.join(prepared, "scripts/spec-init.sh"), 0o755);
+    if (fs.existsSync(destination)) {
+      if (!force) fail(`target appeared during installation: ${destination}`);
+      inspectTarget(destination);
+      validatePackage(destination);
+      fs.renameSync(destination, previous);
+    }
+    try { fs.renameSync(prepared, destination); }
+    catch (error) {
+      if (fs.existsSync(previous)) {
+        try { fs.renameSync(previous, destination); }
+        catch (restoreError) {
+          retainRecovery = true;
+          fail(`${error.message}; recovery needed: restore ${previous} to ${destination}: ${restoreError.message}`);
+        }
+      }
+      throw error;
+    }
+  } finally {
+    if (!retainRecovery) fs.rmSync(stage, { recursive: true, force: true });
   }
-
-  fs.rmSync(destinationDir, { recursive: true, force: true });
+  console.log(`Installed spec-init to: ${destination}`);
+  console.log("Use $spec-init (Codex/project) or /spec-init (Claude Code/OpenCode).");
 }
-
-fs.mkdirSync(path.dirname(destinationDir), { recursive: true });
-fs.cpSync(sourceDir, destinationDir, { recursive: true });
-
-const scaffoldScript = path.join(destinationDir, "scripts", "spec-init.sh");
-if (fs.existsSync(scaffoldScript)) {
-  fs.chmodSync(scaffoldScript, 0o755);
-}
-
-console.log(`Installed spec-init to: ${destinationDir}`);
-console.log("Next step:");
-console.log("- Codex / project-local: use $spec-init or the skill picker");
-console.log("- Claude Code / OpenCode: use /spec-init after the host reloads skills if needed");
+try { install(); }
+catch (error) { console.error(`Error: ${error.message}`); process.exitCode = 1; }

@@ -1,58 +1,10 @@
-# 安装说明
+# 安装与更新
 
-## 当前项目内安装（默认推荐）
+安装命令与宿主路径统一见 [README](../../README.md#安装)。仓库未发布的修改需要从本地安装，GitHub 安装命令只会取得远端版本。
 
-在项目根目录执行：
+区分两个操作：
 
-```bash
-npx --yes github:legeling/spec-init
-```
+- 安装 Skill：复制技能包，不修改项目业务文档。安装器的 `--force` 先准备新版再替换已有完整技能，失败恢复旧版；更新成功会替换定制，先备份。空参数和不安全目标在写入前拒绝。
+- 生成骨架：只为需要文档骨架的项目创建 README、AGENTS、docs/README。脚本的 `--force` 在项目外备份并替换这三个目标，不删除旧目录；通过 `SPEC_INIT_BACKUP_ROOT` 可指定项目外备份根目录。
 
-或者：
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash
-```
-
-默认会安装到：
-
-```text
-.agents/skills/spec-init
-```
-
-这条路径最适合直接把 skill 放进项目里，方便团队共享和版本管理。
-
-## 安装到全局宿主目录
-
-```bash
-npx --yes github:legeling/spec-init --host claude
-npx --yes github:legeling/spec-init --host opencode
-
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host claude
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host opencode
-```
-
-## 安装到自定义目录
-
-```bash
-npx --yes github:legeling/spec-init --dir ./tools/skills/spec-init
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --dir ./tools/skills/spec-init
-```
-
-## 手动复制（备用）
-
-```bash
-cp -R skills/spec-init /path/to/repo/.agents/skills/spec-init
-```
-
-## 验证方式
-
-安装后，尝试显式调用：
-
-- Claude / OpenCode: `/spec-init`
-- 项目内安装 / Codex: `$spec-init`
-
-或者直接询问：
-
-- “帮我把这个想法整理成 requirements、design 和 verification plan”
-- “这是一个现成项目，帮我补 spec，先读代码再写文档”
+升级后，旧项目的全量文档门禁仍可能存在。按 [迁移说明](../../skills/spec-init/references/doc-boundaries.md) 定向合并，不用安装或强制生成代替项目迁移。回滚只恢复本次改动，保留之后的用户编辑。

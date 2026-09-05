@@ -1,52 +1,10 @@
-# Installation
+# Installation and updates
 
-## Install into the current project (recommended)
+The [README](../../README.en.md#install) owns installation commands and host paths. Unpublished changes require installation from the local checkout; GitHub commands retrieve the remote version.
 
-Run this from the project root:
+Distinguish two operations:
 
-```bash
-npx --yes github:legeling/spec-init
-```
+- Installing the skill copies its package without changing project documents. Installer `--force` prepares the replacement first and restores the old installation on failure. Successful updates replace customizations; back them up first. Invalid arguments and unsafe targets are rejected before writes.
+- Scaffolding creates README, AGENTS, and docs/README when a skeleton is needed. Scaffold `--force` backs up those three targets outside the project before replacing them, without deleting old directories. `SPEC_INIT_BACKUP_ROOT` can select an outside-project backup location.
 
-Or:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash
-```
-
-By default this installs to:
-
-```text
-.agents/skills/spec-init
-```
-
-That path is the simplest option when the skill should live with the repository and be shared with the rest of the team.
-
-## Install into a global host directory
-
-```bash
-npx --yes github:legeling/spec-init --host claude
-npx --yes github:legeling/spec-init --host opencode
-
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host claude
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --host opencode
-```
-
-This skill also includes:
-
-- `skills/spec-init/agents/openai.yaml`
-
-to improve Codex presentation metadata and default invocation messaging.
-
-## Install into a custom directory
-
-```bash
-npx --yes github:legeling/spec-init --dir ./tools/skills/spec-init
-curl -fsSL https://raw.githubusercontent.com/legeling/spec-init/main/install.sh | bash -s -- --dir ./tools/skills/spec-init
-```
-
-## Manual copy fallback
-
-```bash
-cp -R skills/spec-init /path/to/repo/.agents/skills/spec-init
-```
+Old project workflow gates may remain after upgrading. Apply a scoped merge using the [migration reference](../../skills/spec-init/references/doc-boundaries.md), rather than treating installation or forced scaffolding as migration. Roll back only this change and preserve later user edits.

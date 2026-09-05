@@ -1,16 +1,7 @@
 # Contributing
 
-Good contributions include:
+Maintain one core skill and keep bilingual templates and examples consistent. Replace rules responsible for demonstrated problems instead of accumulating generic constraints.
 
-- improving the skill workflow in `SKILL.md`
-- improving template boundaries and traceability
-- adding new project-type examples
-- improving docs and bilingual content
-- fixing helper-script, template, or example issues that drift from the skill workflow
+For script or template changes, run `npm run lint` and `npm test`. For core behavior changes, also exercise relevant scenarios and inspect implementation, document scope, and handling of historical plans. Phrase matching is not behavioral acceptance.
 
-Before submitting:
-
-- keep `skills/spec-init/` as the single core skill
-- do not split hosts into multiple duplicated implementations
-- keep templates and examples in sync
-- run `bash tests/spec-init.sh` before submitting changes
+Describe the problem, final behavior, compatibility impact, and actual verification. Ordinary changes need no prerequisite issue, ID chain, or separate change record.

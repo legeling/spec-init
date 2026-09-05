@@ -1,13 +1,3 @@
 # PR Guidelines
 
-Please include:
-
-- motivation
-- what changed
-- scope of impact
-- whether `SKILL.md` changed
-- whether templates changed
-- whether examples changed
-- how you verified the change
-
-If templates changed, also confirm that traceability still holds.
+Explain the problem, final behavior, and actual verification. Describe output compatibility for scaffold changes and scenario results for workflow changes. Keep relevant examples current; no manual traceability matrix is required.

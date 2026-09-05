@@ -1,6 +1,6 @@
 {
   "name": "spec-init",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Install the spec-init agent skill into a project or supported host directories.",
   "license": "PolyForm-Noncommercial-1.0.0",
   "private": true,
@@ -17,7 +17,10 @@
     "skills/spec-init/",
     "LICENSE",
     "README.md",
-    "README.en.md"
+    "README.en.md",
+    "docs/zh/",
+    "docs/en/",
+    "docs/optimization-plan.md"
   ],
   "engines": {
     "node": ">=18"

@@ -1,325 +1,225 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-SCRIPT_PATH="$ROOT_DIR/skills/spec-init/scripts/spec-init.sh"
-INSTALLER_PATH="$ROOT_DIR/install.sh"
-NODE_INSTALLER_PATH="$ROOT_DIR/bin/spec-init.js"
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+SCRIPT="$ROOT/skills/spec-init/scripts/spec-init.sh"
 TMP_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/spec-init-test.XXXXXX")"
-
-cleanup() {
-  rm -rf "$TMP_ROOT"
+TMP_ROOT="$(cd "$TMP_ROOT" && pwd -P)"
+trap 'rm -rf -- "$TMP_ROOT"' EXIT
+export SPEC_INIT_BACKUP_ROOT="$TMP_ROOT/backups"
+checks=0
+fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
+ok() { checks=$((checks + 1)); }
+exists() { [[ -f "$1" ]] || fail "missing $1"; }
+reject() {
+  if "$@" > "$TMP_ROOT/rejected.out" 2>&1; then fail "expected rejection: $*"; fi
+  ok
+}
+manifest() { (cd "$1" && find . -type f | LC_ALL=C sort); }
+expect_three() {
+  local got
+  got="$(manifest "$1")"
+  [[ "$got" == $'./AGENTS.md\n./README.md\n./docs/README.md' ]] || fail "unexpected scaffold files: $got"
+  ok
 }
 
-fail() {
-  printf 'FAIL: %s\n' "$1" >&2
-  exit 1
-}
+# Installer compatibility: local copies only, no network or host-global destinations.
+mkdir "$TMP_ROOT/project"
+(cd "$TMP_ROOT/project" && node "$ROOT/bin/spec-init.js") > "$TMP_ROOT/install.out"
+exists "$TMP_ROOT/project/.agents/skills/spec-init/SKILL.md"
+reject node "$ROOT/bin/spec-init.js" --dir "$TMP_ROOT/project/.agents/skills/spec-init"
+node "$ROOT/bin/spec-init.js" --dir "$TMP_ROOT/node-copy" > /dev/null
+diff -r "$ROOT/skills/spec-init" "$TMP_ROOT/node-copy" > /dev/null
+SPEC_INIT_INSTALL_SOURCE="$ROOT" bash "$ROOT/install.sh" --dir "$TMP_ROOT/bash-copy" > /dev/null
+diff -r "$ROOT/skills/spec-init" "$TMP_ROOT/bash-copy" > /dev/null
+reject node "$ROOT/bin/spec-init.js" --host unknown
+ok
 
-assert_file_exists() {
-  [[ -f "$1" ]] || fail "expected file to exist: $1"
-}
+# Both languages and all supported type values keep the bounded output contract.
+for lang in zh en; do
+  for type in web api cli library service; do
+    out="$TMP_ROOT/$lang-$type"
+    bash "$SCRIPT" "$out" --type="$type" --lang="$lang" > /dev/null
+    expect_three "$out"
+    case "$lang" in
+      zh) label="项目类型：$type";; en) label="Project type: $type";;
+    esac
+    [[ "$(cat "$out/README.md")" == *"$label"* ]] || fail 'type/language not rendered'
+  done
+done
+name='A & B / \ __PROJECT_TYPE__ $HOME `literal` 中文'
+bash "$SCRIPT" "$TMP_ROOT/literal" --name "$name" --type cli > /dev/null
+IFS= read -r title < "$TMP_ROOT/literal/README.md"
+[[ "$title" == "# $name" ]] || fail 'literal project name changed'
+ok
+mkdir "$TMP_ROOT/here"
+(cd "$TMP_ROOT/here" && bash "$SCRIPT" --here --name 'Worker' --lang EN --type API) > /dev/null
+expect_three "$TMP_ROOT/here"
+bash "$SCRIPT" "$TMP_ROOT/queue-worker" > /dev/null
+[[ "$(cat "$TMP_ROOT/queue-worker/README.md")" == *'项目类型：service'* ]] || fail 'inference changed'
+ok
 
-assert_contains() {
-  local file_path="$1"
-  local expected="$2"
+# Rerun preserves every existing byte; force preserves old data and creates recoverable backups.
+existing="$TMP_ROOT/existing"
+bash "$SCRIPT" "$existing" > /dev/null
+printf 'custom readme\n' > "$existing/README.md"
+printf 'custom instructions\n' > "$existing/AGENTS.md"
+printf 'custom entry\n' > "$existing/docs/README.md"
+mkdir -p "$existing/docs/00-intake" "$existing/docs/changes/active/user-change"
+printf 'old business context\n' > "$existing/docs/00-intake/business.md"
+printf 'unfinished work\n' > "$existing/docs/changes/active/user-change/tasks.md"
+cp -R "$existing" "$TMP_ROOT/before"
+bash "$SCRIPT" "$existing" --name Changed > /dev/null
+diff -r "$existing" "$TMP_ROOT/before" > /dev/null
+ok
+bash "$SCRIPT" "$existing" --force --lang en > "$TMP_ROOT/force.out"
+backup="$(sed -n 's/^Backup: //p' "$TMP_ROOT/force.out")"
+[[ -d "$backup" ]] || fail 'backup path missing'
+expect_three "$backup/files"
+exists "$backup/RESTORE.txt"
+[[ "$backup" != "$existing/"* ]] || fail 'backup is inside project'
+for file in README.md AGENTS.md docs/README.md; do
+  cmp "$backup/files/$file" "$TMP_ROOT/before/$file"
+  cp -p "$backup/files/$file" "$existing/$file"
+done
+# Backups are outside the project and cannot introduce old rules into its tree.
+rm -rf -- "$backup"
+diff -r "$existing" "$TMP_ROOT/before" > /dev/null
+ok
+bash "$SCRIPT" "$TMP_ROOT/new-force" --force > /dev/null
+expect_three "$TMP_ROOT/new-force"
 
-  if ! grep -Fq "$expected" "$file_path"; then
-    fail "expected $file_path to contain: $expected"
+# All invalid arguments fail before any target is created.
+for option in '--bad' '--lang=fr' '--type=app' '--name=' '--lang=' '--type='; do
+  reject bash "$SCRIPT" "$TMP_ROOT/invalid" "$option"
+  [[ ! -e "$TMP_ROOT/invalid" ]] || fail 'invalid arguments created target'
+done
+for option in --name --lang --type; do
+  reject bash "$SCRIPT" "$TMP_ROOT/invalid" "$option"
+  [[ ! -e "$TMP_ROOT/invalid" ]] || fail 'missing value created target'
+done
+reject bash "$SCRIPT" "$TMP_ROOT/invalid" --name $'two\nlines'
+reject bash "$SCRIPT" "$TMP_ROOT/invalid" --lang --force
+reject bash "$SCRIPT" "$TMP_ROOT/invalid" "$TMP_ROOT/second"
+[[ ! -e "$TMP_ROOT/invalid" && ! -e "$TMP_ROOT/second" ]] || fail 'bad arguments wrote data'
+
+# Preflight checks every destination before writing anything, with and without force.
+mkdir -p "$TMP_ROOT/external" "$TMP_ROOT/link-file" "$TMP_ROOT/link-docs" "$TMP_ROOT/wrong-type"
+printf 'external content\n' > "$TMP_ROOT/external/original.md"
+ln -s "$TMP_ROOT/external/original.md" "$TMP_ROOT/link-file/AGENTS.md"
+ln -s "$TMP_ROOT/external" "$TMP_ROOT/link-docs/docs"
+ln -s "$TMP_ROOT/external" "$TMP_ROOT/link-parent"
+ln -s "$TMP_ROOT/nonexistent" "$TMP_ROOT/dangling"
+mkdir "$TMP_ROOT/wrong-type/AGENTS.md"
+for force in '' --force; do
+  for target in link-file link-docs link-parent/child dangling wrong-type; do
+    if [[ -n "$force" ]]; then
+      reject bash "$SCRIPT" "$TMP_ROOT/$target" "$force"
+    else
+      reject bash "$SCRIPT" "$TMP_ROOT/$target"
+    fi
+  done
+done
+[[ "$(manifest "$TMP_ROOT/external")" == './original.md' ]] || fail 'wrote outside target'
+[[ "$(cat "$TMP_ROOT/external/original.md")" == 'external content' ]] || fail 'external content changed'
+for target in link-file link-docs wrong-type; do
+  [[ ! -e "$TMP_ROOT/$target/README.md" ]] || fail 'partial output before rejection'
+done
+ok
+
+# Missing template must fail before creating an empty project.
+rm "$TMP_ROOT/node-copy/assets/templates/project/en/AGENTS.md.tmpl"
+reject bash "$TMP_ROOT/node-copy/scripts/spec-init.sh" "$TMP_ROOT/missing-template" --lang en
+[[ ! -e "$TMP_ROOT/missing-template" ]] || fail 'missing template created output'
+
+# Installer argument errors cannot fall back to or mutate the default installation.
+for kind in node bash; do
+  project="$TMP_ROOT/args-$kind"
+  mkdir "$project"
+  if [[ "$kind" == node ]]; then
+    installer=(node "$ROOT/bin/spec-init.js")
+  else
+    installer=(env SPEC_INIT_INSTALL_SOURCE="$ROOT" bash "$ROOT/install.sh")
   fi
-}
-
-assert_equals() {
-  local actual="$1"
-  local expected="$2"
-  local message="$3"
-
-  if [[ "$actual" != "$expected" ]]; then
-    fail "$message"
+  "${installer[@]}" --dir "$project/.agents/skills/spec-init" > /dev/null
+  printf 'custom rule\n' > "$project/.agents/skills/spec-init/custom.md"
+  cp -R "$project" "$TMP_ROOT/args-before-$kind"
+  for option in --dir= --dir --host= --host; do
+    (cd "$project" && reject "${installer[@]}" "$option" --force)
+  done
+  (cd "$project" && reject "${installer[@]}" --host unknown --dir "$project/other")
+  (cd "$project" && reject "${installer[@]}" --dir --host project)
+  if [[ "$kind" == bash ]]; then
+    (cd "$project" && reject "${installer[@]}" --ref= --force)
+    (cd "$project" && reject "${installer[@]}" --ref --force)
   fi
-}
+  diff -r "$project" "$TMP_ROOT/args-before-$kind" > /dev/null
+  ok
 
-trap cleanup EXIT
+  # Normal replacement succeeds, and copy/activation failure preserves the old version.
+  destination="$TMP_ROOT/replace-$kind"
+  "${installer[@]}" --dir "$destination" > /dev/null
+  printf 'old customization\n' > "$destination/custom.md"
+  cp -R "$destination" "$TMP_ROOT/replace-before-$kind"
+  fake="$TMP_ROOT/fake-$kind"
+  mkdir "$fake"
+  if [[ "$kind" == node ]]; then
+    cat > "$fake/fail-copy.cjs" <<'HOOK'
+require('node:fs').cpSync = () => { throw new Error('injected copy failure'); };
+HOOK
+    cat > "$fake/fail-activation.cjs" <<'HOOK'
+const fs = require('node:fs');
+const original = fs.renameSync;
+fs.renameSync = (source, target) => {
+  if (source.endsWith('/package')) throw new Error('injected activation failure');
+  return original(source, target);
+};
+HOOK
+    reject env NODE_OPTIONS="--require=$fake/fail-copy.cjs" "${installer[@]}" --dir "$destination" --force
+    diff -r "$destination" "$TMP_ROOT/replace-before-$kind" > /dev/null
+    reject env NODE_OPTIONS="--require=$fake/fail-activation.cjs" "${installer[@]}" --dir "$destination" --force
+  else
+    mkdir "$fake/copy" "$fake/activation"
+    printf '#!/bin/sh\nexit 28\n' > "$fake/copy/cp"
+    cat > "$fake/activation/mv" <<'HOOK'
+#!/bin/sh
+case "$1" in */package) exit 29;; esac
+exec /bin/mv "$@"
+HOOK
+    chmod +x "$fake/copy/cp" "$fake/activation/mv"
+    reject env PATH="$fake/copy:$PATH" "${installer[@]}" --dir "$destination" --force
+    diff -r "$destination" "$TMP_ROOT/replace-before-$kind" > /dev/null
+    reject env PATH="$fake/activation:$PATH" "${installer[@]}" --dir "$destination" --force
+  fi
+  diff -r "$destination" "$TMP_ROOT/replace-before-$kind" > /dev/null
+  [[ -z "$(find "$TMP_ROOT" -maxdepth 1 -name '.spec-init-install-*' -print)" ]] || fail 'installer staging leaked'
+  "${installer[@]}" --dir "$destination" --force > /dev/null
+  diff -r "$ROOT/skills/spec-init" "$destination" > /dev/null
+  ok
 
-bash -n "$SCRIPT_PATH"
-bash -n "$INSTALLER_PATH"
-node --check "$NODE_INSTALLER_PATH"
+  mkdir "$TMP_ROOT/unrelated-$kind"
+  printf 'business data\n' > "$TMP_ROOT/unrelated-$kind/keep.txt"
+  reject "${installer[@]}" --dir "$TMP_ROOT/unrelated-$kind" --force
+  [[ "$(cat "$TMP_ROOT/unrelated-$kind/keep.txt")" == 'business data' ]] || fail 'unrelated directory damaged'
+  ln -s "$destination" "$TMP_ROOT/install-link-$kind"
+  reject "${installer[@]}" --dir "$TMP_ROOT/install-link-$kind" --force
+  mini="$TMP_ROOT/self-$kind"
+  mkdir -p "$mini/bin" "$mini/skills"
+  cp "$ROOT/bin/spec-init.js" "$mini/bin/spec-init.js"
+  cp -R "$ROOT/skills/spec-init" "$mini/skills/spec-init"
+  if [[ "$kind" == node ]]; then
+    reject node "$mini/bin/spec-init.js" --dir "$mini/skills/spec-init" --force
+  else
+    reject env SPEC_INIT_INSTALL_SOURCE="$mini" bash "$ROOT/install.sh" --dir "$mini/skills/spec-init" --force
+  fi
+  diff -r "$ROOT/skills/spec-init" "$mini/skills/spec-init" > /dev/null
+  diff -r "$ROOT/skills/spec-init" "$destination" > /dev/null
+  ok
+done
 
-project_install_root="$TMP_ROOT/project-install"
-mkdir -p "$project_install_root"
+# Reject an in-project backup root before replacing any existing document.
+cp -R "$existing" "$TMP_ROOT/before-backup-rejection"
+reject env SPEC_INIT_BACKUP_ROOT="$existing/backups" bash "$SCRIPT" "$existing" --force
+diff -r "$existing" "$TMP_ROOT/before-backup-rejection" > /dev/null
+ok
 
-(
-  cd "$project_install_root"
-  node "$NODE_INSTALLER_PATH" >"$TMP_ROOT/node-install.out"
-)
-
-assert_file_exists "$project_install_root/.agents/skills/spec-init/SKILL.md"
-assert_file_exists "$project_install_root/.agents/skills/spec-init/scripts/spec-init.sh"
-assert_contains "$TMP_ROOT/node-install.out" 'Installed spec-init to:'
-assert_contains "$TMP_ROOT/node-install.out" '.agents/skills/spec-init'
-
-custom_install_dir="$TMP_ROOT/custom-install/spec-init"
-node "$NODE_INSTALLER_PATH" --dir "$custom_install_dir" >"$TMP_ROOT/node-custom.out"
-
-assert_file_exists "$custom_install_dir/SKILL.md"
-assert_file_exists "$custom_install_dir/scripts/spec-init.sh"
-
-if node "$NODE_INSTALLER_PATH" --host unknown >"$TMP_ROOT/node-invalid.out" 2>"$TMP_ROOT/node-invalid.err"; then
-  fail 'expected unsupported installer host to fail'
-fi
-
-assert_contains "$TMP_ROOT/node-invalid.err" 'unsupported host: unknown'
-
-bash_install_dir="$TMP_ROOT/bash-install/spec-init"
-SPEC_INIT_INSTALL_SOURCE="$ROOT_DIR" bash "$INSTALLER_PATH" --dir "$bash_install_dir" >"$TMP_ROOT/bash-install.out"
-
-assert_file_exists "$bash_install_dir/SKILL.md"
-assert_file_exists "$bash_install_dir/scripts/spec-init.sh"
-assert_contains "$TMP_ROOT/bash-install.out" 'Installed spec-init to:'
-
-explicit_dir="$TMP_ROOT/cli-tool"
-bash "$SCRIPT_PATH" "$explicit_dir" --name "Demo CLI" --type cli >"$TMP_ROOT/explicit.out"
-
-assert_file_exists "$explicit_dir/README.md"
-assert_file_exists "$explicit_dir/AGENTS.md"
-assert_file_exists "$explicit_dir/spec-init.topology.yml"
-assert_file_exists "$explicit_dir/docs/workflow/00-intake/README.md"
-assert_file_exists "$explicit_dir/docs/workflow/05-tasks/README.md"
-assert_file_exists "$explicit_dir/docs/knowledge/context/README.md"
-assert_file_exists "$explicit_dir/docs/knowledge/structure/README.md"
-assert_file_exists "$explicit_dir/docs/knowledge/behavior/README.md"
-assert_file_exists "$explicit_dir/docs/knowledge/reference/README.md"
-assert_file_exists "$explicit_dir/docs/issues/README.md"
-assert_file_exists "$explicit_dir/docs/changes/README.md"
-assert_file_exists "$explicit_dir/docs/changes/active/CHG-0001-template/overview.md"
-assert_file_exists "$explicit_dir/docs/changes/active/CHG-0001-template/design.md"
-assert_file_exists "$explicit_dir/docs/changes/active/CHG-0001-template/verification.md"
-assert_file_exists "$explicit_dir/docs/changes/active/CHG-0001-template/tasks.md"
-assert_file_exists "$explicit_dir/docs/changes/active/CHG-0001-template/impact.md"
-assert_file_exists "$explicit_dir/docs/changes/completed/README.md"
-assert_file_exists "$explicit_dir/docs/changes/legacy/README.md"
-assert_file_exists "$explicit_dir/docs/releases/README.md"
-assert_file_exists "$explicit_dir/docs/releases/v0.1.0-template.md"
-assert_file_exists "$explicit_dir/docs/archive/README.md"
-assert_file_exists "$explicit_dir/docs/adr/README.md"
-assert_file_exists "$explicit_dir/docs/rules/README.md"
-assert_file_exists "$explicit_dir/docs/rules/clarification-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/coding-standards.md"
-assert_file_exists "$explicit_dir/docs/rules/bug-fix-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/testing-standards.md"
-assert_file_exists "$explicit_dir/docs/rules/doc-sync-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/change-management-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/commit-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/document-archive-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/issue-management-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/document-routing-rules.md"
-assert_file_exists "$explicit_dir/docs/rules/definition-of-done.md"
-assert_contains "$explicit_dir/README.md" "项目类型：cli"
-assert_contains "$explicit_dir/spec-init.topology.yml" 'workflow.intake: docs/workflow/00-intake/README.md'
-assert_contains "$explicit_dir/spec-init.topology.yml" 'workflow_phases:'
-assert_contains "$explicit_dir/spec-init.topology.yml" 'converge:'
-assert_contains "$explicit_dir/AGENTS.md" 'Workflow Phases'
-assert_contains "$explicit_dir/docs/workflow/00-intake/README.md" '当前推断的项目类型：`cli`'
-assert_contains "$explicit_dir/docs/workflow/00-intake/README.md" '新手决策向导'
-assert_contains "$explicit_dir/docs/workflow/00-intake/README.md" '推断依据：用户明确通过命令参数指定项目类型：cli。'
-assert_contains "$explicit_dir/docs/workflow/01-requirements/README.md" '工具输出稳定、退出码明确'
-assert_contains "$explicit_dir/docs/workflow/01-requirements/README.md" '主要是给人工使用，还是需要接入自动化流水线'
-assert_contains "$explicit_dir/docs/workflow/01-requirements/README.md" '可直接参考的 V1 示例'
-assert_contains "$explicit_dir/docs/workflow/01-requirements/README.md" '常见错误示例'
-assert_contains "$explicit_dir/docs/workflow/02-design/README.md" 'Command Parser'
-assert_contains "$explicit_dir/docs/workflow/04-verification/README.md" '退出码不稳定'
-assert_contains "$explicit_dir/docs/workflow/04-verification/README.md" '实现前分析门禁'
-assert_contains "$explicit_dir/docs/workflow/04-verification/README.md" '实现后收敛门禁'
-assert_contains "$explicit_dir/docs/workflow/05-tasks/README.md" 'T-CLI-001'
-assert_contains "$explicit_dir/docs/workflow/05-tasks/README.md" 'T-ANALYZE-001'
-assert_contains "$explicit_dir/docs/workflow/05-tasks/README.md" 'T-CONVERGE-001'
-assert_contains "$explicit_dir/docs/knowledge/context/README.md" '长期稳定的业务上下文'
-assert_contains "$explicit_dir/docs/knowledge/structure/README.md" '长期稳定的系统结构'
-assert_contains "$explicit_dir/docs/knowledge/behavior/README.md" '长期稳定的关键流程'
-assert_contains "$explicit_dir/docs/knowledge/reference/README.md" '样例、协议、schema'
-assert_contains "$explicit_dir/docs/issues/README.md" '还没解决的问题'
-assert_contains "$explicit_dir/docs/changes/README.md" '变更工作区'
-assert_contains "$explicit_dir/docs/changes/README.md" '状态和目录必须一致'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/overview.md" '为什么要改'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/overview.md" '当前阶段'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/overview.md" '本目录不能继续留在 `active/`'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/verification.md" 'Analyze 检查'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/verification.md" '工作区已从 `active/` 移动到 `completed/`'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/impact.md" '分析与收敛清单'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/impact.md" '代码审查重点'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/impact.md" '需要 reviewer 重点复核'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/impact.md" '详细验证见'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/impact.md" '整个工作区已从 `active/` 移入 `completed/`'
-assert_contains "$explicit_dir/docs/changes/active/CHG-0001-template/tasks.md" '工作区已从 `active/` 移到 `completed/`'
-assert_contains "$explicit_dir/docs/releases/README.md" '最终对外交付了什么'
-assert_contains "$explicit_dir/docs/archive/README.md" '已废弃'
-assert_contains "$explicit_dir/docs/rules/README.md" '文档驱动开发'
-assert_contains "$explicit_dir/docs/rules/README.md" '开工前'
-assert_contains "$explicit_dir/docs/rules/README.md" '实现中'
-assert_contains "$explicit_dir/docs/rules/README.md" '文档同步与变更治理'
-assert_contains "$explicit_dir/docs/rules/README.md" '提交、审查与完成'
-assert_contains "$explicit_dir/docs/rules/README.md" 'change-management-rules.md'
-assert_contains "$explicit_dir/docs/rules/README.md" 'commit-rules.md'
-assert_contains "$explicit_dir/docs/rules/README.md" 'document-archive-rules.md'
-assert_contains "$explicit_dir/docs/rules/README.md" 'issue-management-rules.md'
-assert_contains "$explicit_dir/docs/rules/README.md" 'document-routing-rules.md'
-assert_contains "$explicit_dir/docs/rules/clarification-rules.md" '# 需求澄清规则'
-assert_contains "$explicit_dir/docs/rules/coding-standards.md" '# 编码规范'
-assert_contains "$explicit_dir/docs/rules/commit-rules.md" '# 提交规范'
-assert_contains "$explicit_dir/docs/rules/doc-sync-rules.md" '# 文档同步规则'
-assert_contains "$explicit_dir/docs/rules/document-routing-rules.md" '# 文档路由规则'
-assert_contains "$explicit_dir/docs/rules/testing-standards.md" '# 测试规范'
-assert_contains "$explicit_dir/docs/rules/definition-of-done.md" '# 完成定义'
-assert_contains "$explicit_dir/docs/rules/definition-of-done.md" '没有把“已完成”的 change 继续留在 `docs/changes/active/`'
-assert_contains "$explicit_dir/docs/rules/commit-rules.md" '职责边界'
-assert_contains "$explicit_dir/docs/rules/clarification-rules.md" '必须先问用户'
-assert_contains "$explicit_dir/docs/rules/clarification-rules.md" '按项目类型补充必问问题'
-assert_contains "$explicit_dir/docs/rules/bug-fix-rules.md" '定位根因'
-assert_contains "$explicit_dir/docs/rules/change-management-rules.md" '当前状态文档（workflow）与长期知识（knowledge）'
-assert_contains "$explicit_dir/docs/rules/change-management-rules.md" '生命周期门禁'
-assert_contains "$explicit_dir/docs/rules/commit-rules.md" '测试状态'
-assert_contains "$explicit_dir/docs/rules/commit-rules.md" '关联 Issue'
-assert_contains "$explicit_dir/docs/rules/commit-rules.md" '整行省略'
-assert_contains "$explicit_dir/docs/rules/document-archive-rules.md" 'TYPE-YYYYMMDD-NNN'
-assert_contains "$explicit_dir/docs/rules/document-archive-rules.md" '按年份和月份归档'
-assert_contains "$explicit_dir/docs/rules/coding-standards.md" '是什么'
-assert_contains "$explicit_dir/docs/rules/coding-standards.md" '为什么'
-assert_contains "$explicit_dir/docs/rules/issue-management-rules.md" '未解决问题要进入 `docs/issues/`'
-assert_contains "$explicit_dir/docs/rules/document-routing-rules.md" 'workflow.intake'
-assert_contains "$explicit_dir/docs/rules/document-routing-rules.md" '阶段映射'
-assert_contains "$explicit_dir/docs/rules/testing-standards.md" '白盒单元测试（White-box Unit）'
-assert_contains "$explicit_dir/docs/workflow/04-verification/README.md" 'White-box'
-assert_contains "$explicit_dir/docs/changes/completed/README.md" '历史价值'
-assert_contains "$explicit_dir/docs/changes/completed/README.md" '原 `active/<change-key>/` 已整体移动到这里'
-assert_contains "$explicit_dir/docs/changes/legacy/README.md" '参考价值的变更记录'
-assert_contains "$explicit_dir/docs/adr/README.md" '关键架构和技术决策'
-
-web_dir="$TMP_ROOT/admin-web"
-bash "$SCRIPT_PATH" "$web_dir" --type web >"$TMP_ROOT/web.out"
-
-assert_contains "$web_dir/docs/workflow/01-requirements/README.md" '以浏览器页面为主要入口的产品'
-assert_contains "$web_dir/docs/workflow/01-requirements/README.md" '主要用户更常在手机还是桌面使用'
-assert_contains "$web_dir/docs/workflow/01-requirements/README.md" 'V2 候选内容'
-assert_contains "$web_dir/docs/workflow/02-design/README.md" '页面壳层与路由入口'
-assert_contains "$web_dir/docs/workflow/02-design/README.md" '前端体验与视觉规范'
-assert_contains "$web_dir/docs/workflow/02-design/README.md" '目标终端与分辨率'
-assert_contains "$web_dir/docs/workflow/02-design/README.md" '色彩体系'
-assert_contains "$web_dir/docs/workflow/02-design/README.md" '组件规范'
-assert_contains "$web_dir/docs/workflow/04-verification/README.md" '关键页面'
-assert_contains "$web_dir/docs/workflow/05-tasks/README.md" 'T-WEB-001'
-assert_contains "$web_dir/docs/workflow/04-verification/README.md" 'Performance'
-assert_contains "$web_dir/docs/workflow/04-verification/README.md" 'Security'
-
-api_dir="$TMP_ROOT/orders-api"
-bash "$SCRIPT_PATH" "$api_dir" --type api >"$TMP_ROOT/api.out"
-
-assert_contains "$api_dir/docs/workflow/01-requirements/README.md" '以 HTTP 接口为主要交付物的服务'
-assert_contains "$api_dir/docs/workflow/01-requirements/README.md" '首批资源、动作和调用方分别是什么'
-assert_contains "$api_dir/docs/workflow/01-requirements/README.md" 'V2 候选内容'
-assert_contains "$api_dir/docs/workflow/02-design/README.md" 'API Transport Layer'
-assert_contains "$api_dir/docs/workflow/02-design/README.md" '后端工程约定与数据规范'
-assert_contains "$api_dir/docs/workflow/02-design/README.md" '数据库约定'
-assert_contains "$api_dir/docs/workflow/02-design/README.md" 'migration 规范'
-assert_contains "$api_dir/docs/workflow/02-design/README.md" '事务边界'
-assert_contains "$api_dir/docs/workflow/04-verification/README.md" '真实 HTTP 契约'
-assert_contains "$api_dir/docs/workflow/05-tasks/README.md" 'T-API-001'
-assert_contains "$api_dir/docs/workflow/02-design/README.md" '架构质量目标'
-
-inferred_dir="$TMP_ROOT/order-worker"
-bash "$SCRIPT_PATH" "$inferred_dir" --name "Order Worker" >"$TMP_ROOT/inferred.out"
-
-assert_contains "$inferred_dir/README.md" "项目类型：service"
-assert_contains "$inferred_dir/docs/workflow/00-intake/README.md" '当前推断的项目类型：`service`'
-assert_contains "$inferred_dir/docs/workflow/00-intake/README.md" 'worker/consumer/queue/job/scheduler/daemon/service'
-assert_contains "$inferred_dir/docs/workflow/01-requirements/README.md" '范围裁剪助手'
-assert_contains "$inferred_dir/docs/workflow/01-requirements/README.md" '常见错误示例'
-assert_contains "$inferred_dir/docs/workflow/03-implementation/README.md" '范围分阶段建议'
-
-existing_dir="$TMP_ROOT/existing-project"
-mkdir -p "$existing_dir"
-printf 'custom readme\n' > "$existing_dir/README.md"
-
-bash "$SCRIPT_PATH" "$existing_dir" --type web >"$TMP_ROOT/existing.out"
-
-assert_equals "$(cat "$existing_dir/README.md")" "custom readme" "expected existing README.md to be preserved without --force"
-assert_file_exists "$existing_dir/docs/workflow/01-requirements/README.md"
-
-force_dir="$TMP_ROOT/force-project"
-mkdir -p "$force_dir"
-printf 'custom readme\n' > "$force_dir/README.md"
-
-bash "$SCRIPT_PATH" "$force_dir" --type api --force >"$TMP_ROOT/force.out"
-
-assert_contains "$force_dir/README.md" '项目类型：api'
-
-english_dir="$TMP_ROOT/english-cli"
-bash "$SCRIPT_PATH" "$english_dir" --type cli --lang en >"$TMP_ROOT/english.out"
-
-assert_contains "$english_dir/README.md" 'Project type: cli'
-assert_contains "$english_dir/AGENTS.md" 'Clarify the current delivery scope, long-lived project truth, verification strategy, and change workspace before coding'
-assert_contains "$english_dir/AGENTS.md" 'Workflow Phases'
-assert_contains "$english_dir/docs/workflow/00-intake/README.md" 'Current inferred project type: `cli`'
-assert_contains "$english_dir/docs/workflow/00-intake/README.md" 'Beginner Decision Guide'
-assert_contains "$english_dir/docs/workflow/05-tasks/README.md" 'T-CLI-001 Define the command tree'
-assert_contains "$english_dir/docs/issues/README.md" 'unresolved problems'
-assert_contains "$english_dir/docs/changes/README.md" 'change-workspace lifecycles'
-assert_contains "$english_dir/docs/changes/README.md" 'Status and directory placement must match'
-assert_contains "$english_dir/docs/releases/README.md" 'what was actually delivered'
-assert_contains "$english_dir/docs/archive/README.md" 'retired, replaced, or historical documents'
-assert_contains "$english_dir/docs/rules/definition-of-done.md" 'Before a task is marked done'
-assert_contains "$english_dir/docs/rules/definition-of-done.md" 'No completed change remains under `docs/changes/active/`'
-assert_contains "$english_dir/docs/rules/clarification-rules.md" 'ask the user first'
-assert_contains "$english_dir/docs/rules/clarification-rules.md" 'Project-Type-Specific Must-Ask Questions'
-assert_contains "$english_dir/docs/rules/bug-fix-rules.md" 'root cause'
-assert_contains "$english_dir/docs/rules/change-management-rules.md" 'workflow and knowledge docs'
-assert_contains "$english_dir/docs/rules/change-management-rules.md" 'Lifecycle Gate'
-assert_contains "$english_dir/docs/rules/commit-rules.md" 'Test status'
-assert_contains "$english_dir/docs/rules/commit-rules.md" 'Linked Issue'
-assert_contains "$english_dir/docs/rules/commit-rules.md" 'omit the whole line'
-assert_contains "$english_dir/docs/rules/document-archive-rules.md" 'TYPE-YYYYMMDD-NNN'
-assert_contains "$english_dir/docs/rules/document-archive-rules.md" 'archive by year and month'
-assert_contains "$english_dir/docs/rules/coding-standards.md" 'what it is'
-assert_contains "$english_dir/docs/rules/coding-standards.md" 'why it exists'
-assert_contains "$english_dir/docs/rules/issue-management-rules.md" 'Unresolved problems belong in `docs/issues/`'
-assert_contains "$english_dir/docs/rules/document-routing-rules.md" 'where each document semantic type should live'
-assert_contains "$english_dir/docs/rules/document-routing-rules.md" 'Phase Mapping'
-assert_contains "$english_dir/docs/rules/README.md" 'Before implementation'
-assert_contains "$english_dir/docs/rules/README.md" 'During implementation'
-assert_contains "$english_dir/docs/rules/README.md" 'Documentation sync and change governance'
-assert_contains "$english_dir/docs/rules/README.md" 'Commit, review, and completion'
-assert_contains "$english_dir/spec-init.topology.yml" 'knowledge.context: docs/knowledge/context/'
-assert_contains "$english_dir/spec-init.topology.yml" 'workflow_phases:'
-assert_contains "$english_dir/docs/workflow/01-requirements/README.md" 'Is the tool mainly for humans or for automation pipelines?'
-assert_contains "$english_dir/docs/workflow/01-requirements/README.md" 'Copyable V1 Example'
-assert_contains "$english_dir/docs/workflow/01-requirements/README.md" 'Common Mistakes'
-assert_contains "$english_dir/docs/workflow/03-implementation/README.md" 'Ongoing Refinement Plan'
-assert_contains "$english_dir/docs/workflow/03-implementation/README.md" 'Analysis and Convergence Plan'
-assert_contains "$english_dir/docs/workflow/02-design/README.md" 'CLI Experience and Conventions'
-assert_contains "$english_dir/docs/workflow/02-design/README.md" 'Exit-code rules'
-assert_contains "$english_dir/docs/workflow/04-verification/README.md" 'White-box Unit'
-assert_contains "$english_dir/docs/workflow/04-verification/README.md" 'Pre-Implementation Analyze Gate'
-assert_contains "$english_dir/docs/workflow/05-tasks/README.md" 'T-ANALYZE-001'
-assert_contains "$english_dir/docs/changes/active/CHG-0001-template/impact.md" 'Code Review Focus'
-assert_contains "$english_dir/docs/changes/active/CHG-0001-template/impact.md" 'reviewer should inspect'
-assert_contains "$english_dir/docs/changes/active/CHG-0001-template/impact.md" 'Detailed verification'
-assert_contains "$english_dir/docs/changes/active/CHG-0001-template/impact.md" 'the whole workspace has moved from `active/` into `completed/`'
-assert_contains "$english_dir/docs/changes/active/CHG-0001-template/overview.md" 'this directory must not remain under `active/`'
-assert_contains "$english_dir/docs/changes/active/CHG-0001-template/tasks.md" 'the workspace has moved from `active/` to `completed/`'
-
-invalid_dir="$TMP_ROOT/invalid-project"
-if bash "$SCRIPT_PATH" "$invalid_dir" --type app >"$TMP_ROOT/invalid.out" 2>"$TMP_ROOT/invalid.err"; then
-  fail 'expected unsupported project type to fail'
-fi
-
-assert_contains "$TMP_ROOT/invalid.err" 'Unsupported project type: app'
-assert_contains "$TMP_ROOT/invalid.err" 'Supported types: web, api, cli, library, service'
-
-invalid_lang_dir="$TMP_ROOT/invalid-lang-project"
-if bash "$SCRIPT_PATH" "$invalid_lang_dir" --lang fr >"$TMP_ROOT/invalid-lang.out" 2>"$TMP_ROOT/invalid-lang.err"; then
-  fail 'expected unsupported language to fail'
-fi
-
-assert_contains "$TMP_ROOT/invalid-lang.err" 'Unsupported language: fr'
-assert_contains "$TMP_ROOT/invalid-lang.err" 'Supported languages: zh, en'
-
-printf 'spec-init smoke tests passed\n'
+printf 'Passed %s behavioral checks (install, scaffold, preservation, rollback, invalid input, symlinks).\n' "$checks"
